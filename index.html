@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="表現メモ">
+<meta name="theme-color" content="#2b6cb0">
+<title>表現メモ - 英訳フレーズ帳</title>
+<style>
+  :root {
+    --blue: #2b6cb0;
+    --blue-dark: #1a4971;
+    --bg: #f4f6f9;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #1a202c;
+    --sub: #718096;
+    --orange: #dd6b20;
+    --orange-bg: #fff3e0;
+    --green: #2f855a;
+    --green-bg: #e9f7ef;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 40px;
+  }
+  header {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: #fff;
+    padding: 18px 16px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  header h1 {
+    margin: 0 0 2px;
+    font-size: 1.25rem;
+  }
+  header p {
+    margin: 0;
+    font-size: 0.8rem;
+    opacity: 0.85;
+  }
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  .capture-box {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-bottom: 18px;
+  }
+  .capture-box textarea {
+    width: 100%;
+    min-height: 64px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 1rem;
+    resize: vertical;
+    font-family: inherit;
+  }
+  .capture-box textarea:focus { outline: 2px solid var(--blue); }
+  .capture-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .btn-save {
+    flex: 1;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .btn-save:active { background: var(--blue-dark); }
+  .search-box {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    background: var(--card);
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 22px 0 10px;
+  }
+  .section-title h2 {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--sub);
+  }
+  .section-actions { display: flex; gap: 6px; }
+  .btn-mini {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    color: var(--sub);
+  }
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 13px 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+  }
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .badge-pending { background: var(--orange-bg); color: var(--orange); }
+  .badge-done { background: var(--green-bg); color: var(--green); }
+  .card .ja { font-size: 1rem; margin: 6px 0 4px; font-weight: 600; }
+  .card .en { font-size: 0.95rem; margin: 2px 0; color: var(--blue-dark); }
+  .card .en-rough { font-size: 0.9rem; margin: 2px 0; color: var(--sub); font-style: italic; }
+  .card .explanation { font-size: 0.82rem; color: var(--sub); margin-top: 6px; line-height: 1.5; }
+  .card .related { font-size: 0.8rem; color: var(--sub); margin-top: 4px; }
+  .card .related b { color: var(--text); }
+  .card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .icon-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
+    color: var(--sub);
+  }
+  .icon-btn.playing { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .del-btn {
+    background: none;
+    border: none;
+    color: var(--sub);
+    font-size: 0.8rem;
+    padding: 4px 6px;
+  }
+  .empty {
+    text-align: center;
+    color: var(--sub);
+    font-size: 0.85rem;
+    padding: 24px 0;
+  }
+  details.howto {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.83rem;
+    color: var(--sub);
+    border: 1px solid var(--border);
+  }
+  details.howto summary { cursor: pointer; font-weight: 600; color: var(--text); }
+  details.howto ol { margin: 8px 0 0; padding-left: 20px; line-height: 1.7; }
+  details.howto code {
+    background: var(--bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a202c;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    z-index: 50;
+    max-width: 90%;
+    text-align: center;
+  }
+  .toast.show { opacity: 0.95; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📝 表現メモ</h1>
+  <p>思いついた日本語をその場で書いて、英訳フレーズを貯める</p>
+</header>
+
+<main>
+
+  <div class="capture-box">
+    <textarea id="jaInput" placeholder="日本語で入力（単語でも文でもOK）" autocomplete="off"></textarea>
+    <div class="capture-row">
+      <button class="btn-save" id="saveBtn">＋ 保存する</button>
+    </div>
+  </div>
+
+  <details class="howto">
+    <summary>使い方</summary>
+    <ol>
+      <li>思いついた日本語を書いて「保存する」。その場で簡易英訳（機械翻訳）が表示される</li>
+      <li>未清書メモが溜まったら「📋 コピー」でJSONをコピー</li>
+      <li>Claude Codeに貼り付けて <code>/phrase-note-add</code> と伝える → 自然な英訳＋解説＋音声付きで「保存済みフレーズ」に清書される</li>
+      <li>サイトが更新されたら、清書済みと同じ内容の未清書メモは自動で一覧から消える</li>
+    </ol>
+  </details>
+
+  <input type="text" class="search-box" id="searchBox" placeholder="🔍 保存したフレーズを検索">
+
+  <div class="section-title">
+    <h2>🕓 未清書メモ（この端末のみ・<span id="pendingCount">0</span>件）</h2>
+    <div class="section-actions">
+      <button class="btn-mini" id="copyBtn">📋 コピー</button>
+      <button class="btn-mini" id="clearBtn">🗑 全消去</button>
+    </div>
+  </div>
+  <div id="pendingList"></div>
+
+  <div class="section-title">
+    <h2>📚 保存済みフレーズ（<span id="polishedCount">0</span>件）</h2>
+  </div>
+  <div id="polishedList"></div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---- 保存済みフレーズ（/phrase-note-add が追記する） ---- */
+const PHRASES = [
+  // { id, ja, en, explanation, related: ["...", "..."], savedAt }
+];
+
+/* ---- 未清書メモ（localStorage） ---- */
+const STORAGE_KEY = 'phraseNote_pending';
+
+function getPending() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch (e) { return []; }
+}
+function setPending(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+async function translateRough(text) {
+  try {
+    const res = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=ja|en');
+    const data = await res.json();
+    return (data && data.responseData && data.responseData.translatedText) || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function saveEntry() {
+  const input = document.getElementById('jaInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  const entry = { id: Date.now(), ja: text, en_rough: null, savedAt: new Date().toISOString() };
+  const list = getPending();
+  list.unshift(entry);
+  setPending(list);
+  render();
+
+  const rough = await translateRough(text);
+  const list2 = getPending();
+  const idx = list2.findIndex(e => e.id === entry.id);
+  if (idx !== -1) {
+    list2[idx].en_rough = rough || '(簡易訳の取得に失敗。清書時にClaudeが英訳します)';
+    setPending(list2);
+    render();
+  }
+}
+
+function deletePending(id) {
+  setPending(getPending().filter(e => e.id !== id));
+  render();
+}
+
+function clearAllPending() {
+  if (!confirm('未清書メモを全て削除します。よろしいですか？')) return;
+  setPending([]);
+  render();
+}
+
+function copyPending() {
+  const list = getPending();
+  if (list.length === 0) { showToast('未清書メモがありません'); return; }
+  const json = JSON.stringify(list, null, 2);
+  const done = () => showToast('コピーしました。Claude Codeに貼り付けて /phrase-note-add と伝えてください');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(json).then(done).catch(() => fallbackCopy(json, done));
+  } else {
+    fallbackCopy(json, done);
+  }
+}
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); done(); }
+  catch (e) { showToast('コピーに失敗しました。手動で選択してください'); }
+  document.body.removeChild(ta);
+}
+
+/* ---- 音声再生（edge-tts事前生成mp3） ---- */
+let currentAudio = null;
+let currentBtn = null;
+function resetPlayBtn(btn) { btn.textContent = '🔊'; btn.classList.remove('playing'); }
+function playAudio(btn, src) {
+  const isSameBtn = (currentBtn === btn);
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  if (currentBtn) { resetPlayBtn(currentBtn); currentBtn = null; }
+  if (isSameBtn) { currentAudio = null; return; }
+  const audio = new Audio(src);
+  currentAudio = audio; currentBtn = btn;
+  btn.textContent = '■'; btn.classList.add('playing');
+  audio.onended = audio.onerror = () => { resetPlayBtn(btn); if (currentBtn === btn) { currentBtn = null; currentAudio = null; } };
+  audio.play();
+}
+
+/* ---- 描画 ---- */
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function render() {
+  const query = document.getElementById('searchBox').value.trim().toLowerCase();
+
+  // 清書済みと一致する未清書メモは自動で除外（重複解消）
+  const polishedJaSet = new Set(PHRASES.map(p => p.ja));
+  let pending = getPending().filter(e => !polishedJaSet.has(e.ja));
+  if (pending.length !== getPending().length) setPending(pending);
+
+  const pendingFiltered = query
+    ? pending.filter(e => (e.ja || '').toLowerCase().includes(query) || (e.en_rough || '').toLowerCase().includes(query))
+    : pending;
+
+  const polishedFiltered = (query
+    ? PHRASES.filter(p => [p.ja, p.en, p.explanation].some(s => (s || '').toLowerCase().includes(query)))
+    : PHRASES
+  ).slice().reverse();
+
+  document.getElementById('pendingCount').textContent = pending.length;
+  document.getElementById('polishedCount').textContent = PHRASES.length;
+
+  const pendingEl = document.getElementById('pendingList');
+  pendingEl.innerHTML = pendingFiltered.length ? pendingFiltered.map(e => `
+    <div class="card">
+      <div class="card-head">
+        <span class="badge badge-pending">🕓 未清書</span>
+        <button class="del-btn" onclick="deletePending(${e.id})">✕ 削除</button>
+      </div>
+      <div class="ja">${escapeHtml(e.ja)}</div>
+      <div class="en-rough">${e.en_rough ? escapeHtml(e.en_rough) : '翻訳中...'}</div>
+    </div>
+  `).join('') : `<div class="empty">未清書メモはありません</div>`;
+
+  const polishedEl = document.getElementById('polishedList');
+  polishedEl.innerHTML = polishedFiltered.length ? polishedFiltered.map(p => `
+    <div class="card">
+      <div class="card-head">
+        <span class="badge badge-done">📚 清書済み</span>
+      </div>
+      <div class="ja">${escapeHtml(p.ja)}</div>
+      <div class="en">${escapeHtml(p.en)}</div>
+      ${p.explanation ? `<div class="explanation">💡 ${escapeHtml(p.explanation)}</div>` : ''}
+      ${p.related && p.related.length ? `<div class="related"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
+      <div class="card-foot">
+        <button class="icon-btn" onclick="playAudio(this, 'audio/${p.id}.mp3')">🔊</button>
+        <span></span>
+      </div>
+    </div>
+  `).join('') : `<div class="empty">保存済みフレーズはまだありません</div>`;
+}
+
+document.getElementById('saveBtn').addEventListener('click', saveEntry);
+document.getElementById('jaInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) saveEntry();
+});
+document.getElementById('copyBtn').addEventListener('click', copyPending);
+document.getElementById('clearBtn').addEventListener('click', clearAllPending);
+document.getElementById('searchBox').addEventListener('input', render);
+
+render();
+</script>
+
+</body>
+</html>
