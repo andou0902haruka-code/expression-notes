@@ -48,6 +48,22 @@
     font-size: 0.8rem;
     opacity: 0.85;
   }
+  .header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .refresh-btn {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.78rem;
+    padding: 7px 10px;
+    white-space: nowrap;
+  }
+  .refresh-btn:active { background: rgba(255,255,255,0.35); }
   main {
     max-width: 640px;
     margin: 0 auto;
@@ -219,8 +235,13 @@
 <body>
 
 <header>
-  <h1>📝 表現メモ</h1>
-  <p>思いついた日本語をその場で書いて、英訳フレーズを貯める</p>
+  <div class="header-row">
+    <div>
+      <h1>📝 表現メモ</h1>
+      <p>思いついた日本語をその場で書いて、英訳フレーズを貯める</p>
+    </div>
+    <button class="refresh-btn" id="forceRefreshBtn">⟳ 更新</button>
+  </div>
 </header>
 
 <main>
@@ -511,6 +532,9 @@ document.getElementById('jaInput').addEventListener('keydown', (e) => {
 document.getElementById('copyBtn').addEventListener('click', copyPending);
 document.getElementById('clearBtn').addEventListener('click', clearAllPending);
 document.getElementById('searchBox').addEventListener('input', render);
+document.getElementById('forceRefreshBtn').addEventListener('click', () => {
+  location.href = location.pathname + '?_=' + Date.now();
+});
 
 render();
 </script>
