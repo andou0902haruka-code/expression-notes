@@ -182,6 +182,18 @@
     color: var(--sub);
   }
   .icon-btn.playing { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .reveal-btn {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 0.85rem;
+    color: var(--sub);
+  }
+  .reveal-btn:active { background: var(--border); }
   .del-btn {
     background: none;
     border: none;
@@ -276,6 +288,9 @@
 
   <div class="section-title">
     <h2>📚 保存済みフレーズ（<span id="polishedCount">0</span>件）</h2>
+    <div class="section-actions">
+      <button class="btn-mini" id="hideModeBtn">🙈 英訳を隠す</button>
+    </div>
   </div>
   <div id="polishedList"></div>
 
@@ -1081,6 +1096,26 @@ const PHRASES = [
   }
 ];
 
+/* ---- 英訳を隠す自己テストモード ---- */
+const HIDE_MODE_KEY = 'phraseNote_hideMode';
+let hideMode = localStorage.getItem(HIDE_MODE_KEY) === '1';
+let revealedIds = new Set();
+
+function toggleHideMode() {
+  hideMode = !hideMode;
+  revealedIds.clear();
+  localStorage.setItem(HIDE_MODE_KEY, hideMode ? '1' : '0');
+  updateHideModeBtn();
+  render();
+}
+function updateHideModeBtn() {
+  document.getElementById('hideModeBtn').textContent = hideMode ? '👁 英訳を表示' : '🙈 英訳を隠す';
+}
+function revealPhrase(id) {
+  revealedIds.add(id);
+  render();
+}
+
 /* ---- 未清書メモ（localStorage） ---- */
 const STORAGE_KEY = 'phraseNote_pending';
 
@@ -1220,12 +1255,15 @@ function render() {
   `).join('') : `<div class="empty">未清書メモはありません</div>`;
 
   const polishedEl = document.getElementById('polishedList');
-  polishedEl.innerHTML = polishedFiltered.length ? polishedFiltered.map(p => `
+  polishedEl.innerHTML = polishedFiltered.length ? polishedFiltered.map(p => {
+    const isRevealed = !hideMode || revealedIds.has(p.id);
+    return `
     <div class="card">
       <div class="card-head">
         <span class="badge badge-done">📚 清書済み</span>
       </div>
       <div class="ja">${escapeHtml(p.ja)}</div>
+      ${isRevealed ? `
       <div class="en">${escapeHtml(p.en)}</div>
       ${p.explanation ? `<div class="explanation">💡 ${escapeHtml(p.explanation)}</div>` : ''}
       ${p.related && p.related.length ? `<div class="related"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
@@ -1233,8 +1271,10 @@ function render() {
         <button class="icon-btn" onclick="playAudio(this, 'audio/${p.id}.mp3')">🔊</button>
         <span></span>
       </div>
+      ` : `<button class="reveal-btn" onclick="revealPhrase(${p.id})">🙈 タップして英訳を表示</button>`}
     </div>
-  `).join('') : `<div class="empty">保存済みフレーズはまだありません</div>`;
+  `;
+  }).join('') : `<div class="empty">保存済みフレーズはまだありません</div>`;
 }
 
 document.getElementById('saveBtn').addEventListener('click', saveEntry);
@@ -1247,7 +1287,9 @@ document.getElementById('searchBox').addEventListener('input', render);
 document.getElementById('forceRefreshBtn').addEventListener('click', () => {
   location.href = location.pathname + '?_=' + Date.now();
 });
+document.getElementById('hideModeBtn').addEventListener('click', toggleHideMode);
 
+updateHideModeBtn();
 render();
 </script>
 
