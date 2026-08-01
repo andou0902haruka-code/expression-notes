@@ -21,6 +21,8 @@
     --orange-bg: #fff3e0;
     --green: #2f855a;
     --green-bg: #e9f7ef;
+    --gold: #d69e2e;
+    --gold-bg: #fffaf0;
   }
   * { box-sizing: border-box; }
   body {
@@ -225,20 +227,40 @@
     font-size: 0.8rem;
   }
   /* ---- タブ ---- */
-  .tabs { display: flex; gap: 6px; margin-top: 12px; }
+  .tabs { display: flex; gap: 5px; margin-top: 12px; }
   .tab {
     flex: 1;
     background: rgba(255,255,255,0.14);
     border: 1px solid rgba(255,255,255,0.32);
     color: #fff;
     border-radius: 9px;
-    padding: 8px 4px;
-    font-size: 0.8rem;
+    padding: 8px 2px;
+    font-size: 0.72rem;
     font-weight: 600;
+    white-space: nowrap;
+    letter-spacing: -0.02em;
   }
   .tab.active { background: #fff; color: var(--blue-dark); border-color: #fff; }
   .head-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .card-date { font-size: 0.72rem; color: var(--sub); }
+
+  /* ---- お気に入り ---- */
+  .fav-btn {
+    background: none;
+    border: none;
+    color: #cbd5e0;
+    font-size: 1.3rem;
+    line-height: 1;
+    padding: 0 2px;
+    flex-shrink: 0;
+  }
+  .fav-btn.on { color: var(--gold); }
+  .fav-btn:active { transform: scale(0.88); }
+  .fav-btn.small { font-size: 1.05rem; }
+  .badge-fav { background: var(--gold-bg); color: #b7791f; }
+  .fav-sort { flex: 0 0 auto; }
+  .fav-sort .seg-btn { flex: 0 0 auto; padding: 6px 9px; font-size: 0.72rem; }
+  .mini-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
 
   /* ---- 週まとめ ---- */
   .panel-title { font-size: 1rem; margin: 0 0 10px; }
@@ -385,8 +407,9 @@
   </div>
   <nav class="tabs">
     <button class="tab active" data-view="notes">📝 メモ</button>
+    <button class="tab" data-view="favs">⭐ お気に入り</button>
     <button class="tab" data-view="weeks">📅 週まとめ</button>
-    <button class="tab" data-view="test">✍️ 復習テスト</button>
+    <button class="tab" data-view="test">✍️ テスト</button>
   </nav>
 </header>
 
@@ -408,8 +431,9 @@
       <li>未清書メモが溜まったら「📋 コピー」でJSONをコピー</li>
       <li>Claude Codeに貼り付けて <code>/phrase-note-add</code> と伝える → 自然な英訳＋解説＋音声付きで「保存済みフレーズ」に清書される</li>
       <li>サイトが更新されたら、清書済みと同じ内容の未清書メモは自動で一覧から消える</li>
+      <li>フレーズの <b>☆</b> をタップすると<b>⭐ お気に入り</b>タブに集まる（この端末のみ保存）。覚えにくい表現・よく使う表現をここに貯めて、まとめてテストできる</li>
       <li><b>📅 週まとめ</b>タブ … 月曜〜日曜の週ごとに、その週覚えた表現が日付順にまとまる</li>
-      <li><b>✍️ 復習テスト</b>タブ … 週を選んで日本語→英語の産出テスト。「書く」は自動採点＋差分表示、「言う」は口頭で答えて自己採点。スコアは週ごとに記録される</li>
+      <li><b>✍️ テスト</b>タブ … 週（または全期間・⭐お気に入り）を選んで日本語→英語の産出テスト。「書く」は自動採点＋差分表示、「言う」は口頭で答えて自己採点。スコアは週ごとに記録される</li>
     </ol>
   </details>
 
@@ -434,6 +458,30 @@
 
 </section>
 
+<section id="view-favs" hidden>
+  <div class="capture-box">
+    <h2 class="panel-title">⭐ お気に入りリスト</h2>
+    <div class="hint-line" id="favSummary"></div>
+    <div class="week-actions">
+      <button class="btn-primary" id="favTestBtn">✍️ お気に入りをテスト</button>
+      <button class="btn-outline" id="favHideBtn">🙈 英訳を隠す</button>
+    </div>
+  </div>
+
+  <input type="text" class="search-box" id="favSearch" placeholder="🔍 お気に入りを検索">
+
+  <div class="section-title">
+    <h2>⭐ お気に入り（<span id="favCount">0</span>件）</h2>
+    <div class="section-actions">
+      <div class="seg fav-sort" id="favSortSeg">
+        <button class="seg-btn active" data-sort="fav">⭐順</button>
+        <button class="seg-btn" data-sort="date">📅順</button>
+      </div>
+    </div>
+  </div>
+  <div id="favList"></div>
+</section>
+
 <section id="view-weeks" hidden>
   <div class="capture-box">
     <h2 class="panel-title">📅 週ごとのまとめ</h2>
@@ -447,7 +495,7 @@
   <div id="testSetup">
     <div class="capture-box">
       <h2 class="panel-title">✍️ 復習テスト（日本語 → 英語）</h2>
-      <label class="field-label">出題する週</label>
+      <label class="field-label">出題する範囲（週 / 全期間 / ⭐お気に入り）</label>
       <select id="testWeekSel" class="select"></select>
       <label class="field-label">解答のしかた</label>
       <div class="seg" id="testModeSeg">
@@ -2221,13 +2269,98 @@ function toggleHideMode() {
   localStorage.setItem(HIDE_MODE_KEY, hideMode ? '1' : '0');
   updateHideModeBtn();
   render();
+  if (!document.getElementById('view-favs').hidden) renderFavs();
 }
 function updateHideModeBtn() {
-  document.getElementById('hideModeBtn').textContent = hideMode ? '👁 英訳を表示' : '🙈 英訳を隠す';
+  const label = hideMode ? '👁 英訳を表示' : '🙈 英訳を隠す';
+  document.getElementById('hideModeBtn').textContent = label;
+  document.getElementById('favHideBtn').textContent = label;
 }
 function revealPhrase(id) {
   revealedIds.add(id);
   render();
+  if (!document.getElementById('view-favs').hidden) renderFavs();
+}
+
+/* ==========================================================
+   お気に入り（この端末のlocalStorageのみ・PHRASESのidで紐付け）
+   ========================================================== */
+const FAV_KEY = 'phraseNote_favorites';
+let favIds = (() => {
+  const raw = loadJSON(FAV_KEY, []);
+  return Array.isArray(raw) ? raw.map(Number).filter(n => !isNaN(n)) : [];
+})();
+let favSort = 'fav';   // 'fav' = ⭐登録順（新しい順） / 'date' = フレーズの追加日順
+
+function saveFavs() { localStorage.setItem(FAV_KEY, JSON.stringify(favIds)); }
+function isFav(id) { return favIds.indexOf(Number(id)) !== -1; }
+
+/* 実在するPHRASESだけを⭐登録順（新しい順）で返す */
+function favPhrases() {
+  const byId = new Map(PHRASES.map(p => [p.id, p]));
+  return favIds.map(id => byId.get(id)).filter(Boolean);
+}
+
+function toggleFav(id) {
+  id = Number(id);
+  if (isFav(id)) {
+    favIds = favIds.filter(x => x !== id);
+    showToast('お気に入りから外しました');
+  } else {
+    favIds.unshift(id);
+    showToast('⭐ お気に入りに追加しました');
+  }
+  saveFavs();
+  syncFavButtons(id);
+  updateFavCounts();
+  if (!document.getElementById('view-favs').hidden) renderFavs();
+}
+
+/* 画面を作り直さずに★/☆の見た目だけ差し替える（テスト入力中でも安全） */
+function syncFavButtons(id) {
+  const on = isFav(id);
+  document.querySelectorAll('.fav-btn[data-fav="' + id + '"]').forEach(b => {
+    b.classList.toggle('on', on);
+    b.textContent = on ? '★' : '☆';
+    b.title = on ? 'お気に入りから外す' : 'お気に入りに追加';
+  });
+}
+
+function favBtnHtml(id, extraClass) {
+  const on = isFav(id);
+  return `<button class="fav-btn${on ? ' on' : ''}${extraClass ? ' ' + extraClass : ''}" data-fav="${id}"
+    onclick="toggleFav(${id})" title="${on ? 'お気に入りから外す' : 'お気に入りに追加'}" aria-label="お気に入り">${on ? '★' : '☆'}</button>`;
+}
+
+function updateFavCounts() {
+  const n = favPhrases().length;
+  const c = document.getElementById('favCount');
+  if (c) c.textContent = n;
+  const s = document.getElementById('favSummary');
+  if (s) {
+    s.innerHTML = n
+      ? `⭐ <b>${n}</b> フレーズを登録中（全 ${PHRASES.length} フレーズ中）。<br>` +
+        `覚えにくい表現をここに集めて、まとめて産出テストできます。`
+      : `まだお気に入りがありません。<br>各フレーズの <b>☆</b> をタップすると、ここに集まります。`;
+  }
+}
+
+function renderFavs() {
+  updateFavCounts();
+  const query = document.getElementById('favSearch').value.trim().toLowerCase();
+  let items = favPhrases();
+  if (favSort === 'date') {
+    items = items.slice().sort((a, b) => new Date(b.savedAt || 0) - new Date(a.savedAt || 0));
+  }
+  const filtered = query
+    ? items.filter(p => [p.ja, p.en, p.explanation].some(s => (s || '').toLowerCase().includes(query)))
+    : items;
+
+  document.getElementById('favList').innerHTML = filtered.length
+    ? filtered.map(p => phraseCardHtml(p, 'fav')).join('')
+    : (items.length
+        ? `<div class="empty">「${escapeHtml(query)}」に一致するお気に入りはありません</div>`
+        : `<div class="empty">まだお気に入りはありません<br>フレーズの ☆ をタップして登録しましょう</div>`);
 }
 
 /* ---- 未清書メモ（localStorage） ---- */
@@ -2372,15 +2505,27 @@ function render() {
   `).join('') : `<div class="empty">未清書メモはありません</div>`;
 
   const polishedEl = document.getElementById('polishedList');
-  polishedEl.innerHTML = polishedFiltered.length ? polishedFiltered.map(p => {
-    const isRevealed = !hideMode || revealedIds.has(p.id);
-    return `
+  polishedEl.innerHTML = polishedFiltered.length
+    ? polishedFiltered.map(p => phraseCardHtml(p)).join('')
+    : `<div class="empty">保存済みフレーズはまだありません</div>`;
+
+  updateFavCounts();
+}
+
+/* 保存済みフレーズのカード（📝メモ / ⭐お気に入り 共通） */
+function phraseCardHtml(p, context) {
+  const isRevealed = !hideMode || revealedIds.has(p.id);
+  const badge = context === 'fav'
+    ? `<span class="badge badge-fav">⭐ お気に入り</span>`
+    : `<span class="badge badge-done">📚 清書済み</span>`;
+  return `
     <div class="card">
       <div class="card-head">
         <div class="head-left">
-          <span class="badge badge-done">📚 清書済み</span>
+          ${badge}
           <span class="card-date">📅 ${fmtDateFull(p.savedAt)}</span>
         </div>
+        ${favBtnHtml(p.id)}
       </div>
       <div class="ja">${escapeHtml(p.ja)}</div>
       ${isRevealed ? `
@@ -2392,9 +2537,7 @@ function render() {
         <span></span>
       </div>
       ` : `<button class="reveal-btn" onclick="revealPhrase(${p.id})">🙈 タップして英訳を表示</button>`}
-    </div>
-  `;
-  }).join('') : `<div class="empty">保存済みフレーズはまだありません</div>`;
+    </div>`;
 }
 
 /* ==========================================================
@@ -2447,7 +2590,8 @@ function groupByWeek() {
    ========================================================== */
 function switchView(name) {
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.view === name));
-  ['notes', 'weeks', 'test'].forEach(v => { document.getElementById('view-' + v).hidden = (v !== name); });
+  ['notes', 'favs', 'weeks', 'test'].forEach(v => { document.getElementById('view-' + v).hidden = (v !== name); });
+  if (name === 'favs') renderFavs();
   if (name === 'weeks') renderWeeks();
   if (name === 'test') renderTestSetup();
   window.scrollTo(0, 0);
@@ -2500,7 +2644,10 @@ function renderWeeks() {
         ${items.map(p => {
           const open = weekRevealSet.has(p.id);
           return `<div class="mini-row">
-            <div class="mini-ja">${escapeHtml(p.ja)}</div>
+            <div class="mini-head">
+              <div class="mini-ja">${escapeHtml(p.ja)}</div>
+              ${favBtnHtml(p.id, 'small')}
+            </div>
             ${open ? `
               <div class="mini-en">${escapeHtml(p.en)}</div>
               ${p.explanation ? `<div class="mini-exp">💡 ${escapeHtml(p.explanation)}</div>` : ''}
@@ -2649,7 +2796,9 @@ function renderTestSetup() {
   sel.innerHTML = weeks.map(w => {
     const tag = w.key === THIS_WEEK_KEY ? '【今週】' : (w.key === LAST_WEEK_KEY ? '【先週】' : '');
     return `<option value="${w.key}">${tag}${w.label}（${w.items.length}件）</option>`;
-  }).join('') + `<option value="__all__">全期間（${PHRASES.length}件）</option>`;
+  }).join('')
+    + `<option value="__all__">全期間（${PHRASES.length}件）</option>`
+    + `<option value="__fav__">⭐ お気に入り（${favPhrases().length}件）</option>`;
   if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
   else if (weeks.length) sel.value = (weeks.find(w => w.key === LAST_WEEK_KEY) || weeks[0]).key;
 
@@ -2657,8 +2806,19 @@ function renderTestSetup() {
   renderTestHistory();
 }
 
+/* テスト対象の表示名（週キー以外の特殊キーもここで扱う） */
+function testTargetLabel(key) {
+  if (key === '__all__') return '全期間';
+  if (key === '__fav__') return '⭐ お気に入り';
+  return weekRangeLabel(key);
+}
+/* 週ごとのスコア記録の対象外（週に属さない出題範囲） */
+function isSpecialKey(key) { return key === '__all__' || key === '__fav__'; }
+
 function poolFor(weekKey, scope) {
-  let pool = weekKey === '__all__' ? PHRASES.slice() : PHRASES.filter(p => weekKeyOf(p.savedAt) === weekKey);
+  let pool = weekKey === '__all__' ? PHRASES.slice()
+    : weekKey === '__fav__' ? favPhrases()
+    : PHRASES.filter(p => weekKeyOf(p.savedAt) === weekKey);
   if (scope === 'weak') pool = pool.filter(p => isWeak(p.id));
   pool = pool.slice().sort(() => Math.random() - 0.5);
   if (scope === 'r10') pool = pool.slice(0, 10);
@@ -2682,7 +2842,7 @@ function renderTestHistory() {
     const last = h[h.length - 1];
     const best = bestScoreOf(k);
     return `<div class="card">
-      <div class="card-head"><div class="head-left"><span class="badge badge-week">${weekRangeLabel(k)}</span></div></div>
+      <div class="card-head"><div class="head-left"><span class="badge badge-week">${testTargetLabel(k)}</span></div></div>
       <div class="week-score">直近 <b>${last.pct}%</b>（${last.correct}/${last.total}・${fmtDateShort(last.at)}） ／ 最高 <b>${best.pct}%</b> ／ ${h.length} 回受験</div>
     </div>`;
   }).join('');
@@ -2706,7 +2866,9 @@ function startTest(customQueue) {
   const weekKey = document.getElementById('testWeekSel').value;
   const queue = customQueue || poolFor(weekKey, testScope);
   if (!queue.length) {
-    showToast(testScope === 'weak' ? '苦手フレーズはありません 🎉' : 'この週にはフレーズがありません');
+    showToast(testScope === 'weak' ? '苦手フレーズはありません 🎉'
+      : weekKey === '__fav__' ? 'お気に入りがまだありません（☆をタップして登録）'
+      : 'この週にはフレーズがありません');
     return;
   }
   testState = { weekKey, mode: testMode, queue, idx: 0, revealed: false, results: [] };
@@ -2769,7 +2931,10 @@ function renderQuestion() {
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
     <div class="card test-card">
-      <div class="card-date" style="margin-bottom:6px">📅 ${fmtDateFull(p.savedAt)}</div>
+      <div class="card-head" style="margin-bottom:6px">
+        <div class="card-date">📅 ${fmtDateFull(p.savedAt)}</div>
+        ${favBtnHtml(p.id)}
+      </div>
       <div class="test-ja">${escapeHtml(p.ja)}</div>
       ${area}
     </div>`;
@@ -2890,7 +3055,7 @@ function finishTest() {
   const wrong = total - correct - close;
   const pct = total ? Math.round((correct / total) * 100) : 0;
 
-  if (st.weekKey !== '__all__') {
+  if (!isSpecialKey(st.weekKey)) {
     saveScore(st.weekKey, { at: new Date().toISOString(), correct, total, pct, mode: st.mode });
   }
 
@@ -2904,7 +3069,7 @@ function finishTest() {
   el.innerHTML = `
     <div class="capture-box">
       <div class="score-big">${pct}%</div>
-      <div class="score-sub">${st.weekKey === '__all__' ? '全期間' : weekRangeLabel(st.weekKey)}／${st.mode === 'type' ? '書くモード' : '言うモード'}</div>
+      <div class="score-sub">${testTargetLabel(st.weekKey)}／${st.mode === 'type' ? '書くモード' : '言うモード'}</div>
       <div class="score-row">
         <div class="score-cell"><b class="v-correct">${correct}</b><span>正解</span></div>
         <div class="score-cell"><b class="v-close">${close}</b><span>惜しい</span></div>
@@ -2917,9 +3082,9 @@ function finishTest() {
       </div>
     </div>
     ${missed.length ? `
-      <div class="section-title"><h2>📝 復習リスト</h2></div>
+      <div class="section-title"><h2>📝 復習リスト</h2><div class="section-actions"><span class="card-date">☆をタップでお気に入り登録</span></div></div>
       ${missed.map(p => `<div class="card">
-        <div class="card-head"><div class="head-left"><span class="badge badge-done">📅 ${fmtDateFull(p.savedAt)}</span></div></div>
+        <div class="card-head"><div class="head-left"><span class="badge badge-done">📅 ${fmtDateFull(p.savedAt)}</span></div>${favBtnHtml(p.id)}</div>
         <div class="ja">${escapeHtml(p.ja)}</div>
         <div class="en">${escapeHtml(p.en)}</div>
         ${p.explanation ? `<div class="explanation">💡 ${escapeHtml(p.explanation)}</div>` : ''}
@@ -2964,6 +3129,20 @@ document.getElementById('forceRefreshBtn').addEventListener('click', () => {
   location.href = location.pathname + '?_=' + Date.now();
 });
 document.getElementById('hideModeBtn').addEventListener('click', toggleHideMode);
+
+/* ---- お気に入りタブのイベント配線 ---- */
+document.getElementById('favSearch').addEventListener('input', renderFavs);
+document.getElementById('favHideBtn').addEventListener('click', toggleHideMode);
+document.getElementById('favTestBtn').addEventListener('click', () => {
+  if (!favPhrases().length) { showToast('お気に入りがまだありません（☆をタップして登録）'); return; }
+  startTestForWeek('__fav__');
+});
+document.getElementById('favSortSeg').addEventListener('click', e => {
+  const b = e.target.closest('.seg-btn'); if (!b) return;
+  favSort = b.dataset.sort;
+  document.querySelectorAll('#favSortSeg .seg-btn').forEach(x => x.classList.toggle('active', x === b));
+  renderFavs();
+});
 
 updateHideModeBtn();
 render();
