@@ -1093,6 +1093,942 @@ const PHRASES = [
     explanation: "文末の「ぞ」は気づき・注意喚起の終助詞なので、just を添えて「今まさに」という臨場感を出すと自然。",
     related: ["Something dropped!", "I think something just fell."],
     savedAt: "2026-07-25T15:51:47.850Z"
+  },
+  {
+    id: 1785000465810,
+    ja: "真夜中の12時に寝る",
+    en: "go to bed at midnight",
+    explanation: "英語のmidnightはすでに「午前0時」自体を指すので、日本語の「真夜中の12時」のように数字を重ねてat 12 midnightとすると冗長になる。",
+    related: ["hit the hay at midnight", "turn in at midnight"],
+    savedAt: "2026-07-25T17:27:45.810Z"
+  },
+  {
+    id: 1785001712662,
+    ja: "完全に好きになってたかも",
+    en: "I might have completely fallen for it.",
+    explanation: "「〜てたかも」は「〜ていたかもしれない」の口語省略形でmight have + 過去分詞に対応する。「好きになる」は人にも物にも使えるfall for ~が自然。",
+    related: ["I could have totally fallen for it.", "I might have really liked it."],
+    savedAt: "2026-07-25T17:48:32.662Z"
+  },
+  {
+    id: 1785052536682,
+    ja: "気を抜いたら痩せちゃう",
+    en: "I'll lose weight if I let my guard down.",
+    explanation: "「気を抜く」はlet one's guard downが定番の対応表現。仮定の「たら」はif節、未来の結果はwillで表すのが自然。",
+    related: ["I lose weight the moment I relax.", "If I'm not careful, I end up losing weight."],
+    savedAt: "2026-07-26T07:55:36.682Z"
+  },
+  {
+    id: 1785052549608,
+    ja: "こんな僕でもできることがあるかも",
+    en: "Maybe there's something even someone like me can do.",
+    explanation: "「こんな僕でも」は謙遜のニュアンスを持つeven someone like meで表せる。There's something ~構文で「〜があるかも」を自然に訳せる。",
+    related: ["Maybe even I can do something.", "Perhaps there's something I'm capable of, even me."],
+    savedAt: "2026-07-26T07:55:49.608Z"
+  },
+  {
+    id: 1785052564877,
+    ja: "僕にしかできないことが",
+    en: "There's something only I can do.",
+    explanation: "体言止めの「〜ことが」はThere is構文で補うと自然な英文になる。「〜にしか…ない」はonlyで限定するのが定番。",
+    related: ["Something only I can pull off.", "It's something nobody else but me can do."],
+    savedAt: "2026-07-26T07:56:04.877Z"
+  },
+  {
+    id: 1785052626945,
+    ja: "狂気と夢の世界",
+    en: "A world of madness and dreams",
+    explanation: "名詞句なので英語では冠詞Aを補うと自然になる。madnessとdreamsの語順は日本語のまま保ってよい。",
+    related: ["A realm of madness and dreams", "The world where madness meets dreams"],
+    savedAt: "2026-07-26T07:57:06.945Z"
+  },
+  {
+    id: 1785052635322,
+    ja: "僕は狂いたい",
+    en: "I want to go crazy.",
+    explanation: "「狂う」は文字通りの発狂だけでなく、何かに我を忘れるほど没頭したいという情熱的な意味でも使われ、go crazyはその両方をカバーできる。",
+    related: ["I want to lose my mind (in a good way).", "I want to go a little insane."],
+    savedAt: "2026-07-26T07:57:15.322Z"
+  },
+  {
+    id: 1785052663894,
+    ja: "綺麗事を言う奴がいてもいいじゃないか",
+    en: "Isn't it fine to have someone who talks in ideals?",
+    explanation: "「綺麗事」は表面的で現実味のない理想論を指すのでbeautiful thingsではなくidealsが正確。「〜てもいいじゃないか」は反語的な許容表現でIsn't it fine if ~?が対応する。",
+    related: ["There's nothing wrong with someone speaking idealistically.", "Why not let someone say idealistic things?"],
+    savedAt: "2026-07-26T07:57:43.894Z"
+  },
+  {
+    id: 1785060450348,
+    ja: "いつからこんなにコンビニの商品の値段は高くなったの?",
+    en: "Since when did convenience store prices get this expensive?",
+    explanation: "「いつから〜になったの」は驚き・不満を表すSince when did ~の定番構文。「商品の値段」はまとめてpricesと簡潔に表すのが自然。",
+    related: ["When did convenience store stuff get so pricey?", "Prices at convenience stores have gotten crazy expensive lately."],
+    savedAt: "2026-07-26T10:07:30.348Z"
+  },
+  {
+    id: 1785073762249,
+    ja: "それは大した問題ではない",
+    en: "That's not a big deal.",
+    explanation: "「大した〜ではない」は口語定番のnot a big dealに対応し、大袈裟にすることではないという軽いニュアンスを表す。",
+    related: ["It's no big deal.", "That's not really an issue."],
+    savedAt: "2026-07-26T13:49:22.249Z"
+  },
+  {
+    id: 1785074979106,
+    ja: "君からはもう沢山のものをもらったよ",
+    en: "I've already gotten so much from you.",
+    explanation: "「沢山の」を強調するにはa lotよりso muchの方が感情がこもり自然。alreadyで「もう十分に」というニュアンスを添える。",
+    related: ["You've already given me so much.", "I've already received plenty from you."],
+    savedAt: "2026-07-26T14:09:39.106Z"
+  },
+  {
+    id: 1785082672936,
+    ja: "あんまり無理すんなってこと",
+    en: "Basically, don't push yourself too hard.",
+    explanation: "「無理する」は限界を超えて頑張ることでpush oneself too hard/overdo itが対応する。文末の「〜ってこと」は要点をまとめるBasically, ~で表せる。",
+    related: ["Just don't overdo it.", "The point is, take it easy on yourself."],
+    savedAt: "2026-07-26T16:17:52.936Z"
+  },
+  {
+    id: 1785085940550,
+    ja: "こればかりは私が悪い",
+    en: "This one's on me.",
+    explanation: "「こればかりは」は「これに関しては例外的に」というニュアンスで、口語表現This one is on meで「これについては自分の責任だ」を表せる。",
+    related: ["This is on me, no question.", "At least this time, it's my fault."],
+    savedAt: "2026-07-26T17:12:20.550Z"
+  },
+  {
+    id: 1785122558128,
+    ja: "ウッディが映画に出る意味がわからなかった。",
+    en: "I couldn't understand why Woody was in the movie.",
+    explanation: "「意味がわからない」はwhy節を使ってI couldn't understand why ~と表すのが自然。the meaning of Woody being in the movieのような直訳は不自然。",
+    related: ["I didn't see the point of Woody being in the movie.", "It didn't make sense to me why Woody appeared in the film."],
+    savedAt: "2026-07-27T03:22:38.128Z"
+  },
+  {
+    id: 1785127934967,
+    ja: "全部何もかも諦めたい",
+    en: "I want to give up on everything.",
+    explanation: "「諦める」は対象を伴う場合、句動詞give up onになるのが自然（onを忘れやすいので注意）。",
+    related: ["I just want to quit on everything.", "I feel like giving up on it all."],
+    savedAt: "2026-07-27T04:52:14.967Z"
+  },
+  {
+    id: 1785128773136,
+    ja: "君の自尊心のために勉強してもうまくいかないと思う",
+    en: "I don't think studying just for your self-esteem will get you anywhere.",
+    explanation: "「うまくいかない」はwon't get you anywhereで表現できる。「〜のために」はjust forで目的を限定するニュアンスを出す。",
+    related: ["Studying only to protect your pride won't lead anywhere.", "I don't think that kind of motivation will pay off."],
+    savedAt: "2026-07-27T05:06:13.136Z"
+  },
+  {
+    id: 1785130379244,
+    ja: "Aiにプロンプトを丸投げするだけだけどね",
+    en: "Though it's basically just tossing a prompt at AI and letting it do everything.",
+    explanation: "「丸投げ」は全部人任せにすることで、just throw ~ atやleave everything toで「投げっぱなしにする」ニュアンスを出せる。",
+    related: ["I basically just dump the task on AI with a prompt.", "It's really just handing everything over to AI via a prompt."],
+    savedAt: "2026-07-27T05:32:59.244Z"
+  },
+  {
+    id: 1785149049258,
+    ja: "ついさっきまで夜ご飯を食べていた",
+    en: "I was eating dinner until just a moment ago.",
+    explanation: "「ついさっきまで〜していた」は継続を表す過去進行形にuntil just a moment agoを添えることで、直前まで続いていた動作を自然に表現できる。",
+    related: ["I was having dinner just a little while ago.", "Up until a minute ago, I was eating dinner."],
+    savedAt: "2026-07-27T10:44:09.258Z"
+  },
+  {
+    id: 1785149086788,
+    ja: "オムライス",
+    en: "omurice",
+    explanation: "「オムライス」はomelette+riceの和製英語。英語話者にはomuriceでも通じ始めているが、説明する際はa Japanese omelette filled with fried riceと補うと伝わりやすい。",
+    related: ["Japanese omelette rice", "rice omelette"],
+    savedAt: "2026-07-27T10:44:46.788Z"
+  },
+  {
+    id: 1785195100066,
+    ja: "デイリータスクをやる",
+    en: "Do my daily tasks.",
+    explanation: "To-doリストの動作として書く場合はDo my daily tasksが自然。タスク一覧の見出しとして使う場合はComplete Daily Tasksでもよい。",
+    related: ["Get my daily tasks done.", "Knock out today's tasks."],
+    savedAt: "2026-07-27T23:31:40.066Z"
+  },
+  {
+    id: 1785196839607,
+    ja: "応援を送ることしかできない",
+    en: "All I can do is cheer you on.",
+    explanation: "「〜しかできない」はAll I can do is ~という定型表現でよく使われる。「応援を送る」は直訳のsend supportよりcheer ~ onが自然な口語表現。",
+    related: ["The only thing I can do is root for you.", "I can only offer my support from here."],
+    savedAt: "2026-07-28T00:00:39.607Z"
+  },
+  {
+    id: 1785200209885,
+    ja: "必要のないものは買わない",
+    en: "I don't buy things I don't need.",
+    explanation: "「〜ものは買わない」は関係代名詞thatを省略したthings I don't needの形が最も自然で簡潔。",
+    related: ["I only buy what I actually need.", "I never buy things that aren't necessary."],
+    savedAt: "2026-07-28T00:56:49.885Z"
+  },
+  {
+    id: 1785200223299,
+    ja: "適切な相槌の表現を学びたい",
+    en: "I want to learn appropriate expressions for backchanneling.",
+    explanation: "「相槌」は会話中の短い反応を指し、英語のbackchannelingが専門的な対応語。日常会話ではconversational reactionsと言い換えても伝わる。",
+    related: ["I want to learn how to give natural conversational reactions.", "I'd like to learn proper ways to respond while listening."],
+    savedAt: "2026-07-28T00:57:03.299Z"
+  },
+  {
+    id: 1785200230527,
+    ja: "それはしょうがない",
+    en: "That can't be helped.",
+    explanation: "「それは」が指すのは状況や事実なので、自分の内的感情を表すI can't help itより、状況を主語にしたThat can't be helpedの方が対応が近い。",
+    related: ["That's just how it is.", "There's nothing we can do about that."],
+    savedAt: "2026-07-28T00:57:10.527Z"
+  },
+  {
+    id: 1785200237031,
+    ja: "それでもあなたはすごい",
+    en: "But you're still amazing.",
+    explanation: "「それでも」は逆接・譲歩を表すbutやstillで表現でき、両方を併用することで「それでもなお」の強調が出る。",
+    related: ["Still, you're incredible.", "Even so, you're amazing."],
+    savedAt: "2026-07-28T00:57:17.031Z"
+  },
+  {
+    id: 1785200344197,
+    ja: "あなたは人気講師でなかなか予約が取れない",
+    en: "You're such a popular instructor that it's hard to get a reservation.",
+    explanation: "日本語は「人気講師で(だから)予約が取れない」という因果関係だが、such ~ that構文で「人気すぎて予約が取れない」という因果を明確に表せる。",
+    related: ["You're so popular as a teacher that lessons book up fast.", "Your lessons are so popular they're hard to book."],
+    savedAt: "2026-07-28T00:59:04.197Z"
+  },
+  {
+    id: 1785200440743,
+    ja: "今の成績に甘んじるなよ",
+    en: "Don't settle for your current grades.",
+    explanation: "「甘んじる」は「満足して現状に留まる」という意味でsettle forが定番の対応表現。",
+    related: ["Don't rest on your current grades.", "Don't be satisfied with the grades you have now."],
+    savedAt: "2026-07-28T01:00:40.743Z"
+  },
+  {
+    id: 1785200448417,
+    ja: "今の能力に甘んじるな",
+    en: "Don't settle for your current abilities.",
+    explanation: "「甘んじる」は不満足ながら受け入れる意味ではなく現状に満足して留まる意味なのでsettle forが正確。indulgeでは意味がずれる。",
+    related: ["Don't be content with your current skill level.", "Don't rest on your current abilities."],
+    savedAt: "2026-07-28T01:00:48.417Z"
+  },
+  {
+    id: 1785200566798,
+    ja: "なぜ私の靴下は勝手にどこかにいくのか",
+    en: "Why do my socks always disappear on their own?",
+    explanation: "「勝手にどこかにいく」は「いなくなる・消える」という意味合いが強いのでdisappearが自然。on their ownで「誰も動かしていないのに」を表す。",
+    related: ["Why do my socks keep vanishing by themselves?", "Where do my socks keep running off to?"],
+    savedAt: "2026-07-28T01:02:46.798Z"
+  },
+  {
+    id: 1785200616937,
+    ja: "おそらく私がパンパンに洗濯機に詰めるせいだが",
+    en: "It's probably because I stuff the washing machine too full.",
+    explanation: "「パンパンに詰める」は隙間がないほど満杯に詰め込むという意味でstuff ~ (too) fullが対応する。「パン」は食べ物のパンではなく擬態語なので注意。",
+    related: ["It's probably because I overstuff the washing machine.", "I think it's from packing the washer too tight."],
+    savedAt: "2026-07-28T01:03:36.937Z"
+  },
+  {
+    id: 1785200767832,
+    ja: "正直いうと、僕もあんまり研究のやる気はない",
+    en: "To be honest, I'm not that motivated to do research either.",
+    explanation: "「やる気がない」はmotivatedを使いI'm not motivated to do ~の形にすると自然。「あんまり」はnot thatやnot veryで程度を弱める。",
+    related: ["Honestly, research doesn't excite me much either.", "To tell the truth, I don't feel much drive to do research either."],
+    savedAt: "2026-07-28T01:06:07.832Z"
+  },
+  {
+    id: 1785202959688,
+    ja: "興奮する",
+    en: "get excited",
+    explanation: "「興奮する」は状態ではなく「興奮した状態になる」という変化を表す動詞なので、形容詞excitedではなく動詞句get excitedが対応する。",
+    related: ["get thrilled", "get worked up"],
+    savedAt: "2026-07-28T01:42:39.688Z"
+  },
+  {
+    id: 1785211675029,
+    ja: "解凍の魔術師が必要だ",
+    en: "We need a wizard of thawing.",
+    explanation: "「魔術師」はmagicianよりwizardの方がファンタジー的な老練の使い手のニュアンスが強く、ユーモラスな誇張表現に合う。",
+    related: ["We need a thawing wizard.", "What we need is someone with magical defrosting powers."],
+    savedAt: "2026-07-28T04:07:55.029Z"
+  },
+  {
+    id: 1785212479340,
+    ja: "日光を浴びる必要がある",
+    en: "I need to get some sunlight.",
+    explanation: "「日光を浴びる」はget/soak up some sunlight[sunshine]という句が自然。bathe in sunlightは詩的すぎてやや不自然になる。",
+    related: ["I need to soak up some sun.", "I should get some sunshine."],
+    savedAt: "2026-07-28T04:21:19.340Z"
+  },
+  {
+    id: 1785213592461,
+    ja: "時間とおいしさを天秤にかけた時、多くの人は時間をとるだろう",
+    en: "When it comes down to time versus taste, most people will choose time.",
+    explanation: "「天秤にかける」はweigh A against Bが対応する。「時間をとる」はここでは「のんびりする(take one's time)」ではなく「時間(効率)の方を選ぶ」意味なのでchooseが正確。",
+    related: ["Given the choice between time and flavor, most people go with time.", "When time and taste are weighed against each other, time usually wins."],
+    savedAt: "2026-07-28T04:39:52.461Z"
+  },
+  {
+    id: 1785213607290,
+    ja: "君が暇だと言っているわけではない",
+    en: "I'm not saying you're free.",
+    explanation: "「〜わけではない」は部分否定でI'm not saying (that) ~という婉曲的な否定表現に対応し、相手の解釈を先回りして訂正するニュアンスを持つ。",
+    related: ["That's not to say you have free time.", "I don't mean that you've got time to spare."],
+    savedAt: "2026-07-28T04:40:07.290Z"
+  },
+  {
+    id: 1785590389763,
+    ja: "君が対象外だとは一言も言ってない",
+    en: "I never said you weren't included.",
+    explanation: "「一言も言ってない」は never said だけで十分表せる（not say even one word は直訳的で冗長）。「対象外」は文脈により not included / excluded を使い分ける。",
+    related: ["I never said you were an exception.", "I didn't say you were off the hook."],
+    savedAt: "2026-08-01T13:19:49.763Z"
+  },
+  {
+    id: 1785585669195,
+    ja: "意味がわからない",
+    en: "That doesn't make any sense.",
+    explanation: "相手の話が筋が通らない場合は make sense を使う。I don't understand the meaning は「単語の意味が不明」という別の状況に聞こえる。",
+    related: ["I have no idea what you're talking about.", "You're not making any sense."],
+    savedAt: "2026-08-01T12:01:09.195Z"
+  },
+  {
+    id: 1785585665521,
+    ja: "なぜゲイじゃ無いのにムキムキになるの？",
+    en: "Why get ripped if you're not gay?",
+    explanation: "「ムキムキ」は get ripped / get jacked（筋肉が発達して引き締まった状態）。become muscular は説明的で会話ではまず使わない。",
+    related: ["Why bulk up if you're not gay?", "Why build all that muscle if you're not gay?"],
+    savedAt: "2026-08-01T12:01:05.522Z"
+  },
+  {
+    id: 1785585327818,
+    ja: "過去の自分にいってやりたい",
+    en: "I wish I could tell my past self that.",
+    explanation: "実現不可能な願望なので I wish I could ~ を使う。go to my past self は物理的な移動になり意味をなさない。",
+    related: ["I'd love to go back and tell my younger self.", "Someone should have told me that back then."],
+    savedAt: "2026-08-01T11:55:27.818Z"
+  },
+  {
+    id: 1785585289720,
+    ja: "簡単に結婚できると思ったら大間違いだ",
+    en: "If you think getting married is easy, you're dead wrong.",
+    explanation: "「大間違い」は認識の誤りなので be dead wrong。make a big mistake は「行動上のミスをする」意味で、思い込みの誤りには合わない。",
+    related: ["If you think marriage is that easy, think again.", "You're kidding yourself if you think it's easy to get married."],
+    savedAt: "2026-08-01T11:54:49.721Z"
+  },
+  {
+    id: 1785583899689,
+    ja: "浮気",
+    en: "cheating",
+    explanation: "恋愛関係の「浮気」は cheat on someone を名詞化した cheating。playboy は「遊び人」という人物像を指す語で、行為そのものは表さない。",
+    related: ["having an affair", "two-timing"],
+    savedAt: "2026-08-01T11:31:39.689Z"
+  },
+  {
+    id: 1785583897017,
+    ja: "ちょうどいい愛人に向いている",
+    en: "They're perfectly cut out to be someone's secret lover.",
+    explanation: "「〜に向いている」は人の適性を言うので be cut out to be ~ が定型。be suitable for は条件・用途に使う語で、人の性格には不自然。",
+    related: ["They'd make the perfect mistress.", "They're exactly the type for that kind of relationship."],
+    savedAt: "2026-08-01T11:31:37.017Z"
+  },
+  {
+    id: 1785581373451,
+    ja: "少しずつ自信をつけていけばいいさ",
+    en: "You can just build up your confidence little by little.",
+    explanation: "「〜すればいいさ」の軽い助言は You can just ~ で表す。「自信をつける」は build up confidence が定番のコロケーション。",
+    related: ["Just take your time and gain confidence step by step.", "There's no rush — confidence comes little by little."],
+    savedAt: "2026-08-01T10:49:33.451Z"
+  },
+  {
+    id: 1785581348204,
+    ja: "人間が1日に覚えられる量は限られている",
+    en: "There's a limit to how much you can memorize in a day.",
+    explanation: "「限られている」は There's a limit to ~ が自然。人間一般は humans より総称の you を使う方が口語的に響く。",
+    related: ["You can only take in so much in one day.", "The brain can only absorb so much per day."],
+    savedAt: "2026-08-01T10:49:08.204Z"
+  },
+  {
+    id: 1785579096249,
+    ja: "前に進んでる気がしない",
+    en: "I don't feel like I'm making any progress.",
+    explanation: "ここでの「前に進む」は物理的移動ではなく進捗なので make progress。moving forward でも通じるが、勉強・仕事の話では progress の方が明確。",
+    related: ["I feel like I'm going nowhere.", "It feels like I'm stuck in the same place."],
+    savedAt: "2026-08-01T10:11:36.249Z"
+  },
+  {
+    id: 1785575760977,
+    ja: "何もできない",
+    en: "There's nothing I can do.",
+    explanation: "能力ではなく状況的に手立てがない場合の定型。I can't do anything でも通じるが、There's nothing I can do の方が「打つ手がない」諦めが出る。",
+    related: ["My hands are tied.", "I can't do anything about it."],
+    savedAt: "2026-08-01T09:16:00.977Z"
+  },
+  {
+    id: 1785571226186,
+    ja: "全然そっちを優先しても構わない",
+    en: "I really don't mind if you put that first.",
+    explanation: "「全然〜構わない」は I really don't mind / I don't mind at all。「優先する」は口語では prioritize より put ~ first が自然。",
+    related: ["Feel free to prioritize that.", "Go ahead and deal with that first — I'm fine."],
+    savedAt: "2026-08-01T08:00:26.186Z"
+  },
+  {
+    id: 1785555629673,
+    ja: "その心配は彼にしてやれ",
+    en: "Save that worry for him.",
+    explanation: "Save ~ for ... は「〜は…のためにとっておけ」で、皮肉混じりの助言にぴったりはまる。Let him worry about it だと「彼に心配させろ」と主語が入れ替わる。",
+    related: ["He's the one you should be worrying about.", "Go worry about him instead."],
+    savedAt: "2026-08-01T03:40:29.673Z"
+  },
+  {
+    id: 1785509360203,
+    ja: "だから最近こどもがいないのね",
+    en: "So that's why there are so few kids these days.",
+    explanation: "「だから〜のね」という納得は So that's why ~ の定型で表す。出生率の話なので no children より so few kids が実態に合う。",
+    related: ["No wonder the birth rate keeps dropping.", "That explains why you hardly see kids around anymore."],
+    savedAt: "2026-07-31T14:49:20.203Z"
+  },
+  {
+    id: 1785500050625,
+    ja: "速い時代の流れが私をあせらせる",
+    en: "How fast everything moves these days makes me feel rushed.",
+    explanation: "「時代の流れ」は the flow of times とは言わず the pace of the times / how fast things move と表す。「あせる」は feel rushed（急かされる感覚）。",
+    related: ["The speed of the world today puts me on edge.", "I feel pressured by how quickly the times change."],
+    savedAt: "2026-07-31T12:14:10.625Z"
+  },
+  {
+    id: 1785491155182,
+    ja: "工夫して箱に入るようにする",
+    en: "I'll figure out a way to make it fit in the box.",
+    explanation: "「工夫して〜する」は figure out a way to ~ が自然。be creative は「創造的にやれ」という助言で、「なんとか収める」の意には合わない。",
+    related: ["I'll find some way to squeeze it into the box.", "I'll work out how to get it all in there."],
+    savedAt: "2026-07-31T09:45:55.182Z"
+  },
+  {
+    id: 1785491143051,
+    ja: "工夫する",
+    en: "figure out a smarter way to do it",
+    explanation: "「工夫する」に対応する一語はなく、目的に応じて figure out a way / get creative / improvise を使い分ける。be ingenious は形容詞的で日常会話ではまず使わない。",
+    related: ["get creative", "come up with a workaround"],
+    savedAt: "2026-07-31T09:45:43.051Z"
+  },
+  {
+    id: 1785468452123,
+    ja: "焦ってやってもいい効果は得られない",
+    en: "Rushing it won't get you good results.",
+    explanation: "「焦ってやる」は rush it。動名詞を主語にすると「〜しても」という条件を簡潔に言える。",
+    related: ["You won't get anywhere by rushing.", "Hurrying through it never pays off."],
+    savedAt: "2026-07-31T03:27:32.123Z"
+  },
+  {
+    id: 1785468432013,
+    ja: "少しも寒く無いわ",
+    en: "I'm not cold at all.",
+    explanation: "「少しも〜ない」は not ~ at all。It's not cold は気温、I'm not cold は体感の話なので、主語の使い分けに注意。",
+    related: ["I'm not the least bit cold.", "I don't feel cold in the slightest."],
+    savedAt: "2026-07-31T03:27:12.013Z"
+  },
+  {
+    id: 1785467112148,
+    ja: "最近思ったのは",
+    en: "Something I've been thinking about lately is...",
+    explanation: "話を切り出す前置き。現在完了進行形 I've been thinking が「最近ずっと考えている」を表す。",
+    related: ["Here's what's been on my mind lately.", "One thing I've realized recently is..."],
+    savedAt: "2026-07-31T03:05:12.148Z"
+  },
+  {
+    id: 1785466910290,
+    ja: "物事が意思をもったことになってしまう",
+    en: "It ends up sounding like things have a will of their own.",
+    explanation: "「意思をもつ」は have a will of one's own / have a mind of its own が定型。「〜したことになってしまう」は end up ~ing で意図せぬ帰結を表す。",
+    related: ["That would mean objects have intentions.", "It makes it sound as if things act on their own."],
+    savedAt: "2026-07-31T03:01:50.290Z"
+  },
+  {
+    id: 1785462715532,
+    ja: "テンポを遅くしてしまうことが嫌だよね",
+    en: "You hate the idea of slowing everything down, right?",
+    explanation: "「〜してしまうことが嫌」は hate the idea of ~ing（そうなるのを恐れる気持ち）。You don't want to ~ より抵抗感が強く出る。",
+    related: ["Nobody wants to be the one killing the momentum.", "It bugs you to think you're holding up the pace."],
+    savedAt: "2026-07-31T01:51:55.532Z"
+  },
+  {
+    id: 1785462701394,
+    ja: "怖気付くと言うか",
+    en: "Or rather, I get cold feet.",
+    explanation: "「怖気付く」は get cold feet（直前で怖くなって尻込みする）。scary は「怖い」対象を指す形容詞なので、自分の心情には使えない。「〜と言うか」は or rather。",
+    related: ["I guess I just chicken out.", "Or maybe it's more that I lose my nerve."],
+    savedAt: "2026-07-31T01:51:41.394Z"
+  },
+  {
+    id: 1785462695404,
+    ja: "対面だとやっぱりコミュニケーションのスピードが速いから",
+    en: "Because face-to-face, the conversation just moves so much faster.",
+    explanation: "「対面」は face-to-face / in person。「やっぱり」は just や after all を添えて表す。",
+    related: ["In person, everything happens at a much faster pace.", "Talking face-to-face, you have to keep up in real time."],
+    savedAt: "2026-07-31T01:51:35.404Z"
+  },
+  {
+    id: 1785462673725,
+    ja: "頭の中だったら上手く喋れるのに",
+    en: "In my head I can speak perfectly.",
+    explanation: "「頭の中では」は In my head。If I were in my head は英語として意味をなさない。「〜のに」の残念さは though を文末に添えても出せる。",
+    related: ["I sound great in my head — it's saying it out loud that's the problem.", "I can hold a whole conversation in my head, though."],
+    savedAt: "2026-07-31T01:51:13.725Z"
+  },
+  {
+    id: 1785456623810,
+    ja: "予習はしたから多分大丈夫",
+    en: "I did the prep work, so I should be fine.",
+    explanation: "「多分大丈夫」は maybe it's okay より should be fine が自然（should は「〜のはず」という見込み）。",
+    related: ["I studied ahead, so I think I'll manage.", "I've prepared, so I should be okay."],
+    savedAt: "2026-07-31T00:10:23.810Z"
+  },
+  {
+    id: 1785374557844,
+    ja: "時には忘れてしまうことさえある",
+    en: "Sometimes I even forget about it completely.",
+    explanation: "「〜さえある」は even を動詞の前に置く。forget を単独で使うと目的語が曖昧なので about it を補うと自然。",
+    related: ["There are times when it slips my mind entirely.", "I sometimes forget it altogether."],
+    savedAt: "2026-07-30T01:22:37.844Z"
+  },
+  {
+    id: 1785373138851,
+    ja: "どちらにせよ彼らは仕事としてやってる訳で、君が何かを思う必要はない",
+    en: "Either way, they're just doing their job, so you don't need to read anything into it.",
+    explanation: "ここでの「何かを思う」は「深読みする」の意なので read anything into it が的確。think about anything では意味が通らない。",
+    related: ["Either way, it's their job — don't take it personally.", "They're paid to do that, so there's nothing to overthink."],
+    savedAt: "2026-07-30T00:58:58.851Z"
+  },
+  {
+    id: 1785373103168,
+    ja: "それは考えすぎだよ",
+    en: "You're overthinking it.",
+    explanation: "「考えすぎ」は overthink 一語で表す。That's too much to think about は「量が多くて処理しきれない」という別の意味になる。",
+    related: ["You're reading too much into it.", "Don't overanalyze it."],
+    savedAt: "2026-07-30T00:58:23.168Z"
+  },
+  {
+    id: 1785371032497,
+    ja: "性欲が半端ない",
+    en: "His sex drive is insane.",
+    explanation: "「性欲」は sex drive / libido。「半端ない」は insane や off the charts といったくだけた強調語で表す。sexual desire is not half-hearted は直訳で通じない。",
+    related: ["He's got an unbelievable libido.", "His sex drive is off the charts."],
+    savedAt: "2026-07-30T00:23:52.497Z"
+  },
+  {
+    id: 1785370650405,
+    ja: "隣にある",
+    en: "It's right next to it.",
+    explanation: "next to だけでは文にならないので It's を補う。right を添えると「すぐ隣」であることが明確になる。",
+    related: ["It's right beside it.", "It's just next door."],
+    savedAt: "2026-07-30T00:17:30.405Z"
+  },
+  {
+    id: 1785370436897,
+    ja: "その場合も同じで、3時15分前には行きたい。",
+    en: "Same in that case — I'd like to get there by a quarter to three.",
+    explanation: "「3時15分前」は2時45分のこと。英語では a quarter to three / 2:45 と言い、3:15（three fifteen）と紛らわしいので数字で言い切ると安全。",
+    related: ["It's the same then — I want to be there by 2:45.", "Same story — I'd like to arrive fifteen minutes before three."],
+    savedAt: "2026-07-30T00:13:56.897Z"
+  },
+  {
+    id: 1785370337275,
+    ja: "もしかしたら少し遅れるかも",
+    en: "I might be running a little late.",
+    explanation: "「遅れる」は be late より be running late の方が「今まさに遅れつつある」状況に合う。might が「かも」を担うので maybe は不要。",
+    related: ["I may be a few minutes behind.", "There's a chance I'll be slightly late."],
+    savedAt: "2026-07-30T00:12:17.275Z"
+  },
+  {
+    id: 1785370089207,
+    ja: "一日中",
+    en: "all day long",
+    explanation: "「一日中」は all day または all day long。All the day は誤りで、the は入らない。",
+    related: ["the whole day", "from morning till night"],
+    savedAt: "2026-07-30T00:08:09.207Z"
+  },
+  {
+    id: 1785369975680,
+    ja: "12時ちょうど",
+    en: "at twelve o'clock sharp",
+    explanation: "「ちょうど」は時刻の後ろに sharp を置く（または exactly at ~）。just before 12 は「12時直前」で逆の意味になる。",
+    related: ["at exactly twelve", "right at noon"],
+    savedAt: "2026-07-30T00:06:15.680Z"
+  },
+  {
+    id: 1785369781845,
+    ja: "これ終わったらすぐ行く",
+    en: "I'll head over as soon as I'm done with this.",
+    explanation: "相手のいる場所へ向かうときは go より head over / come over を使う。as soon as 節では未来の内容でも現在形にする。",
+    related: ["I'll be there the moment I finish this.", "Just let me finish this and I'll come."],
+    savedAt: "2026-07-30T00:03:01.845Z"
+  },
+  {
+    id: 1785369763756,
+    ja: "このすぐ後に行く",
+    en: "I'll come right after this.",
+    explanation: "「このすぐ後に」は right after this。I'll be right behind you は「すぐ後ろをついていく」で、物理的な追随を指す別表現。",
+    related: ["I'll be there right after this.", "I'm heading over as soon as this wraps up."],
+    savedAt: "2026-07-30T00:02:43.756Z"
+  },
+  {
+    id: 1785369418650,
+    ja: "君の評価もあいつの評価と同じくらいだよ",
+    en: "People think about as highly of you as they do of him.",
+    explanation: "人物への世間の「評価」は rating ではなく think highly of ~ や reputation で表す。rating は商品やサービスの評点。",
+    related: ["Your reputation is about on par with his.", "You're seen pretty much the same way he is."],
+    savedAt: "2026-07-29T23:56:58.650Z"
+  },
+  {
+    id: 1785366776598,
+    ja: "ゆっくり勉強していきたい",
+    en: "I want to take my time studying.",
+    explanation: "「ゆっくり〜する」は slowly ではなく take one's time ~ing（急がず丁寧に）。study slowly だと「理解が遅い」と受け取られかねない。",
+    related: ["I'd rather learn at my own pace.", "I want to work through it without rushing."],
+    savedAt: "2026-07-29T23:12:56.598Z"
+  },
+  {
+    id: 1785366764392,
+    ja: "勤勉",
+    en: "hardworking",
+    explanation: "人柄を表す日常語は hardworking。diligent も同義だがやや硬く、書き言葉や評価コメント向き。",
+    related: ["diligent", "industrious"],
+    savedAt: "2026-07-29T23:12:44.392Z"
+  },
+  {
+    id: 1785365659233,
+    ja: "ノイローゼになりそう",
+    en: "I'm about to lose my mind.",
+    explanation: "「ノイローゼ」は和製語で、英語の neurosis は医学用語。日常では lose my mind / go crazy で「精神的に参りそう」を表す。",
+    related: ["This is driving me crazy.", "I'm on the verge of a breakdown."],
+    savedAt: "2026-07-29T22:54:19.233Z"
+  },
+  {
+    id: 1785364730706,
+    ja: "君のバカみたいな妄想に巻き込まないでくれ",
+    en: "Don't drag me into your ridiculous fantasies.",
+    explanation: "「巻き込む」は drag someone into ~。get caught up in は自分から巻き込まれる自動詞的用法なので、命令文にすると意味がずれる。",
+    related: ["Leave me out of your crazy delusions.", "Keep your wild imagination to yourself."],
+    savedAt: "2026-07-29T22:38:50.706Z"
+  },
+  {
+    id: 1785364315755,
+    ja: "日常を英語で喋るのが癖になっている",
+    en: "I've gotten into the habit of saying everyday things in English.",
+    explanation: "「癖になっている」は get into the habit of ~ing を現在完了で使うと「その状態に至った」が出る。have a habit of は単に習慣を述べるだけで変化の含みがない。",
+    related: ["Speaking English about daily life has become second nature.", "I catch myself narrating my day in English."],
+    savedAt: "2026-07-29T22:31:55.755Z"
+  },
+  {
+    id: 1785312252786,
+    ja: "お得な情報も得れる",
+    en: "You can also get some good deals.",
+    explanation: "「お得な情報」は good deals（お買い得情報）。deal は可算名詞なので複数形にする。great deals とすると割安感がさらに強まる。",
+    related: ["You'll pick up some useful bargains too.", "There's inside info on discounts as well."],
+    savedAt: "2026-07-29T08:04:12.786Z"
+  },
+  {
+    id: 1785306018425,
+    ja: "君は相変わらずよく働くねぇ",
+    en: "You work as hard as ever, don't you?",
+    explanation: "「相変わらず」は as ~ as ever。「よく働く」は work hard で、work a lot だと労働時間の長さだけを指してしまう。",
+    related: ["Still working as hard as always, I see.", "You never let up, do you?"],
+    savedAt: "2026-07-29T06:20:18.425Z"
+  },
+  {
+    id: 1785305389429,
+    ja: "どうでもいい他人の時間を大切にできない。特に暇でなにもすることがなさそうに見えるやつ。",
+    en: "I can't bring myself to value the time of people I don't care about — especially the ones who look like they have nothing to do.",
+    explanation: "「大切にできない」は気持ちの上でできないので can't bring myself to ~。I don't care about other people's time だと「他人の時間全般を軽視する」となり、原文の限定が消える。",
+    related: ["I struggle to respect the time of people who clearly have nothing going on.", "Other people's time only matters to me if they actually seem busy."],
+    savedAt: "2026-07-29T06:09:49.429Z"
+  },
+  {
+    id: 1785305225204,
+    ja: "どうしてそう自暴自棄になる",
+    en: "Why do you get so self-destructive?",
+    explanation: "「自暴自棄」は self-destructive / give up on oneself。desperate は「必死・切羽詰まった」で、投げやりな態度とは意味が違う。",
+    related: ["Why do you throw everything away like that?", "What makes you give up on yourself so easily?"],
+    savedAt: "2026-07-29T06:07:05.204Z"
+  },
+  {
+    id: 1785304226702,
+    ja: "自分が不幸せだと言う資格なんてどこにもない",
+    en: "I have no right whatsoever to call myself unhappy.",
+    explanation: "「〜する資格がない」は have no right to ~。「どこにもない」という強調は whatsoever を添えて出す。",
+    related: ["I'm in no position to say I'm unhappy.", "Who am I to complain about being unhappy?"],
+    savedAt: "2026-07-29T05:50:26.702Z"
+  },
+  {
+    id: 1785304211309,
+    ja: "それに、ぼくは恵まれているから文句なんて言う資格ない。",
+    en: "Besides, I'm lucky enough that I've got no right to complain.",
+    explanation: "「恵まれている」は blessed でも通じるが宗教色が出るため、日常では lucky / fortunate が無難で自然。",
+    related: ["On top of that, I've had it easy, so I shouldn't complain.", "Besides, I'm in no position to complain — I've been fortunate."],
+    savedAt: "2026-07-29T05:50:11.309Z"
+  },
+  {
+    id: 1785304196110,
+    ja: "これは悲しい過去でもなんでも無いし、よくあるありふれた話だ",
+    en: "This isn't some tragic backstory or anything — it's a pretty common story.",
+    explanation: "「〜でもなんでもない」は not some ~ or anything という否定の強調形。「ありふれた」は commonplace より common / ordinary が会話向き。",
+    related: ["It's nothing like a sad past — just an everyday story.", "This is hardly a tragedy; it happens to plenty of people."],
+    savedAt: "2026-07-29T05:49:56.110Z"
+  },
+  {
+    id: 1785304168242,
+    ja: "素直",
+    en: "open and honest",
+    explanation: "「素直」は文脈で訳し分ける。人柄なら open and honest（気取らず正直）、助言を受け入れる態度なら receptive。straightforward は「率直・単刀直入」でややずれる。",
+    related: ["receptive", "genuine"],
+    savedAt: "2026-07-29T05:49:28.242Z"
+  },
+  {
+    id: 1785304161299,
+    ja: "素直になれない",
+    en: "I can't be honest about how I feel.",
+    explanation: "「素直になれない」は自分の感情を認められない状態なので can't be honest about how I feel。behave は「行儀よくする」で無関係。",
+    related: ["I just can't come clean about my feelings.", "I have trouble being upfront with myself."],
+    savedAt: "2026-07-29T05:49:21.299Z"
+  },
+  {
+    id: 1785304132828,
+    ja: "あなたは私より一年多く生きてるんだから",
+    en: "You've been alive a year longer than me, after all.",
+    explanation: "「今まで生きてきた」は現在完了 have been alive で表す。You live a year longer だと「一年長生きする」という未来の話になってしまう。",
+    related: ["You've got a whole year on me.", "You're a year ahead of me in life."],
+    savedAt: "2026-07-29T05:48:52.828Z"
+  },
+  {
+    id: 1785302464522,
+    ja: "映画をすべてをAIでつくるのではなく、お金と手間と時間をかけて映画を作ると言うことの意味を見出すことができる人はどれだけいるのか",
+    en: "How many people can still see the value in making a film with real money, effort, and time instead of generating the whole thing with AI?",
+    explanation: "「意味を見出す」は see the value in ~ / find meaning in ~。figure out what it means は「意味を理解する」という別の行為を指す。",
+    related: ["How many people still believe a film is worth real time and money rather than letting AI make it?", "Who out there still finds meaning in making movies the hard way?"],
+    savedAt: "2026-07-29T05:21:04.523Z"
+  },
+  {
+    id: 1785302399905,
+    ja: "どれくらいの人が意味を感じれるだろうか",
+    en: "I wonder how many people can actually find meaning in it.",
+    explanation: "「〜だろうか」という自問は I wonder ~ で表すと自然。feel meaningful は主語がずれる（meaningful なのは人ではなく対象）。",
+    related: ["How many people would see any point in it?", "I doubt many people would find it meaningful."],
+    savedAt: "2026-07-29T05:19:59.905Z"
+  },
+  {
+    id: 1785302124115,
+    ja: "自分が知りたく無い情報まで知ってしまう",
+    en: "You end up finding out things you never wanted to know.",
+    explanation: "「〜てしまう」という望まぬ結果は end up ~ing。「〜まで」の含みは things you never wanted to know という関係詞句に吸収される。",
+    related: ["You get exposed to stuff you'd rather not know.", "Information you never asked for just finds its way to you."],
+    savedAt: "2026-07-29T05:15:24.115Z"
+  },
+  {
+    id: 1785299439041,
+    ja: "目に入っても痛くない体にしておかないと。だらしない体は嫌",
+    en: "I need to keep my body in good enough shape that it's nice to look at. I hate letting myself go.",
+    explanation: "「だらしない体」は a sloppy body ではなく let oneself go（体型の維持をやめて崩れる）で表すのが英語らしい言い方。",
+    related: ["I want a body I won't be embarrassed to show. I hate being out of shape.", "I've got to stay in shape — I can't stand looking flabby."],
+    savedAt: "2026-07-29T04:30:39.041Z"
+  },
+  {
+    id: 1785299396267,
+    ja: "そこでは体を異性に晒す機会があるので体をキレイにしておかないと",
+    en: "You end up showing your body to the opposite sex there, so I need to keep it in shape.",
+    explanation: "ここでの「体をキレイにしておく」は清潔さではなく体型を整える意なので keep it in shape。keep your body clean だと入浴の話になる。",
+    related: ["Since you're exposed in front of the opposite sex there, you'd better look after your body.", "You'll be seen in a swimsuit, so you want to be in decent shape."],
+    savedAt: "2026-07-29T04:29:56.267Z"
+  },
+  {
+    id: 1785299369299,
+    ja: "海に行く",
+    en: "go to the beach",
+    explanation: "遊びに行く「海」は the sea ではなく the beach。the sea は海そのもの（航海・海洋生物など）を指す語。",
+    related: ["head to the coast", "hit the beach"],
+    savedAt: "2026-07-29T04:29:29.299Z"
+  },
+  {
+    id: 1785299358345,
+    ja: "夏までに体を鍛える",
+    en: "get in shape by summer",
+    explanation: "「体を鍛える」は get in shape（体づくり全般）や build muscle（筋肉をつける）。strengthen your body は直訳的で不自然。",
+    related: ["build some muscle before summer", "get fit in time for summer"],
+    savedAt: "2026-07-29T04:29:18.345Z"
+  },
+  {
+    id: 1785299044314,
+    ja: "誰もが一回は悪いことをしようと思ったことがある",
+    en: "Everyone has thought about doing something bad at least once.",
+    explanation: "「〜したことがある」は経験を表す現在完了。「一回は」は at least once。現在形 wants to do では経験の意味にならない。",
+    related: ["We've all been tempted to do something wrong at some point.", "Nobody gets through life without once considering doing something bad."],
+    savedAt: "2026-07-29T04:24:04.314Z"
+  },
+  {
+    id: 1785299013152,
+    ja: "誰もが少しは邪悪な心をもっている",
+    en: "Everyone has a little bit of evil in them.",
+    explanation: "「邪悪な心」は an evil heart より a little bit of evil in them とする方が英語らしい。総称の everyone を them で受けるのは標準的な用法。",
+    related: ["We all have a dark side.", "There's a bit of wickedness in all of us."],
+    savedAt: "2026-07-29T04:23:33.152Z"
+  },
+  {
+    id: 1785295928896,
+    ja: "それほどの能力はない",
+    en: "I'm not that capable.",
+    explanation: "「それほど」は副詞の that を使って not that ~ とする。Not so capable は主語と be 動詞が欠けており文として成立しない。",
+    related: ["I'm not nearly that talented.", "I don't have that kind of ability."],
+    savedAt: "2026-07-29T03:32:08.896Z"
+  },
+  {
+    id: 1785295923173,
+    ja: "僕はそんな褒めてもらえるような人間じゃない",
+    en: "I'm not the kind of person who deserves that kind of praise.",
+    explanation: "「〜のような人間じゃない」は not the kind of person who ~。deserve を使うと「褒められるに値しない」という謙遜が明確になる。",
+    related: ["I don't deserve compliments like that.", "You're giving me far more credit than I've earned."],
+    savedAt: "2026-07-29T03:32:03.173Z"
+  },
+  {
+    id: 1785295910822,
+    ja: "だけどそれは買い被りすぎ",
+    en: "But you're giving me too much credit.",
+    explanation: "「買い被る」は give someone too much credit / overestimate。overbought は株式相場の用語なので誤用。",
+    related: ["But that's overestimating me.", "You think too highly of me."],
+    savedAt: "2026-07-29T03:31:50.822Z"
+  },
+  {
+    id: 1785295902894,
+    ja: "君から褒めてもらえるなんて嬉しい",
+    en: "It means a lot coming from you.",
+    explanation: "「君から」褒められる特別さを出すには coming from you が定型。I'm glad you complimented me は事務的で温度が伝わりにくい。",
+    related: ["I'm really happy to hear that from you.", "A compliment from you means more than most."],
+    savedAt: "2026-07-29T03:31:42.894Z"
+  },
+  {
+    id: 1785294777838,
+    ja: "反射で反応しなければならない",
+    en: "You have to react on reflex.",
+    explanation: "「反射で」は on reflex / reflexively。reflection は「反射光」や「熟考」で意味が異なるので取り違えに注意。",
+    related: ["You need to respond instinctively.", "It has to be automatic, without thinking."],
+    savedAt: "2026-07-29T03:12:57.838Z"
+  },
+  {
+    id: 1785291248888,
+    ja: "だから焦るな",
+    en: "So don't rush it.",
+    explanation: "「焦る」は rush（急ぐ）と panic（うろたえる）で使い分ける。ここは「急ぐな」の意なので rush が適切。",
+    related: ["So take your time.", "There's no need to hurry."],
+    savedAt: "2026-07-29T02:14:08.888Z"
+  },
+  {
+    id: 1785291244674,
+    ja: "どんな立派な人でもやがて骨になる",
+    en: "No matter how great someone is, they'll be bones in the end.",
+    explanation: "「どんな〜でも」は No matter how ~。become a bone と単数にすると不自然で、bones と複数形にする。",
+    related: ["Even the greatest people end up as dust.", "However admirable you are, you'll be nothing but bones someday."],
+    savedAt: "2026-07-29T02:14:04.674Z"
+  },
+  {
+    id: 1785288596614,
+    ja: "夏までに体をキレイにしたい",
+    en: "I want to get my body looking good by summer.",
+    explanation: "ここでの「キレイにする」は洗浄ではなく体型を整える意なので cleanse my body は誤り。get ~ looking good / tone up が適切。",
+    related: ["I want to be toned up before summer.", "I'd like to look good in a swimsuit by summer."],
+    savedAt: "2026-07-29T01:29:56.614Z"
+  },
+  {
+    id: 1785286876263,
+    ja: "筋肉がある男の方がゲイだと思われやすいのでは？",
+    en: "Wouldn't a guy with muscles be more likely to be taken for gay?",
+    explanation: "「〜と思われやすい」は be more likely to be taken for ~ / come across as ~。Isn't it easier to think that ~ は主語がずれて不自然。",
+    related: ["Doesn't being muscular make people assume you're gay?", "Wouldn't a ripped guy read as gay more easily?"],
+    savedAt: "2026-07-29T01:01:16.263Z"
+  },
+  {
+    id: 1785286607254,
+    ja: "弁当",
+    en: "packed lunch",
+    explanation: "「弁当」は packed lunch / boxed lunch が一般的。bento も英語圏で通じるようになってきたが、日本文化として説明する場面で使う語。",
+    related: ["bento box", "lunch box"],
+    savedAt: "2026-07-29T00:56:47.254Z"
+  },
+  {
+    id: 1785286596275,
+    ja: "全然語彙が出てこない",
+    en: "The words just won't come to me.",
+    explanation: "「出てこない」は come to me（頭に浮かぶ）を使う。No vocabulary at all は名詞の羅列で文になっていない。",
+    related: ["I can't think of the right words at all.", "My vocabulary just goes blank."],
+    savedAt: "2026-07-29T00:56:36.275Z"
+  },
+  {
+    id: 1785286571469,
+    ja: "それはしょうがないことだ",
+    en: "That's just how it is.",
+    explanation: "避けられない事実を受け入れる定型。That's just how it is / It can't be helped が使える。I can't help it は「（自分が）やめられない」という別の意味なので注意。",
+    related: ["It can't be helped.", "That's just the way things go."],
+    savedAt: "2026-07-29T00:56:11.469Z"
+  },
+  {
+    id: 1785286565074,
+    ja: "朝は冷凍したご飯をレンジで温めて食べている",
+    en: "In the morning I microwave some frozen rice and eat that.",
+    explanation: "「レンジで温める」は動詞 microwave 一語で表せる。warm it in a range は誤り（range はコンロ・オーブンレンジ全体を指す）。",
+    related: ["I heat up frozen rice in the microwave for breakfast.", "Breakfast is usually frozen rice I zap in the microwave."],
+    savedAt: "2026-07-29T00:56:05.075Z"
+  },
+  {
+    id: 1785284877733,
+    ja: "癒し",
+    en: "It's really soothing.",
+    explanation: "「癒し」を名詞 healing と訳すと医療・宗教的な響きになる。日常では soothing / comforting という形容詞、または a source of comfort と表す。",
+    related: ["It's so comforting.", "a source of comfort"],
+    savedAt: "2026-07-29T00:27:57.733Z"
+  },
+  {
+    id: 1785284771763,
+    ja: "体調が少し悪い",
+    en: "I'm not feeling great.",
+    explanation: "「少し体調が悪い」は I'm a little sick より I'm not feeling great が自然。sick は「病気だ」と強く響き、軽い不調には大げさ。",
+    related: ["I feel a bit under the weather.", "I'm slightly off today."],
+    savedAt: "2026-07-29T00:26:11.763Z"
+  },
+  {
+    id: 1785284404725,
+    ja: "今日はあまり気が乗らない",
+    en: "I'm not really feeling it today.",
+    explanation: "「気が乗らない」は I'm not feeling it / I'm not in the mood。comfortable は「快適さ」の話で、やる気とは無関係。",
+    related: ["I'm not in the mood today.", "I just don't have it in me today."],
+    savedAt: "2026-07-29T00:20:04.725Z"
+  },
+  {
+    id: 1785283334318,
+    ja: "それは事実ではない",
+    en: "That's not true.",
+    explanation: "「事実ではない」は That's not true が最も自然。That's not a fact は「事実として確定していない」という理屈っぽい響きになる。",
+    related: ["That's simply not the case.", "That isn't accurate."],
+    savedAt: "2026-07-29T00:02:14.318Z"
+  },
+  {
+    id: 1785283066663,
+    ja: "デイリータスクを前日あるいはそれ以前に決めていれば、何をするべきか悩むことがなくなる",
+    en: "If you decide your daily tasks the day before or earlier, you never have to waste time wondering what to do.",
+    explanation: "ここでの「悩む」は worry ではなく wonder what to do（何をするか迷う）。「〜がなくなる」は you never have to ~ とすると自然。",
+    related: ["Planning your tasks in advance takes the guesswork out of your day.", "Set your to-do list the night before and you won't waste time deciding."],
+    savedAt: "2026-07-28T23:57:46.663Z"
+  },
+  {
+    id: 1785246568529,
+    ja: "Aiの事はどうしてもすきになれない",
+    en: "I just can't bring myself to like AI.",
+    explanation: "「どうしても〜できない」は can't bring myself to ~（気持ちの上でどうしてもできない）。just can't like AI でも通じるが、抵抗感がより明確に出る。",
+    related: ["AI just never grew on me.", "No matter what, I can't warm up to AI."],
+    savedAt: "2026-07-28T13:49:28.529Z"
   }
 ];
 
