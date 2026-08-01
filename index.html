@@ -224,6 +224,135 @@
     border-radius: 4px;
     font-size: 0.8rem;
   }
+  /* ---- タブ ---- */
+  .tabs { display: flex; gap: 6px; margin-top: 12px; }
+  .tab {
+    flex: 1;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.32);
+    color: #fff;
+    border-radius: 9px;
+    padding: 8px 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .tab.active { background: #fff; color: var(--blue-dark); border-color: #fff; }
+  .head-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card-date { font-size: 0.72rem; color: var(--sub); }
+
+  /* ---- 週まとめ ---- */
+  .panel-title { font-size: 1rem; margin: 0 0 10px; }
+  .hint-line { font-size: 0.78rem; color: var(--sub); margin-top: 8px; line-height: 1.6; }
+  .week-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .week-card.current { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(43,108,176,0.12); }
+  .week-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .week-range { font-size: 0.95rem; font-weight: 700; }
+  .week-count { font-size: 0.78rem; color: var(--sub); white-space: nowrap; }
+  .badge-week { background: #e6f0fa; color: var(--blue-dark); }
+  .badge-last { background: #f1f0fb; color: #6b46c1; }
+  .week-score { font-size: 0.78rem; color: var(--sub); margin-top: 6px; }
+  .week-score b { color: var(--green); }
+  .week-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .btn-primary {
+    flex: 1;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .btn-primary:active { background: var(--blue-dark); }
+  .btn-outline {
+    flex: 1;
+    background: var(--card);
+    color: var(--blue-dark);
+    border: 1px solid var(--blue);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .week-list { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px; }
+  .day-head { font-size: 0.78rem; color: var(--blue-dark); font-weight: 700; margin: 10px 0 4px; }
+  .mini-row { padding: 7px 0; border-bottom: 1px dashed var(--border); }
+  .mini-row:last-child { border-bottom: none; }
+  .mini-ja { font-size: 0.9rem; font-weight: 600; }
+  .mini-en { font-size: 0.88rem; color: var(--blue-dark); margin-top: 3px; }
+  .mini-exp { font-size: 0.78rem; color: var(--sub); margin-top: 3px; line-height: 1.5; }
+  .mini-foot { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+  .mini-tap { font-size: 0.78rem; color: var(--sub); margin-top: 3px; }
+  .icon-btn.small { width: 28px; height: 28px; font-size: 0.8rem; }
+
+  /* ---- テスト ---- */
+  .field-label { display: block; font-size: 0.78rem; color: var(--sub); font-weight: 600; margin: 12px 0 5px; }
+  .select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: var(--card);
+    color: var(--text);
+  }
+  .seg { display: flex; gap: 6px; }
+  .seg-btn {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 9px 4px;
+    font-size: 0.8rem;
+    color: var(--sub);
+    font-weight: 600;
+  }
+  .seg-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .test-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .test-progress { font-size: 0.82rem; color: var(--sub); font-weight: 600; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 14px; }
+  .progress-fill { height: 100%; background: var(--blue); transition: width 0.25s; }
+  .test-card { padding: 16px 15px; }
+  .test-ja { font-size: 1.15rem; font-weight: 700; line-height: 1.5; margin-bottom: 12px; }
+  .test-input {
+    width: 100%;
+    min-height: 70px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+  }
+  .test-input:focus { outline: 2px solid var(--blue); }
+  .test-btn-row { display: flex; gap: 8px; margin-top: 10px; }
+  .verdict { font-size: 1rem; font-weight: 700; margin: 4px 0 8px; }
+  .v-correct { color: var(--green); }
+  .v-close { color: var(--orange); }
+  .v-wrong { color: #c53030; }
+  .ans-block { background: var(--bg); border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
+  .ans-label { font-size: 0.72rem; color: var(--sub); font-weight: 700; margin-bottom: 3px; }
+  .ans-en { font-size: 1rem; color: var(--blue-dark); font-weight: 600; line-height: 1.5; }
+  .diff-line { font-size: 0.95rem; line-height: 1.8; word-break: break-word; }
+  .d-eq { color: var(--text); }
+  .d-del { background: #e9f7ef; color: var(--green); border-radius: 4px; padding: 0 3px; font-weight: 700; }
+  .d-ins { background: #fde8e8; color: #c53030; border-radius: 4px; padding: 0 3px; text-decoration: line-through; }
+  .diff-legend { font-size: 0.72rem; color: var(--sub); margin-top: 5px; }
+  .hint-text { font-family: ui-monospace, Menlo, monospace; font-size: 0.95rem; color: var(--orange); letter-spacing: 1px; margin-top: 8px; word-break: break-word; }
+  .score-big { font-size: 2.4rem; font-weight: 800; color: var(--blue-dark); text-align: center; margin: 6px 0 2px; }
+  .score-sub { text-align: center; font-size: 0.85rem; color: var(--sub); margin-bottom: 12px; }
+  .score-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .score-cell { flex: 1; text-align: center; background: var(--bg); border-radius: 10px; padding: 9px 4px; }
+  .score-cell b { display: block; font-size: 1.15rem; }
+  .score-cell span { font-size: 0.72rem; color: var(--sub); }
   .toast {
     position: fixed;
     bottom: 20px;
@@ -254,9 +383,16 @@
     </div>
     <button class="refresh-btn" id="forceRefreshBtn">⟳ 更新</button>
   </div>
+  <nav class="tabs">
+    <button class="tab active" data-view="notes">📝 メモ</button>
+    <button class="tab" data-view="weeks">📅 週まとめ</button>
+    <button class="tab" data-view="test">✍️ 復習テスト</button>
+  </nav>
 </header>
 
 <main>
+
+<section id="view-notes">
 
   <div class="capture-box">
     <textarea id="jaInput" placeholder="日本語で入力（単語でも文でもOK）" autocomplete="off"></textarea>
@@ -272,6 +408,8 @@
       <li>未清書メモが溜まったら「📋 コピー」でJSONをコピー</li>
       <li>Claude Codeに貼り付けて <code>/phrase-note-add</code> と伝える → 自然な英訳＋解説＋音声付きで「保存済みフレーズ」に清書される</li>
       <li>サイトが更新されたら、清書済みと同じ内容の未清書メモは自動で一覧から消える</li>
+      <li><b>📅 週まとめ</b>タブ … 月曜〜日曜の週ごとに、その週覚えた表現が日付順にまとまる</li>
+      <li><b>✍️ 復習テスト</b>タブ … 週を選んで日本語→英語の産出テスト。「書く」は自動採点＋差分表示、「言う」は口頭で答えて自己採点。スコアは週ごとに記録される</li>
     </ol>
   </details>
 
@@ -293,6 +431,46 @@
     </div>
   </div>
   <div id="polishedList"></div>
+
+</section>
+
+<section id="view-weeks" hidden>
+  <div class="capture-box">
+    <h2 class="panel-title">📅 週ごとのまとめ</h2>
+    <div class="hint-line" id="weeksSummary"></div>
+  </div>
+  <div id="weekList"></div>
+</section>
+
+<section id="view-test" hidden>
+
+  <div id="testSetup">
+    <div class="capture-box">
+      <h2 class="panel-title">✍️ 復習テスト（日本語 → 英語）</h2>
+      <label class="field-label">出題する週</label>
+      <select id="testWeekSel" class="select"></select>
+      <label class="field-label">解答のしかた</label>
+      <div class="seg" id="testModeSeg">
+        <button class="seg-btn active" data-mode="type">⌨️ 書く（自動採点）</button>
+        <button class="seg-btn" data-mode="oral">🗣 言う（自己採点）</button>
+      </div>
+      <label class="field-label">出題範囲</label>
+      <div class="seg" id="testScopeSeg">
+        <button class="seg-btn active" data-scope="all">すべて</button>
+        <button class="seg-btn" data-scope="r10">ランダム10問</button>
+        <button class="seg-btn" data-scope="weak">苦手だけ</button>
+      </div>
+      <button class="btn-save" id="testStartBtn" style="margin-top:14px">▶ テスト開始</button>
+      <div class="hint-line" id="testSetupInfo"></div>
+    </div>
+    <div class="section-title"><h2>📊 テスト履歴</h2></div>
+    <div id="testHistory"></div>
+  </div>
+
+  <div id="testRun" hidden></div>
+  <div id="testResult" hidden></div>
+
+</section>
 
 </main>
 
@@ -2173,7 +2351,7 @@ function render() {
   const polishedFiltered = (query
     ? PHRASES.filter(p => [p.ja, p.en, p.explanation].some(s => (s || '').toLowerCase().includes(query)))
     : PHRASES
-  ).slice().reverse();
+  ).slice().sort((a, b) => new Date(b.savedAt || 0) - new Date(a.savedAt || 0));
 
   document.getElementById('pendingCount').textContent = pending.length;
   document.getElementById('polishedCount').textContent = PHRASES.length;
@@ -2182,7 +2360,10 @@ function render() {
   pendingEl.innerHTML = pendingFiltered.length ? pendingFiltered.map(e => `
     <div class="card">
       <div class="card-head">
-        <span class="badge badge-pending">🕓 未清書</span>
+        <div class="head-left">
+          <span class="badge badge-pending">🕓 未清書</span>
+          <span class="card-date">📅 ${fmtDateFull(e.savedAt)}</span>
+        </div>
         <button class="del-btn" onclick="deletePending(${e.id})">✕ 削除</button>
       </div>
       <div class="ja">${escapeHtml(e.ja)}</div>
@@ -2196,7 +2377,10 @@ function render() {
     return `
     <div class="card">
       <div class="card-head">
-        <span class="badge badge-done">📚 清書済み</span>
+        <div class="head-left">
+          <span class="badge badge-done">📚 清書済み</span>
+          <span class="card-date">📅 ${fmtDateFull(p.savedAt)}</span>
+        </div>
       </div>
       <div class="ja">${escapeHtml(p.ja)}</div>
       ${isRevealed ? `
@@ -2212,6 +2396,562 @@ function render() {
   `;
   }).join('') : `<div class="empty">保存済みフレーズはまだありません</div>`;
 }
+
+/* ==========================================================
+   日付ユーティリティ（端末のローカル時刻＝日本時間で判定）
+   ========================================================== */
+const WD = ['日', '月', '火', '水', '木', '金', '土'];
+function pad2(n) { return String(n).padStart(2, '0'); }
+function ymd(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+function fmtDateFull(s) {
+  const d = new Date(s || Date.now());
+  return `${d.getFullYear()}/${pad2(d.getMonth() + 1)}/${pad2(d.getDate())}(${WD[d.getDay()]})`;
+}
+function fmtDateShort(s) {
+  const d = new Date(s || Date.now());
+  return `${d.getMonth() + 1}/${d.getDate()}(${WD[d.getDay()]})`;
+}
+/* 月曜はじまりの週。キーはその週の月曜の YYYY-MM-DD */
+function mondayOf(d) {
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
+  return x;
+}
+function weekKeyOf(s) { return ymd(mondayOf(new Date(s || Date.now()))); }
+function weekRangeLabel(key) {
+  const m = new Date(key + 'T00:00:00');
+  const e = new Date(m); e.setDate(e.getDate() + 6);
+  return `${m.getMonth() + 1}/${m.getDate()}(月) 〜 ${e.getMonth() + 1}/${e.getDate()}(日)`;
+}
+const THIS_WEEK_KEY = ymd(mondayOf(new Date()));
+const LAST_WEEK_KEY = (() => { const d = mondayOf(new Date()); d.setDate(d.getDate() - 7); return ymd(d); })();
+
+function groupByWeek() {
+  const map = new Map();
+  PHRASES.forEach(p => {
+    const k = weekKeyOf(p.savedAt);
+    if (!map.has(k)) map.set(k, []);
+    map.get(k).push(p);
+  });
+  return [...map.entries()]
+    .sort((a, b) => b[0].localeCompare(a[0]))
+    .map(([key, items]) => ({
+      key,
+      label: weekRangeLabel(key),
+      items: items.slice().sort((a, b) => new Date(a.savedAt || 0) - new Date(b.savedAt || 0))
+    }));
+}
+
+/* ==========================================================
+   タブ切り替え
+   ========================================================== */
+function switchView(name) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  ['notes', 'weeks', 'test'].forEach(v => { document.getElementById('view-' + v).hidden = (v !== name); });
+  if (name === 'weeks') renderWeeks();
+  if (name === 'test') renderTestSetup();
+  window.scrollTo(0, 0);
+}
+
+/* ==========================================================
+   週まとめページ
+   ========================================================== */
+const weekOpenSet = new Set();
+const weekRevealSet = new Set();
+
+function toggleWeek(key) {
+  if (weekOpenSet.has(key)) weekOpenSet.delete(key); else weekOpenSet.add(key);
+  renderWeeks();
+}
+function revealMini(id) {
+  if (weekRevealSet.has(id)) weekRevealSet.delete(id); else weekRevealSet.add(id);
+  renderWeeks();
+}
+
+function renderWeeks() {
+  const weeks = groupByWeek();
+  const thisWeek = weeks.find(w => w.key === THIS_WEEK_KEY);
+  document.getElementById('weeksSummary').innerHTML =
+    `全 <b>${PHRASES.length}</b> フレーズ / <b>${weeks.length}</b> 週分。` +
+    `今週（${weekRangeLabel(THIS_WEEK_KEY)}）は <b>${thisWeek ? thisWeek.items.length : 0}</b> フレーズ。<br>` +
+    `週が終わったら「この週をテスト」で日本語→英語の産出練習をしましょう。`;
+
+  const el = document.getElementById('weekList');
+  el.innerHTML = weeks.map(w => {
+    const isThis = w.key === THIS_WEEK_KEY;
+    const isLast = w.key === LAST_WEEK_KEY;
+    const badge = isThis ? `<span class="badge badge-week">今週</span>`
+      : isLast ? `<span class="badge badge-last">先週</span>` : '';
+    const best = bestScoreOf(w.key);
+    const scoreLine = best
+      ? `<div class="week-score">🏆 最高スコア <b>${best.pct}%</b>（${best.correct}/${best.total}・${fmtDateShort(best.at)}）／ 受験 ${historyOf(w.key).length} 回</div>`
+      : `<div class="week-score">まだテストしていません</div>`;
+
+    let body = '';
+    if (weekOpenSet.has(w.key)) {
+      const byDay = new Map();
+      w.items.forEach(p => {
+        const k = ymd(new Date(p.savedAt || Date.now()));
+        if (!byDay.has(k)) byDay.set(k, []);
+        byDay.get(k).push(p);
+      });
+      body = `<div class="week-list">` + [...byDay.entries()].map(([day, items]) => `
+        <div class="day-head">${fmtDateShort(day + 'T00:00:00')}（${items.length}）</div>
+        ${items.map(p => {
+          const open = weekRevealSet.has(p.id);
+          return `<div class="mini-row">
+            <div class="mini-ja">${escapeHtml(p.ja)}</div>
+            ${open ? `
+              <div class="mini-en">${escapeHtml(p.en)}</div>
+              ${p.explanation ? `<div class="mini-exp">💡 ${escapeHtml(p.explanation)}</div>` : ''}
+              ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
+              <div class="mini-foot">
+                <button class="icon-btn small" onclick="playAudio(this, 'audio/${p.id}.mp3')">🔊</button>
+                <button class="del-btn" onclick="revealMini(${p.id})">閉じる</button>
+              </div>
+            ` : `<div class="mini-tap"><button class="del-btn" onclick="revealMini(${p.id})">👁 英訳を表示</button></div>`}
+          </div>`;
+        }).join('')}
+      `).join('') + `</div>`;
+    }
+
+    return `<div class="week-card${isThis ? ' current' : ''}">
+      <div class="week-head">
+        <div class="week-range">${w.label} ${badge}</div>
+        <div class="week-count">${w.items.length} 件</div>
+      </div>
+      ${scoreLine}
+      <div class="week-actions">
+        <button class="btn-primary" onclick="startTestForWeek('${w.key}')">✍️ この週をテスト</button>
+        <button class="btn-outline" onclick="toggleWeek('${w.key}')">${weekOpenSet.has(w.key) ? '▲ 閉じる' : '📖 一覧を見る'}</button>
+      </div>
+      ${body}
+    </div>`;
+  }).join('') || `<div class="empty">保存済みフレーズがまだありません</div>`;
+}
+
+/* ==========================================================
+   採点ロジック（正規化 → 語単位のdiff）
+   ========================================================== */
+const CONTRACTIONS = {
+  "i'm": "i am", "you're": "you are", "we're": "we are", "they're": "they are",
+  "he's": "he is", "she's": "she is", "it's": "it is", "that's": "that is",
+  "there's": "there is", "here's": "here is", "what's": "what is", "who's": "who is",
+  "let's": "let us", "cannot": "can not", "can't": "can not", "won't": "will not",
+  "don't": "do not", "doesn't": "does not", "didn't": "did not", "isn't": "is not",
+  "aren't": "are not", "wasn't": "was not", "weren't": "were not", "haven't": "have not",
+  "hasn't": "has not", "hadn't": "had not", "wouldn't": "would not", "couldn't": "could not",
+  "shouldn't": "should not", "mustn't": "must not", "i've": "i have", "you've": "you have",
+  "we've": "we have", "they've": "they have", "i'll": "i will", "you'll": "you will",
+  "he'll": "he will", "she'll": "she will", "we'll": "we will", "they'll": "they will",
+  "it'll": "it will", "i'd": "i would", "you'd": "you would", "we'd": "we would",
+  "they'd": "they would", "gonna": "going to", "wanna": "want to"
+};
+function normalizeEn(s) {
+  let t = String(s || '').toLowerCase()
+    .replace(/[‘’]/g, "'").replace(/[“”]/g, '"')
+    .replace(/[^a-z0-9'\s]/g, ' ')
+    .replace(/\s+/g, ' ').trim();
+  if (!t) return '';
+  return t.split(' ').map(w => CONTRACTIONS[w] || w).join(' ').replace(/\s+/g, ' ').trim();
+}
+function wordsOf(s) { return normalizeEn(s).split(' ').filter(Boolean); }
+
+/* a=正解, b=解答 → [{t:'eq'|'miss'|'extra', w}] */
+function diffWords(a, b) {
+  const n = a.length, m = b.length;
+  const dp = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) {
+    for (let j = m - 1; j >= 0; j--) {
+      dp[i][j] = (a[i] === b[j]) ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+    }
+  }
+  const ops = []; let i = 0, j = 0;
+  while (i < n && j < m) {
+    if (a[i] === b[j]) { ops.push({ t: 'eq', w: a[i] }); i++; j++; }
+    else if (dp[i + 1][j] >= dp[i][j + 1]) { ops.push({ t: 'miss', w: a[i] }); i++; }
+    else { ops.push({ t: 'extra', w: b[j] }); j++; }
+  }
+  while (i < n) ops.push({ t: 'miss', w: a[i++] });
+  while (j < m) ops.push({ t: 'extra', w: b[j++] });
+  return ops;
+}
+function similarity(a, b) {
+  if (!a.length && !b.length) return 1;
+  const ops = diffWords(a, b);
+  const eq = ops.filter(o => o.t === 'eq').length;
+  return (2 * eq) / (a.length + b.length);
+}
+function judgeAnswer(userAns, phrase) {
+  const ub = wordsOf(userAns);
+  const candidates = [phrase.en].concat(phrase.related || []);
+  let best = { sim: -1, target: phrase.en, isRelated: false };
+  candidates.forEach((c, i) => {
+    const s = similarity(wordsOf(c), ub);
+    if (s > best.sim) best = { sim: s, target: c, isRelated: i > 0 };
+  });
+  const level = ub.length === 0 ? 'wrong' : (best.sim >= 0.999 ? 'correct' : (best.sim >= 0.72 ? 'close' : 'wrong'));
+  return { level, sim: best.sim, target: best.target, isRelated: best.isRelated, userWords: ub };
+}
+function hintOf(en) {
+  return String(en).replace(/[A-Za-z][A-Za-z']*/g, w => w[0] + '_'.repeat(Math.max(0, w.length - 1)));
+}
+
+/* ==========================================================
+   テスト成績の保存
+   ========================================================== */
+const STATS_KEY = 'phraseNote_testStats';   // { [id]: {ok, ng, lastOk, lastAt} }
+const SCORES_KEY = 'phraseNote_weekScores'; // { [weekKey]: [{at, correct, total, pct, mode}] }
+
+function loadJSON(key, def) {
+  try { return JSON.parse(localStorage.getItem(key) || 'null') || def; } catch (e) { return def; }
+}
+function getStats() { return loadJSON(STATS_KEY, {}); }
+function recordStat(id, ok) {
+  const s = getStats();
+  const cur = s[id] || { ok: 0, ng: 0 };
+  if (ok) cur.ok++; else cur.ng++;
+  cur.lastOk = ok;
+  cur.lastAt = new Date().toISOString();
+  s[id] = cur;
+  localStorage.setItem(STATS_KEY, JSON.stringify(s));
+}
+function historyOf(weekKey) { return loadJSON(SCORES_KEY, {})[weekKey] || []; }
+function bestScoreOf(weekKey) {
+  const h = historyOf(weekKey);
+  if (!h.length) return null;
+  return h.slice().sort((a, b) => b.pct - a.pct)[0];
+}
+function saveScore(weekKey, rec) {
+  const all = loadJSON(SCORES_KEY, {});
+  all[weekKey] = (all[weekKey] || []).concat([rec]).slice(-30);
+  localStorage.setItem(SCORES_KEY, JSON.stringify(all));
+}
+function isWeak(id) {
+  const s = getStats()[id];
+  return !s || s.lastOk === false;
+}
+
+/* ==========================================================
+   テスト設定画面
+   ========================================================== */
+let testMode = 'type';
+let testScope = 'all';
+
+function renderTestSetup() {
+  document.getElementById('testSetup').hidden = false;
+  document.getElementById('testRun').hidden = true;
+  document.getElementById('testResult').hidden = true;
+
+  const weeks = groupByWeek();
+  const sel = document.getElementById('testWeekSel');
+  const prev = sel.value;
+  sel.innerHTML = weeks.map(w => {
+    const tag = w.key === THIS_WEEK_KEY ? '【今週】' : (w.key === LAST_WEEK_KEY ? '【先週】' : '');
+    return `<option value="${w.key}">${tag}${w.label}（${w.items.length}件）</option>`;
+  }).join('') + `<option value="__all__">全期間（${PHRASES.length}件）</option>`;
+  if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
+  else if (weeks.length) sel.value = (weeks.find(w => w.key === LAST_WEEK_KEY) || weeks[0]).key;
+
+  updateSetupInfo();
+  renderTestHistory();
+}
+
+function poolFor(weekKey, scope) {
+  let pool = weekKey === '__all__' ? PHRASES.slice() : PHRASES.filter(p => weekKeyOf(p.savedAt) === weekKey);
+  if (scope === 'weak') pool = pool.filter(p => isWeak(p.id));
+  pool = pool.slice().sort(() => Math.random() - 0.5);
+  if (scope === 'r10') pool = pool.slice(0, 10);
+  return pool;
+}
+
+function updateSetupInfo() {
+  const key = document.getElementById('testWeekSel').value;
+  const n = poolFor(key, testScope).length;
+  const modeText = testMode === 'type'
+    ? '日本語を見て英語を入力 → 語単位で自動採点（言い換えも正解判定）'
+    : '日本語を見て口に出して言う → 答えを見て自分で ⭕/❌ を付ける';
+  document.getElementById('testSetupInfo').innerHTML =
+    `出題数: <b>${n}</b> 問<br>${modeText}`;
+}
+
+function renderTestHistory() {
+  const all = loadJSON(SCORES_KEY, {});
+  const rows = Object.keys(all).sort((a, b) => b.localeCompare(a)).map(k => {
+    const h = all[k];
+    const last = h[h.length - 1];
+    const best = bestScoreOf(k);
+    return `<div class="card">
+      <div class="card-head"><div class="head-left"><span class="badge badge-week">${weekRangeLabel(k)}</span></div></div>
+      <div class="week-score">直近 <b>${last.pct}%</b>（${last.correct}/${last.total}・${fmtDateShort(last.at)}） ／ 最高 <b>${best.pct}%</b> ／ ${h.length} 回受験</div>
+    </div>`;
+  }).join('');
+  document.getElementById('testHistory').innerHTML = rows || `<div class="empty">まだ受験履歴がありません</div>`;
+}
+
+function startTestForWeek(weekKey) {
+  switchView('test');
+  const sel = document.getElementById('testWeekSel');
+  if ([...sel.options].some(o => o.value === weekKey)) sel.value = weekKey;
+  updateSetupInfo();
+  startTest();
+}
+
+/* ==========================================================
+   テスト本体
+   ========================================================== */
+let testState = null;
+
+function startTest(customQueue) {
+  const weekKey = document.getElementById('testWeekSel').value;
+  const queue = customQueue || poolFor(weekKey, testScope);
+  if (!queue.length) {
+    showToast(testScope === 'weak' ? '苦手フレーズはありません 🎉' : 'この週にはフレーズがありません');
+    return;
+  }
+  testState = { weekKey, mode: testMode, queue, idx: 0, revealed: false, results: [] };
+  document.getElementById('testSetup').hidden = true;
+  document.getElementById('testResult').hidden = true;
+  document.getElementById('testRun').hidden = false;
+  renderQuestion();
+}
+
+function quitTest() {
+  if (!confirm('テストを中断します。よろしいですか？')) return;
+  testState = null;
+  renderTestSetup();
+  window.scrollTo(0, 0);
+}
+
+function renderQuestion() {
+  const st = testState;
+  const p = st.queue[st.idx];
+  const pct = Math.round((st.idx / st.queue.length) * 100);
+  const answered = st.results.length > st.idx;
+
+  let area;
+  if (answered) {
+    area = renderFeedback(st.results[st.idx]);
+  } else if (st.mode === 'type') {
+    area = `
+      <textarea class="test-input" id="testInput" placeholder="英語で入力" autocomplete="off"
+        autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="test-btn-row">
+        <button class="btn-primary" onclick="submitAnswer()">✓ 答え合わせ</button>
+        <button class="btn-outline" onclick="showHint()">💡 ヒント</button>
+      </div>
+      <div id="hintBox"></div>`;
+  } else {
+    area = st.revealed ? `
+      <div class="ans-block">
+        <div class="ans-label">正解</div>
+        <div class="ans-en">${escapeHtml(p.en)}</div>
+        <div class="mini-foot"><button class="icon-btn small" onclick="playAudio(this, 'audio/${p.id}.mp3')">🔊</button></div>
+      </div>
+      ${p.explanation ? `<div class="mini-exp">💡 ${escapeHtml(p.explanation)}</div>` : ''}
+      ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
+      <div class="test-btn-row">
+        <button class="btn-primary" onclick="selfGrade(true)">⭕ 言えた</button>
+        <button class="btn-outline" onclick="selfGrade(false)">❌ 言えなかった</button>
+      </div>` : `
+      <div class="hint-line">日本語を見て、英語で声に出して言ってみましょう。</div>
+      <div class="test-btn-row">
+        <button class="btn-primary" onclick="revealOral()">👁 答えを見る</button>
+        <button class="btn-outline" onclick="showHint()">💡 ヒント</button>
+      </div>
+      <div id="hintBox"></div>`;
+  }
+
+  document.getElementById('testRun').innerHTML = `
+    <div class="test-topbar">
+      <button class="btn-mini" onclick="quitTest()">✕ やめる</button>
+      <div class="test-progress">${st.idx + 1} / ${st.queue.length}　${st.mode === 'type' ? '⌨️ 書く' : '🗣 言う'}</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="card test-card">
+      <div class="card-date" style="margin-bottom:6px">📅 ${fmtDateFull(p.savedAt)}</div>
+      <div class="test-ja">${escapeHtml(p.ja)}</div>
+      ${area}
+    </div>`;
+
+  const input = document.getElementById('testInput');
+  if (input) {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submitAnswer();
+    });
+    input.focus();
+  }
+}
+
+function showHint() {
+  const p = testState.queue[testState.idx];
+  const box = document.getElementById('hintBox');
+  if (box) box.innerHTML = `<div class="hint-text">${escapeHtml(hintOf(p.en))}</div>
+    <div class="diff-legend">語数と頭文字だけのヒントです（ヒントを見ても採点は変わりません）</div>`;
+}
+
+function revealOral() { testState.revealed = true; renderQuestion(); }
+
+function selfGrade(ok) {
+  const p = testState.queue[testState.idx];
+  recordStat(p.id, ok);
+  testState.results[testState.idx] = { phrase: p, level: ok ? 'correct' : 'wrong', user: '', selfGraded: true };
+  testState.revealed = false;
+  nextQuestion();
+}
+
+function submitAnswer() {
+  const input = document.getElementById('testInput');
+  const val = input ? input.value : '';
+  if (!val.trim()) { showToast('英語を入力してください'); return; }
+  const p = testState.queue[testState.idx];
+  const j = judgeAnswer(val, p);
+  recordStat(p.id, j.level === 'correct');
+  testState.results[testState.idx] = { phrase: p, level: j.level, user: val, judge: j };
+  renderQuestion();
+}
+
+function renderFeedback(r) {
+  const p = r.phrase;
+  const label = { correct: '⭕ 正解', close: '🔺 惜しい', wrong: '❌ 不正解' }[r.level];
+  const cls = { correct: 'v-correct', close: 'v-close', wrong: 'v-wrong' }[r.level];
+  const j = r.judge;
+
+  let diffHtml = '';
+  if (j) {
+    const ops = diffWords(wordsOf(j.target), j.userWords);
+    diffHtml = `
+      <div class="ans-block">
+        <div class="ans-label">あなたの答えとの差分</div>
+        <div class="diff-line">${ops.map(o =>
+          o.t === 'eq' ? `<span class="d-eq">${escapeHtml(o.w)}</span>`
+          : o.t === 'miss' ? `<span class="d-del">${escapeHtml(o.w)}</span>`
+          : `<span class="d-ins">${escapeHtml(o.w)}</span>`
+        ).join(' ')}</div>
+        <div class="diff-legend">
+          <span class="d-del">緑</span>＝入れるべきだった語　<span class="d-ins">赤</span>＝余分・間違いの語　／ 一致率 ${Math.round(j.sim * 100)}%
+        </div>
+      </div>`;
+  }
+
+  return `
+    <div class="verdict ${cls}">${label}${j && j.isRelated && r.level === 'correct' ? '（言い換え表現として正解）' : ''}</div>
+    ${r.user ? `<div class="ans-block"><div class="ans-label">あなたの答え</div><div class="diff-line">${escapeHtml(r.user)}</div></div>` : ''}
+    <div class="ans-block">
+      <div class="ans-label">模範解答</div>
+      <div class="ans-en">${escapeHtml(p.en)}</div>
+      <div class="mini-foot"><button class="icon-btn small" onclick="playAudio(this, 'audio/${p.id}.mp3')">🔊</button></div>
+    </div>
+    ${diffHtml}
+    ${p.explanation ? `<div class="mini-exp">💡 ${escapeHtml(p.explanation)}</div>` : ''}
+    ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
+    <div class="test-btn-row">
+      <button class="btn-primary" onclick="nextQuestion()">${testState.idx + 1 < testState.queue.length ? '次へ →' : '結果を見る →'}</button>
+      ${r.level === 'correct'
+        ? `<button class="btn-outline" onclick="overrideGrade(false)">❌ 不正解にする</button>`
+        : `<button class="btn-outline" onclick="overrideGrade(true)">⭕ 正解にする</button>`}
+    </div>`;
+}
+
+function overrideGrade(ok) {
+  const r = testState.results[testState.idx];
+  const prevOk = r.level === 'correct';
+  r.level = ok ? 'correct' : 'wrong';
+  r.overridden = true;
+  if (prevOk !== ok) {
+    const s = getStats();
+    const cur = s[r.phrase.id];
+    if (cur) {
+      if (prevOk) { cur.ok = Math.max(0, cur.ok - 1); cur.ng++; } else { cur.ng = Math.max(0, cur.ng - 1); cur.ok++; }
+      cur.lastOk = ok;
+      s[r.phrase.id] = cur;
+      localStorage.setItem(STATS_KEY, JSON.stringify(s));
+    }
+  }
+  renderQuestion();
+}
+
+function nextQuestion() {
+  if (testState.idx + 1 < testState.queue.length) {
+    testState.idx++;
+    testState.revealed = false;
+    renderQuestion();
+    window.scrollTo(0, 0);
+  } else {
+    finishTest();
+  }
+}
+
+function finishTest() {
+  const st = testState;
+  const total = st.results.length;
+  const correct = st.results.filter(r => r.level === 'correct').length;
+  const close = st.results.filter(r => r.level === 'close').length;
+  const wrong = total - correct - close;
+  const pct = total ? Math.round((correct / total) * 100) : 0;
+
+  if (st.weekKey !== '__all__') {
+    saveScore(st.weekKey, { at: new Date().toISOString(), correct, total, pct, mode: st.mode });
+  }
+
+  const missed = st.results.filter(r => r.level !== 'correct').map(r => r.phrase);
+  const comment = pct === 100 ? '完璧です！🎉' : pct >= 80 ? 'いい調子です。落とした表現だけ復習しましょう。'
+    : pct >= 50 ? 'あと一息。間違えたものをもう一度回しましょう。' : 'まずは間違えた表現を音声付きで読み直しましょう。';
+
+  document.getElementById('testRun').hidden = true;
+  const el = document.getElementById('testResult');
+  el.hidden = false;
+  el.innerHTML = `
+    <div class="capture-box">
+      <div class="score-big">${pct}%</div>
+      <div class="score-sub">${st.weekKey === '__all__' ? '全期間' : weekRangeLabel(st.weekKey)}／${st.mode === 'type' ? '書くモード' : '言うモード'}</div>
+      <div class="score-row">
+        <div class="score-cell"><b class="v-correct">${correct}</b><span>正解</span></div>
+        <div class="score-cell"><b class="v-close">${close}</b><span>惜しい</span></div>
+        <div class="score-cell"><b class="v-wrong">${wrong}</b><span>不正解</span></div>
+      </div>
+      <div class="hint-line">${comment}</div>
+      <div class="test-btn-row">
+        ${missed.length ? `<button class="btn-primary" onclick="retryMissed()">🔁 間違えた${missed.length}問だけ再挑戦</button>` : ''}
+        <button class="btn-outline" onclick="renderTestSetup()">設定に戻る</button>
+      </div>
+    </div>
+    ${missed.length ? `
+      <div class="section-title"><h2>📝 復習リスト</h2></div>
+      ${missed.map(p => `<div class="card">
+        <div class="card-head"><div class="head-left"><span class="badge badge-done">📅 ${fmtDateFull(p.savedAt)}</span></div></div>
+        <div class="ja">${escapeHtml(p.ja)}</div>
+        <div class="en">${escapeHtml(p.en)}</div>
+        ${p.explanation ? `<div class="explanation">💡 ${escapeHtml(p.explanation)}</div>` : ''}
+        <div class="card-foot"><button class="icon-btn" onclick="playAudio(this, 'audio/${p.id}.mp3')">🔊</button><span></span></div>
+      </div>`).join('')}
+    ` : ''}`;
+  window.scrollTo(0, 0);
+  testState.missed = missed;
+}
+
+function retryMissed() {
+  const missed = testState.missed || [];
+  if (!missed.length) return;
+  startTest(missed.slice().sort(() => Math.random() - 0.5));
+}
+
+/* ---- テスト画面のイベント配線 ---- */
+document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => switchView(b.dataset.view)));
+document.getElementById('testWeekSel').addEventListener('change', updateSetupInfo);
+document.getElementById('testModeSeg').addEventListener('click', e => {
+  const b = e.target.closest('.seg-btn'); if (!b) return;
+  testMode = b.dataset.mode;
+  document.querySelectorAll('#testModeSeg .seg-btn').forEach(x => x.classList.toggle('active', x === b));
+  updateSetupInfo();
+});
+document.getElementById('testScopeSeg').addEventListener('click', e => {
+  const b = e.target.closest('.seg-btn'); if (!b) return;
+  testScope = b.dataset.scope;
+  document.querySelectorAll('#testScopeSeg .seg-btn').forEach(x => x.classList.toggle('active', x === b));
+  updateSetupInfo();
+});
+document.getElementById('testStartBtn').addEventListener('click', () => startTest());
 
 document.getElementById('saveBtn').addEventListener('click', saveEntry);
 document.getElementById('jaInput').addEventListener('keydown', (e) => {
