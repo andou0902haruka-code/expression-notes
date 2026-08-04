@@ -303,6 +303,18 @@
     font-size: 0.85rem;
     font-weight: 600;
   }
+  .week-actions.second { margin-top: 8px; }
+  .btn-play {
+    flex: 1;
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid var(--green);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .btn-play:active { background: var(--green); color: #fff; }
   .week-list { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px; }
   .day-head { font-size: 0.78rem; color: var(--blue-dark); font-weight: 700; margin: 10px 0 4px; }
   .mini-row { padding: 7px 0; border-bottom: 1px dashed var(--border); }
@@ -393,6 +405,58 @@
     text-align: center;
   }
   .toast.show { opacity: 0.95; }
+
+  /* ---- 通し再生プレイヤー ---- */
+  body.player-open { padding-bottom: 300px; }
+  .player-bar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 40;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.13);
+    padding: 10px 14px calc(12px + env(safe-area-inset-bottom));
+    max-height: 72vh;
+    overflow-y: auto;
+  }
+  .pl-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .pl-title { font-size: 0.8rem; font-weight: 700; color: var(--blue-dark); }
+  .pl-close {
+    background: none; border: none; color: var(--sub);
+    font-size: 1.1rem; padding: 2px 6px; line-height: 1;
+  }
+  .pl-progress { height: 5px; background: var(--border); border-radius: 999px; overflow: hidden; margin: 7px 0 9px; }
+  .pl-fill { height: 100%; background: var(--green); transition: width 0.2s; }
+  .pl-body { min-height: 62px; }
+  .pl-count { font-size: 0.72rem; color: var(--sub); font-weight: 700; }
+  .pl-ja { font-size: 1.05rem; font-weight: 700; line-height: 1.45; margin-top: 2px; }
+  .pl-en { font-size: 0.98rem; color: var(--blue-dark); font-weight: 600; line-height: 1.45; margin-top: 4px; min-height: 1.4em; }
+  .pl-en.hidden-en { color: var(--border); letter-spacing: 2px; }
+  .pl-phase { font-size: 0.68rem; font-weight: 700; border-radius: 999px; padding: 2px 8px; margin-left: 6px; }
+  .pl-phase.ja { background: #f1f0fb; color: #6b46c1; }
+  .pl-phase.en { background: var(--green-bg); color: var(--green); }
+  .pl-ctrl { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 8px 0 4px; }
+  .pl-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    width: 46px; height: 42px;
+    font-size: 1rem;
+    color: var(--text);
+  }
+  .pl-btn.main {
+    width: 62px; height: 46px;
+    background: var(--blue); border-color: var(--blue); color: #fff;
+    font-size: 1.15rem;
+  }
+  .pl-btn:active { transform: scale(0.94); }
+  .pl-lab { font-size: 0.72rem; color: var(--sub); font-weight: 700; display: block; margin: 8px 0 4px; }
+  .pl-speed .seg-btn { padding: 7px 2px; font-size: 0.75rem; }
+  .pl-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .pl-row .select { flex: 1; padding: 7px 9px; font-size: 0.8rem; }
+  .pl-opts { display: flex; flex-wrap: wrap; gap: 10px 14px; margin-top: 9px; }
+  .pl-opts label { font-size: 0.76rem; color: var(--sub); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+  .pl-opts input { width: 15px; height: 15px; accent-color: var(--blue); }
 </style>
 </head>
 <body>
@@ -432,7 +496,7 @@
       <li>Claude Codeに貼り付けて <code>/phrase-note-add</code> と伝える → 自然な英訳＋解説＋音声付きで「保存済みフレーズ」に清書される</li>
       <li>サイトが更新されたら、清書済みと同じ内容の未清書メモは自動で一覧から消える</li>
       <li>フレーズの <b>☆</b> をタップすると<b>⭐ お気に入り</b>タブに集まる（この端末のみ保存）。覚えにくい表現・よく使う表現をここに貯めて、まとめてテストできる</li>
-      <li><b>📅 週まとめ</b>タブ … 月曜〜日曜の週ごとに、その週覚えた表現が日付順にまとまる</li>
+      <li><b>📅 週まとめ</b>タブ … 月曜〜日曜の週ごとに、その週覚えた表現が日付順にまとまる。<b>🎧 通し再生</b>でその週の全フレーズを「日本語 →（間）→ 英語」の順に自動再生できる（英語だけ速度変更可）</li>
       <li><b>✍️ テスト</b>タブ … 週（または全期間・⭐お気に入り）を選んで日本語→英語の産出テスト。「書く」は自動採点＋差分表示、「言う」は口頭で答えて自己採点。スコアは週ごとに記録される</li>
     </ol>
   </details>
@@ -489,6 +553,47 @@
   </div>
   <div id="weekList"></div>
 </section>
+
+<div class="player-bar" id="playerBar" hidden>
+  <div class="pl-top">
+    <div class="pl-title">🎧 通し再生 <span id="plWeekLabel"></span></div>
+    <button class="pl-close" id="plCloseBtn" aria-label="閉じる">✕</button>
+  </div>
+  <div class="pl-progress"><div class="pl-fill" id="plFill" style="width:0%"></div></div>
+  <div class="pl-body">
+    <div class="pl-count"><span id="plCount"></span><span class="pl-phase ja" id="plPhase">日本語</span></div>
+    <div class="pl-ja" id="plJa"></div>
+    <div class="pl-en" id="plEn"></div>
+  </div>
+  <div class="pl-ctrl">
+    <button class="pl-btn" id="plPrevBtn" aria-label="前へ">⏮</button>
+    <button class="pl-btn main" id="plPlayBtn" aria-label="再生／一時停止">⏸</button>
+    <button class="pl-btn" id="plNextBtn" aria-label="次へ">⏭</button>
+  </div>
+  <span class="pl-lab">英語の速度（日本語は常に等倍）</span>
+  <div class="seg pl-speed" id="plSpeedSeg">
+    <button class="seg-btn" data-rate="0.6">0.6x</button>
+    <button class="seg-btn" data-rate="0.75">0.75x</button>
+    <button class="seg-btn active" data-rate="1">1.0x</button>
+    <button class="seg-btn" data-rate="1.25">1.25x</button>
+    <button class="seg-btn" data-rate="1.5">1.5x</button>
+  </div>
+  <div class="pl-row">
+    <span class="pl-lab" style="margin:0">考える間</span>
+    <select class="select" id="plGapSel">
+      <option value="0">なし</option>
+      <option value="1000">1秒</option>
+      <option value="2000" selected>2秒</option>
+      <option value="3000">3秒</option>
+      <option value="5000">5秒</option>
+    </select>
+  </div>
+  <div class="pl-opts">
+    <label><input type="checkbox" id="plRepeatEn"> 英語を2回</label>
+    <label><input type="checkbox" id="plLoop"> くり返す</label>
+    <label><input type="checkbox" id="plShowEn"> 英訳を先に表示</label>
+  </div>
+</div>
 
 <section id="view-test" hidden>
 
@@ -2604,7 +2709,12 @@ function fallbackCopy(text, done) {
 let currentAudio = null;
 let currentBtn = null;
 function resetPlayBtn(btn) { btn.textContent = '🔊'; btn.classList.remove('playing'); }
+function stopSinglePlay() {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; currentAudio = null; }
+  if (currentBtn) { resetPlayBtn(currentBtn); currentBtn = null; }
+}
 function playAudio(btn, src) {
+  pauseSeqIfPlaying();   // 通し再生中なら止めてから1件再生する
   const isSameBtn = (currentBtn === btn);
   if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
   if (currentBtn) { resetPlayBtn(currentBtn); currentBtn = null; }
@@ -2770,7 +2880,8 @@ function renderWeeks() {
   document.getElementById('weeksSummary').innerHTML =
     `全 <b>${PHRASES.length}</b> フレーズ / <b>${weeks.length}</b> 週分。` +
     `今週（${weekRangeLabel(THIS_WEEK_KEY)}）は <b>${thisWeek ? thisWeek.items.length : 0}</b> フレーズ。<br>` +
-    `週が終わったら「この週をテスト」で日本語→英語の産出練習をしましょう。`;
+    `週が終わったら「✍️ この週をテスト」で日本語→英語の産出練習を。<br>` +
+    `「🎧 通し再生」を押すと、その週のフレーズを<b>日本語 →（考える間）→ 英語</b>の順に自動で流します（英語だけ速度変更可）。`;
 
   const el = document.getElementById('weekList');
   el.innerHTML = weeks.map(w => {
@@ -2824,9 +2935,203 @@ function renderWeeks() {
         <button class="btn-primary" onclick="startTestForWeek('${w.key}')">✍️ この週をテスト</button>
         <button class="btn-outline" onclick="toggleWeek('${w.key}')">${weekOpenSet.has(w.key) ? '▲ 閉じる' : '📖 一覧を見る'}</button>
       </div>
+      <div class="week-actions second">
+        <button class="btn-play" onclick="seqStart('${w.key}')">🎧 通し再生（日本語 → 英語）</button>
+      </div>
       ${body}
     </div>`;
   }).join('') || `<div class="empty">保存済みフレーズがまだありません</div>`;
+}
+
+/* ==========================================================
+   通し再生プレイヤー（日本語音声 → 英訳音声）
+   ---------------------------------------------------------
+   週の全フレーズを ja → (考える間) → en の順に自動で流す。
+   速度変更は英語側にだけ適用する（日本語は常に等倍）。
+   iOS対策として <audio> は1つだけ作って src を差し替える
+   （毎回 new Audio() すると初回タップ以外で再生できない）。
+   ========================================================== */
+const SEQ_PREF_KEY = 'phraseNote_seqPrefs';
+
+const seq = {
+  items: [], label: '', key: '',
+  idx: 0, phase: 'ja', enPlayed: 0,
+  playing: false, finished: false, timer: null,
+  rate: 1, gap: 2000, repeatEn: false, loop: false, showEn: false
+};
+let seqAudio = null;
+
+function loadSeqPrefs() {
+  try {
+    const o = JSON.parse(localStorage.getItem(SEQ_PREF_KEY) || '{}');
+    if (typeof o.rate === 'number') seq.rate = o.rate;
+    if (typeof o.gap === 'number') seq.gap = o.gap;
+    seq.repeatEn = !!o.repeatEn; seq.loop = !!o.loop; seq.showEn = !!o.showEn;
+  } catch (e) {}
+}
+function saveSeqPrefs() {
+  try {
+    localStorage.setItem(SEQ_PREF_KEY, JSON.stringify({
+      rate: seq.rate, gap: seq.gap, repeatEn: seq.repeatEn, loop: seq.loop, showEn: seq.showEn
+    }));
+  } catch (e) {}
+}
+
+function seqEl() {
+  if (!seqAudio) {
+    seqAudio = new Audio();
+    seqAudio.preload = 'auto';
+    /* src差し替えで playbackRate が戻る環境があるので毎回入れ直す */
+    seqAudio.addEventListener('loadedmetadata', () => { seqAudio.playbackRate = seqRateNow(); });
+    seqAudio.addEventListener('ended', seqOnEnded);
+    /* 音声ファイルが無い場合（日本語音声未生成など）は止めずに次へ進む。
+       ただし src 差し替えによる中断（ABORTED）はエラー扱いしない */
+    seqAudio.addEventListener('error', () => {
+      if (!seq.playing) return;
+      const err = seqAudio.error;
+      if (err && err.code === err.MEDIA_ERR_ABORTED) return;
+      seqOnEnded();
+    });
+  }
+  return seqAudio;
+}
+function seqRateNow() { return seq.phase === 'en' ? seq.rate : 1; }
+
+function seqStart(weekKey) {
+  const w = groupByWeek().find(x => x.key === weekKey);
+  if (!w || !w.items.length) { showToast('この週にはフレーズがありません'); return; }
+  stopSinglePlay();
+  clearTimeout(seq.timer);
+  seq.items = w.items.slice();
+  seq.label = w.label; seq.key = w.key;
+  seq.idx = 0; seq.phase = 'ja'; seq.enPlayed = 0;
+  seq.playing = true; seq.finished = false;
+  document.getElementById('playerBar').hidden = false;
+  document.body.classList.add('player-open');
+  syncPlayerControls();
+  seqPlayCurrent();
+}
+
+function seqPlayCurrent() {
+  const p = seq.items[seq.idx];
+  if (!p) { seqStop(); return; }
+  const a = seqEl();
+  a.src = seq.phase === 'ja' ? `audio_ja/${p.id}.mp3` : `audio/${p.id}.mp3`;
+  a.playbackRate = seqRateNow();
+  renderPlayer();
+  const pr = a.play();
+  if (pr && pr.catch) pr.catch(() => { seq.playing = false; renderPlayer(); });
+}
+
+function seqAfter(ms) {
+  clearTimeout(seq.timer);
+  seq.timer = setTimeout(() => { if (seq.playing) seqPlayCurrent(); }, ms);
+}
+
+function seqOnEnded() {
+  if (!seq.playing) return;
+  if (seq.phase === 'ja') {
+    seq.phase = 'en'; seq.enPlayed = 0;
+    seqAfter(seq.gap);
+    return;
+  }
+  seq.enPlayed++;
+  if (seq.repeatEn && seq.enPlayed < 2) { seqAfter(500); return; }
+  if (seq.idx + 1 < seq.items.length) {
+    seq.idx++; seq.phase = 'ja'; seq.enPlayed = 0;
+    seqAfter(800);
+  } else if (seq.loop) {
+    seq.idx = 0; seq.phase = 'ja'; seq.enPlayed = 0;
+    seqAfter(1000);
+  } else {
+    seq.playing = false; seq.finished = true;
+    renderPlayer();
+    showToast('この週の通し再生が終わりました');
+  }
+}
+
+function seqToggle() {
+  if (seq.finished) {
+    seq.finished = false; seq.idx = 0; seq.phase = 'ja'; seq.enPlayed = 0; seq.playing = true;
+    seqPlayCurrent();
+    return;
+  }
+  if (seq.playing) {
+    seq.playing = false;
+    clearTimeout(seq.timer);
+    if (seqAudio) seqAudio.pause();
+    renderPlayer();
+  } else {
+    stopSinglePlay();
+    seq.playing = true;
+    const a = seqEl();
+    if (a.src && !a.ended && a.currentTime > 0) {
+      a.playbackRate = seqRateNow();
+      a.play();
+      renderPlayer();
+    } else {
+      seqPlayCurrent();
+    }
+  }
+}
+
+function seqJump(delta) {
+  if (!seq.items.length) return;
+  clearTimeout(seq.timer);
+  const next = seq.idx + delta;
+  seq.idx = Math.min(Math.max(next, 0), seq.items.length - 1);
+  seq.phase = 'ja'; seq.enPlayed = 0; seq.finished = false; seq.playing = true;
+  seqPlayCurrent();
+}
+
+function seqStop() {
+  clearTimeout(seq.timer);
+  seq.playing = false; seq.finished = false;
+  if (seqAudio) { seqAudio.pause(); }
+  document.getElementById('playerBar').hidden = true;
+  document.body.classList.remove('player-open');
+}
+
+/* 1件再生（🔊ボタン）と通し再生が同時に鳴らないようにする */
+function pauseSeqIfPlaying() {
+  if (seq.playing) {
+    seq.playing = false;
+    clearTimeout(seq.timer);
+    if (seqAudio) seqAudio.pause();
+    renderPlayer();
+  }
+}
+
+function renderPlayer() {
+  const bar = document.getElementById('playerBar');
+  if (!bar || bar.hidden) return;
+  const p = seq.items[seq.idx];
+  if (!p) return;
+  document.getElementById('plWeekLabel').textContent = seq.label;
+  document.getElementById('plCount').textContent = `${seq.idx + 1} / ${seq.items.length}`;
+  const phaseEl = document.getElementById('plPhase');
+  phaseEl.textContent = seq.phase === 'ja' ? '日本語' : `英語 ${seq.rate}x`;
+  phaseEl.className = 'pl-phase ' + seq.phase;
+  const done = seq.idx + (seq.phase === 'en' ? 0.5 : 0) + (seq.finished ? 1 : 0);
+  document.getElementById('plFill').style.width =
+    Math.min(100, done / seq.items.length * 100) + '%';
+  document.getElementById('plJa').textContent = p.ja;
+  const enEl = document.getElementById('plEn');
+  const reveal = seq.showEn || seq.phase === 'en';
+  enEl.textContent = reveal ? p.en : '‥‥‥‥';
+  enEl.classList.toggle('hidden-en', !reveal);
+  document.getElementById('plPlayBtn').textContent = seq.finished ? '↻' : (seq.playing ? '⏸' : '▶');
+}
+
+/* チェックボックス・セグメントの表示を seq の状態に合わせる */
+function syncPlayerControls() {
+  document.querySelectorAll('#plSpeedSeg .seg-btn').forEach(b => {
+    b.classList.toggle('active', Number(b.dataset.rate) === seq.rate);
+  });
+  document.getElementById('plGapSel').value = String(seq.gap);
+  document.getElementById('plRepeatEn').checked = seq.repeatEn;
+  document.getElementById('plLoop').checked = seq.loop;
+  document.getElementById('plShowEn').checked = seq.showEn;
 }
 
 /* ==========================================================
@@ -3023,6 +3328,7 @@ function startTest(customQueue) {
       : 'この週にはフレーズがありません');
     return;
   }
+  pauseSeqIfPlaying();   // テスト中に通し再生の音が流れ続けないようにする
   testState = { weekKey, mode: testMode, queue, idx: 0, revealed: false, results: [] };
   document.getElementById('testSetup').hidden = true;
   document.getElementById('testResult').hidden = true;
@@ -3296,6 +3602,35 @@ document.getElementById('favSortSeg').addEventListener('click', e => {
   renderFavs();
 });
 
+/* ---- 通し再生プレイヤーのイベント配線 ---- */
+document.getElementById('plPlayBtn').addEventListener('click', seqToggle);
+document.getElementById('plPrevBtn').addEventListener('click', () => seqJump(-1));
+document.getElementById('plNextBtn').addEventListener('click', () => seqJump(1));
+document.getElementById('plCloseBtn').addEventListener('click', seqStop);
+document.getElementById('plSpeedSeg').addEventListener('click', e => {
+  const b = e.target.closest('.seg-btn'); if (!b) return;
+  seq.rate = Number(b.dataset.rate);
+  document.querySelectorAll('#plSpeedSeg .seg-btn').forEach(x => x.classList.toggle('active', x === b));
+  /* 英語を再生中なら即座に反映（日本語には効かせない） */
+  if (seqAudio && seq.phase === 'en') seqAudio.playbackRate = seq.rate;
+  saveSeqPrefs();
+  renderPlayer();
+});
+document.getElementById('plGapSel').addEventListener('change', e => {
+  seq.gap = Number(e.target.value); saveSeqPrefs();
+});
+document.getElementById('plRepeatEn').addEventListener('change', e => {
+  seq.repeatEn = e.target.checked; saveSeqPrefs();
+});
+document.getElementById('plLoop').addEventListener('change', e => {
+  seq.loop = e.target.checked; saveSeqPrefs();
+});
+document.getElementById('plShowEn').addEventListener('change', e => {
+  seq.showEn = e.target.checked; saveSeqPrefs(); renderPlayer();
+});
+
+loadSeqPrefs();
+syncPlayerControls();
 updateHideModeBtn();
 render();
 </script>
