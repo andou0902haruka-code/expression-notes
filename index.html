@@ -138,6 +138,56 @@
     font-size: 0.78rem;
     color: var(--sub);
   }
+  /* ---- 重複お知らせ（同じ表現をもう一度保存しようとしたとき） ---- */
+  .dup-notice {
+    margin-top: 10px;
+    background: var(--orange-bg);
+    border: 1px solid var(--orange);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .dup-title {
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1.5;
+  }
+  .dup-body { margin-top: 8px; }
+  .dup-ja { font-size: 0.95rem; font-weight: 600; margin-top: 4px; }
+  .dup-en { font-size: 0.92rem; color: var(--blue-dark); margin-top: 3px; }
+  .dup-exp { font-size: 0.8rem; color: var(--sub); margin-top: 4px; line-height: 1.5; }
+  .dup-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .dup-actions .btn-mini { background: var(--card); }
+  /* ---- 保存済みフレーズの週ごと表示 ---- */
+  .list-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .list-toolbar .seg-btn { flex: 0 0 auto; padding: 6px 10px; font-size: 0.74rem; }
+  .wk-group { margin-bottom: 12px; }
+  .wk-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 12px;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: left;
+  }
+  .wk-toggle:active { background: var(--bg); }
+  .wk-group.current .wk-toggle { border-color: var(--blue); background: #f2f7fd; }
+  .wk-caret { color: var(--sub); font-size: 0.7rem; width: 12px; }
+  .wk-label { flex: 1; }
+  .wk-count { font-size: 0.75rem; color: var(--sub); font-weight: 600; white-space: nowrap; }
+  .wk-body { margin-top: 8px; }
   .card {
     background: var(--card);
     border-radius: 12px;
@@ -486,6 +536,7 @@
     <div class="capture-row">
       <button class="btn-save" id="saveBtn">＋ 保存する</button>
     </div>
+    <div class="dup-notice" id="dupNotice" hidden></div>
   </div>
 
   <details class="howto">
@@ -495,6 +546,8 @@
       <li>未清書メモが溜まったら「📋 コピー」でJSONをコピー</li>
       <li>Claude Codeに貼り付けて <code>/phrase-note-add</code> と伝える → 自然な英訳＋解説＋音声付きで「保存済みフレーズ」に清書される</li>
       <li>サイトが更新されたら、清書済みと同じ内容の未清書メモは自動で一覧から消える</li>
+      <li>すでに追加した表現をもう一度保存しようとすると、<b>「この表現はすでにメモに追加されています（追加日）」</b>と表示される（前の英訳もその場で確認できる。あえて重複させたいときは「＋ それでも保存する」）</li>
+      <li><b>📚 保存済みフレーズ</b>は<b>週ごとのトグル</b>でまとまる（初期表示は今週だけ開く）。見出しをタップで開閉、「全て開く」で一括展開。<b>🕘 新しい順</b>に切り替えれば従来どおりの通し一覧になる</li>
       <li>フレーズの <b>☆</b> をタップすると<b>⭐ お気に入り</b>タブに集まる（この端末のみ保存）。覚えにくい表現・よく使う表現をここに貯めて、まとめてテストできる</li>
       <li><b>📅 週まとめ</b>タブ … 月曜〜日曜の週ごとに、その週覚えた表現が日付順にまとまる。<b>🎧 通し再生</b>でその週の全フレーズを「日本語 →（間）→ 英語」の順に自動再生できる（英語だけ速度変更可）</li>
       <li><b>✍️ テスト</b>タブ … 週（または全期間・⭐お気に入り）を選んで日本語→英語の産出テスト。「書く」は自動採点＋差分表示、「言う」は口頭で答えて自己採点。スコアは週ごとに記録される</li>
@@ -517,6 +570,13 @@
     <div class="section-actions">
       <button class="btn-mini" id="hideModeBtn">🙈 英訳を隠す</button>
     </div>
+  </div>
+  <div class="list-toolbar">
+    <div class="seg" id="polishedViewSeg">
+      <button class="seg-btn active" data-pview="week">📅 週ごと</button>
+      <button class="seg-btn" data-pview="flat">🕘 新しい順</button>
+    </div>
+    <button class="btn-mini" id="wkExpandBtn">全て開く</button>
   </div>
   <div id="polishedList"></div>
 
@@ -3105,10 +3165,112 @@ async function translateRough(text) {
   }
 }
 
-async function saveEntry() {
+/* ==========================================================
+   重複チェック
+   ---------------------------------------------------------
+   保存済みフレーズ（PHRASES）と未清書メモ（localStorage）の
+   両方を見て、同じ表現が既にあれば追加日つきで知らせる。
+   表記ゆれ（前後の空白・全角空白・末尾の句読点）は無視して判定する。
+   ========================================================== */
+function normJa(s) {
+  return String(s || '')
+    .trim()
+    .replace(/[\s　]+/g, '')
+    .replace(/[。．、，!！?？…~〜.]+$/g, '')
+    .toLowerCase();
+}
+
+/* 一致すれば { kind: 'polished' | 'pending', entry } を返す */
+function findDuplicate(text) {
+  const key = normJa(text);
+  if (!key) return null;
+  const hit = PHRASES.find(p => normJa(p.ja) === key);
+  if (hit) return { kind: 'polished', entry: hit };
+  const pend = getPending().find(e => normJa(e.ja) === key);
+  if (pend) return { kind: 'pending', entry: pend };
+  return null;
+}
+
+let dupPendingText = null;   // 「それでも保存する」で使う一時退避
+let dupRevealed = false;     // 🙈英訳を隠すモード中に、お知らせ内の英訳だけ表示したか
+
+function hideDupNotice() {
+  const el = document.getElementById('dupNotice');
+  el.hidden = true;
+  el.innerHTML = '';
+  dupPendingText = null;
+}
+
+function showDupNotice(dup) {
+  const el = document.getElementById('dupNotice');
+  const e = dup.entry;
+  const isPolished = dup.kind === 'polished';
+  const badge = isPolished
+    ? `<span class="badge badge-done">📚 清書済み</span>`
+    : `<span class="badge badge-pending">🕓 未清書メモ</span>`;
+  const enBlock = !isPolished
+    ? `<div class="dup-en">${e.en_rough ? escapeHtml(e.en_rough) : '（簡易訳を取得中）'}</div>`
+    : (hideMode && !dupRevealed
+        ? `<button class="btn-mini" onclick="dupRevealEn()">👁 英訳を表示</button>`
+        : `<div class="dup-en">${escapeHtml(e.en)}</div>` +
+          (e.explanation ? `<div class="dup-exp">💡 ${escapeHtml(e.explanation)}</div>` : ''));
+
+  el.innerHTML = `
+    <div class="dup-title">⚠️ この表現はすでにメモに追加されています（${fmtDateFull(e.savedAt)}）</div>
+    <div class="dup-body">
+      ${badge}
+      <div class="dup-ja">${escapeHtml(e.ja)}</div>
+      ${enBlock}
+    </div>
+    <div class="dup-actions">
+      ${isPolished ? `<button class="btn-mini" onclick="playAudio(this, 'audio/${e.id}.mp3')">🔊 音声</button>` : ''}
+      <button class="btn-mini" onclick="dupShowInList()">🔍 一覧で見る</button>
+      <button class="btn-mini" onclick="dupSaveAnyway()">＋ それでも保存する</button>
+      <button class="btn-mini" onclick="hideDupNotice()">✕ 閉じる</button>
+    </div>`;
+  el.hidden = false;
+}
+
+function dupRevealEn() {
+  dupRevealed = true;
+  const dup = findDuplicate(dupPendingText || '');
+  if (dup) showDupNotice(dup);
+}
+
+/* 重複していた表現を検索ボックスに入れて一覧で確認する */
+function dupShowInList() {
+  const text = dupPendingText || '';
+  hideDupNotice();
+  const box = document.getElementById('searchBox');
+  box.value = text;
+  render();
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* 重複を承知のうえで保存する */
+function dupSaveAnyway() {
+  const input = document.getElementById('jaInput');
+  if (dupPendingText && !input.value.trim()) input.value = dupPendingText;
+  hideDupNotice();
+  saveEntry(true);
+}
+
+async function saveEntry(force) {
   const input = document.getElementById('jaInput');
   const text = input.value.trim();
   if (!text) return;
+
+  if (force !== true) {
+    const dup = findDuplicate(text);
+    if (dup) {
+      dupPendingText = text;
+      dupRevealed = false;
+      showDupNotice(dup);
+      showToast('この表現はすでに追加されています');
+      return;   // 入力は消さずに残す（判断はユーザーに委ねる）
+    }
+  }
+  hideDupNotice();
   input.value = '';
 
   const entry = { id: Date.now(), ja: text, en_rough: null, savedAt: new Date().toISOString() };
@@ -3222,10 +3384,24 @@ function render() {
     </div>
   `).join('') : `<div class="empty">未清書メモはありません</div>`;
 
+  /* 検索中はヒットした週を自動で開く（同じ検索語のあいだは開閉操作を尊重する） */
+  if (query && query !== lastAutoOpenQuery && polishedFiltered.length) {
+    groupPhrasesByWeek(polishedFiltered).forEach(w => polishedOpenWeeks.add(w.key));
+    savePolishedOpen();
+  }
+  lastAutoOpenQuery = query;
+
   const polishedEl = document.getElementById('polishedList');
-  polishedEl.innerHTML = polishedFiltered.length
-    ? polishedFiltered.map(p => phraseCardHtml(p)).join('')
-    : `<div class="empty">保存済みフレーズはまだありません</div>`;
+  if (!polishedFiltered.length) {
+    polishedEl.innerHTML = query
+      ? `<div class="empty">「${escapeHtml(query)}」に一致する保存済みフレーズはありません</div>`
+      : `<div class="empty">保存済みフレーズはまだありません</div>`;
+  } else if (polishedView === 'flat') {
+    polishedEl.innerHTML = polishedFiltered.map(p => phraseCardHtml(p)).join('');
+  } else {
+    polishedEl.innerHTML = polishedWeeksHtml(polishedFiltered);
+  }
+  updateWkToolbar();
 
   updateFavCounts();
 }
@@ -3287,9 +3463,10 @@ function weekRangeLabel(key) {
 const THIS_WEEK_KEY = ymd(mondayOf(new Date()));
 const LAST_WEEK_KEY = (() => { const d = mondayOf(new Date()); d.setDate(d.getDate() - 7); return ymd(d); })();
 
-function groupByWeek() {
+/* 任意のフレーズ配列を週（月曜はじまり）ごとに新しい週→古い週の順でまとめる */
+function groupPhrasesByWeek(list) {
   const map = new Map();
-  PHRASES.forEach(p => {
+  list.forEach(p => {
     const k = weekKeyOf(p.savedAt);
     if (!map.has(k)) map.set(k, []);
     map.get(k).push(p);
@@ -3301,6 +3478,82 @@ function groupByWeek() {
       label: weekRangeLabel(key),
       items: items.slice().sort((a, b) => new Date(a.savedAt || 0) - new Date(b.savedAt || 0))
     }));
+}
+function groupByWeek() { return groupPhrasesByWeek(PHRASES); }
+
+/* ==========================================================
+   📝メモタブ「保存済みフレーズ」の週ごとトグル
+   ---------------------------------------------------------
+   表示モード（週ごと／新しい順）と、どの週を開いているかは
+   端末の localStorage に保存する。初期状態は今週だけ開く。
+   ========================================================== */
+const POLISHED_VIEW_KEY = 'phraseNote_polishedView';
+const POLISHED_OPEN_KEY = 'phraseNote_polishedOpenWeeks';
+let polishedView = localStorage.getItem(POLISHED_VIEW_KEY) === 'flat' ? 'flat' : 'week';
+let polishedOpenWeeks = (() => {
+  const raw = loadJSON(POLISHED_OPEN_KEY, null);
+  return new Set(Array.isArray(raw) ? raw.map(String) : [THIS_WEEK_KEY]);
+})();
+let lastAutoOpenQuery = '';
+
+function savePolishedOpen() {
+  localStorage.setItem(POLISHED_OPEN_KEY, JSON.stringify([...polishedOpenWeeks]));
+}
+
+function togglePolishedWeek(key) {
+  if (polishedOpenWeeks.has(key)) polishedOpenWeeks.delete(key); else polishedOpenWeeks.add(key);
+  savePolishedOpen();
+  render();
+}
+
+/* いま画面に出ている週が全て開いているか */
+function allWeeksOpen() {
+  const keys = groupPhrasesByWeek(PHRASES).map(w => w.key);
+  return keys.length > 0 && keys.every(k => polishedOpenWeeks.has(k));
+}
+
+function toggleAllPolishedWeeks() {
+  const keys = groupPhrasesByWeek(PHRASES).map(w => w.key);
+  if (allWeeksOpen()) polishedOpenWeeks.clear();
+  else keys.forEach(k => polishedOpenWeeks.add(k));
+  savePolishedOpen();
+  render();
+}
+
+function updateWkToolbar() {
+  const btn = document.getElementById('wkExpandBtn');
+  if (!btn) return;
+  btn.hidden = (polishedView !== 'week');
+  btn.textContent = allWeeksOpen() ? '全て閉じる' : '全て開く';
+}
+
+function setPolishedView(mode) {
+  polishedView = (mode === 'flat') ? 'flat' : 'week';
+  localStorage.setItem(POLISHED_VIEW_KEY, polishedView);
+  document.querySelectorAll('#polishedViewSeg .seg-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.pview === polishedView);
+  });
+  render();
+}
+
+function polishedWeeksHtml(list) {
+  return groupPhrasesByWeek(list).map(w => {
+    const open = polishedOpenWeeks.has(w.key);
+    const isThis = w.key === THIS_WEEK_KEY;
+    const badge = isThis ? `<span class="badge badge-week">今週</span>`
+      : (w.key === LAST_WEEK_KEY ? `<span class="badge badge-last">先週</span>` : '');
+    /* 週の中は新しい順（メモタブ全体の並びに合わせる） */
+    const items = w.items.slice().sort((a, b) => new Date(b.savedAt || 0) - new Date(a.savedAt || 0));
+    return `<div class="wk-group${isThis ? ' current' : ''}">
+      <button class="wk-toggle" onclick="togglePolishedWeek('${w.key}')" aria-expanded="${open}">
+        <span class="wk-caret">${open ? '▼' : '▶'}</span>
+        <span class="wk-label">${w.label}</span>
+        ${badge}
+        <span class="wk-count">${items.length}件</span>
+      </button>
+      ${open ? `<div class="wk-body">${items.map(p => phraseCardHtml(p)).join('')}</div>` : ''}
+    </div>`;
+  }).join('');
 }
 
 /* ==========================================================
@@ -4032,10 +4285,20 @@ document.getElementById('testScopeSeg').addEventListener('click', e => {
 });
 document.getElementById('testStartBtn').addEventListener('click', () => startTest());
 
-document.getElementById('saveBtn').addEventListener('click', saveEntry);
+document.getElementById('saveBtn').addEventListener('click', () => saveEntry());
 document.getElementById('jaInput').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) saveEntry();
 });
+/* 入力を書き換えたら重複お知らせは引っ込める */
+document.getElementById('jaInput').addEventListener('input', () => {
+  const el = document.getElementById('dupNotice');
+  if (!el.hidden && document.getElementById('jaInput').value.trim() !== dupPendingText) hideDupNotice();
+});
+document.getElementById('polishedViewSeg').addEventListener('click', e => {
+  const b = e.target.closest('.seg-btn'); if (!b) return;
+  setPolishedView(b.dataset.pview);
+});
+document.getElementById('wkExpandBtn').addEventListener('click', toggleAllPolishedWeeks);
 document.getElementById('copyBtn').addEventListener('click', copyPending);
 document.getElementById('clearBtn').addEventListener('click', clearAllPending);
 document.getElementById('searchBox').addEventListener('input', render);
@@ -4088,6 +4351,9 @@ document.getElementById('plShowEn').addEventListener('change', e => {
 loadSeqPrefs();
 syncPlayerControls();
 updateHideModeBtn();
+document.querySelectorAll('#polishedViewSeg .seg-btn').forEach(b => {
+  b.classList.toggle('active', b.dataset.pview === polishedView);
+});
 render();
 </script>
 
