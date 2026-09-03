@@ -352,6 +352,11 @@
   .due-stat span { font-size: 0.64rem; opacity: 0.92; }
   .due-bar { height: 5px; background: rgba(255,255,255,0.25); border-radius: 999px; overflow: hidden; margin-top: 11px; }
   .due-bar > div { height: 100%; background: #fff; }
+  /* ---- 途中でやめても、そこまでは記録される（今日ここまでの問数） ---- */
+  .due-done { margin-top: 8px; background: rgba(255,255,255,0.18); border-radius: 9px;
+    padding: 7px 9px; font-size: 0.76rem; line-height: 1.55; }
+  .due-done b { font-size: 0.95rem; }
+  .due-done-sub { opacity: 0.85; font-size: 0.68rem; }
 
   /* ---- 応用問題 ---- */
   .apply-details { margin-top: 8px; }
@@ -7671,6 +7676,9 @@ function polishedWeeksHtml(list) {
    タブ切り替え
    ========================================================== */
 function switchView(name) {
+  /* テストの途中でタブを移っても、答え合わせが済んだ問はそこまでで締める
+     （タブを戻すと設定画面に戻るので、締めないとその回だけ記録が宙に浮く） */
+  sealIfRunning();
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.view === name));
   ['notes', 'favs', 'weeks', 'test', 'motiv'].forEach(v => { document.getElementById('view-' + v).hidden = (v !== name); });
   if (name === 'favs') renderFavs();
@@ -8058,6 +8066,103 @@ function restoreStat(id, before) {
   }
   localStorage.setItem(STATS_KEY, JSON.stringify(s));
 }
+
+/* ==========================================================
+   途中でやめても、そこまでは学習ずみ（2026-09-03 追加）
+   ---------------------------------------------------------
+   成績・復習の箱・やる気の記録は「答え合わせが済んだ瞬間」に書いているので、
+   1問ずつの記録はもともと中断しても消えない。残っていた穴は3つ:
+     ① 週の成績は結果画面まで進まないと残らなかった
+     ② その日に何問やったかが画面に出ず、1日ぶんの上限にも数えられていなかった
+        （＝やめて開き直すと、今日の持ち時間が仕切り直しになっていた）
+     ③ タブを移る／アプリを閉じると、その回そのものが無かったことになっていた
+   ここでは「1回ぶんの控え（RUN_KEY）」と「1日ぶんの記録（DAYLOG_KEY）」を持ち、
+   中断・タブ移動・再読み込みのどれでも、解いたところまでを必ず確定させる。
+   確定させる道は commitRun() 一本にして、二重に記録しないようにしている。
+   ========================================================== */
+const RUN_KEY = 'phraseNote_run';         // 進行中セッションの控え（中断・再読み込み対策）
+const DAYLOG_KEY = 'phraseNote_dayLog';   // { 'YYYY-MM-DD': { n: 答え合わせ数, due: うち今日の復習ぶん } }
+const DAYLOG_KEEP = 120;                  // 日ごとの記録はこの日数ぶんだけ持つ
+
+function dayLogAll() { const l = loadJSON(DAYLOG_KEY, {}); return (l && typeof l === 'object') ? l : {}; }
+function doneToday() {
+  const d = dayLogAll()[ymd(new Date())] || {};
+  return { n: d.n | 0, due: d.due | 0 };
+}
+/* 1問ぶん答え合わせが済んだ印。おかわりでは呼ばない（記録が動かない練習のため） */
+function bumpDayLog(isDue) {
+  const l = dayLogAll(), k = ymd(new Date()), d = l[k] || { n: 0, due: 0 };
+  d.n = (d.n | 0) + 1;
+  if (isDue) d.due = (d.due | 0) + 1;
+  l[k] = d;
+  const keys = Object.keys(l).sort();
+  while (keys.length > DAYLOG_KEEP) delete l[keys.shift()];
+  localStorage.setItem(DAYLOG_KEY, JSON.stringify(l));
+}
+
+/* いま解いているぶんの控え。答え合わせのたびに上書きし、締めたら消す。
+   これが残ったまま次に開いたら「途中で閉じた回」なので、開いたときに確定させる */
+function runRows(st) {
+  return ((st && st.results) || []).filter(r => r && !r.phrase.again)
+    .map(r => ({ lv: r.level, ap: r.phrase.isApply ? 1 : 0 }));
+}
+function saveRun() {
+  const st = testState;
+  if (!st || st.sealed) return;
+  const rows = runRows(st);
+  if (!rows.length) return;
+  st.lastAt = Date.now();
+  localStorage.setItem(RUN_KEY, JSON.stringify({
+    v: 1, weekKey: st.weekKey, mode: st.mode, startedAt: st.startedAt, lastAt: st.lastAt, rows
+  }));
+}
+function clearRun() { localStorage.removeItem(RUN_KEY); }
+
+/* 解いたぶんを確定させる（通しでも中断でもここだけを通る）。
+   partial は「最後まで行かずに締めた回」の印で、週の最高スコアには数えない */
+function commitRun(run, partial) {
+  clearRun();
+  const rows = (run && run.rows) || [];
+  if (!rows.length) return null;
+  /* 1問あたりの秒数は「始めてから最後に答え合わせをするまで」で測る
+     （開いたまま放置した時間を混ぜない） */
+  if (run.weekKey === '__due__' && run.startedAt && run.lastAt > run.startedAt)
+    pushPace((run.lastAt - run.startedAt) / 1000, rows.length);
+  const graded = rows.filter(r => !r.ap);   // 週の成績には本体の問題だけを記録する
+  if (isSpecialKey(run.weekKey) || !graded.length) return null;
+  const gc = graded.filter(r => r.lv === 'correct').length;
+  const rec = {
+    at: new Date(run.lastAt || Date.now()).toISOString(),
+    correct: gc, total: graded.length,
+    pct: Math.round((gc / graded.length) * 100), mode: run.mode
+  };
+  if (partial) rec.partial = true;
+  saveScore(run.weekKey, rec);
+  return rec;
+}
+
+/* テストの途中でタブを移った・別のテストを始めたときに、そこまでで締める */
+function sealIfRunning(quiet) {
+  const st = testState;
+  if (!st || st.sealed) return;
+  const rows = runRows(st);
+  st.sealed = true;
+  testState = null;
+  if (!rows.length) { clearRun(); return; }
+  commitRun({ weekKey: st.weekKey, mode: st.mode, startedAt: st.startedAt,
+    lastAt: st.lastAt || Date.now(), rows }, true);
+  if (!quiet) showToast('ここまでの ' + rows.length + ' 問を記録しました');
+}
+
+/* 前回、答え合わせまで進んだのに締めずに閉じた回を拾う（開いたときに1回だけ） */
+function recoverRun() {
+  const run = loadJSON(RUN_KEY, null);
+  const rows = (run && run.rows) || [];
+  if (!rows.length) { clearRun(); return 0; }
+  commitRun(run, true);
+  showToast('前回の途中までの ' + rows.length + ' 問を記録しました');
+  return rows.length;
+}
 /* ==========================================================
    やる気の仕掛け（連続日数＋12週カレンダー／レベル＆XP／バッジ12種）
    本体は .claude/skills_assets/motivation/motiv.js が正本で、inject.py が下の目印の間へ配る。
@@ -8411,7 +8516,8 @@ function mvRender() {
 
 function historyOf(weekKey) { return loadJSON(SCORES_KEY, {})[weekKey] || []; }
 function bestScoreOf(weekKey) {
-  const h = historyOf(weekKey);
+  /* 最高スコアは通しで受けた回だけで比べる（途中でやめた回は問数が違うので混ぜない） */
+  const h = historyOf(weekKey).filter(r => !r.partial);
   if (!h.length) return null;
   return h.slice().sort((a, b) => b.pct - a.pct)[0];
 }
@@ -8537,9 +8643,14 @@ function riskRank(st) {
   const b = boxOf(st) || 1;
   return overdueDaysOf(st) >= 14 ? Math.min(b, 2) : b;
 }
-/* 今日ぶんの復習キュー＝期限切れを上限まで（忘れかけている順）＋ 余った枠に未着手 */
-function dueQueue() {
-  const s = getStats(), cap = reviewCap();
+/* 今日つかう時間のうち、まだ残っているぶん（今日すでに答え合わせした復習を差し引く）。
+   途中でやめて開き直しても、その日の総量が仕切り直しにならないようにするため */
+function dueCapLeft() { return Math.max(0, reviewCap() - doneToday().due); }
+/* 今日ぶんの復習キュー＝期限切れを上限まで（忘れかけている順）＋ 余った枠に未着手。
+   { full: true } は「今日ぶんを使い切ったあとに、もう少しやる」ための追加ぶん */
+function dueQueue(opts) {
+  const s = getStats(), cap = (opts && opts.full) ? reviewCap() : dueCapLeft();
+  if (cap <= 0) return [];
   const due = duePhrases().slice().sort((a, b) => {
     const ra = riskRank(s[a.id]), rb = riskRank(s[b.id]);
     if (ra !== rb) return ra - rb;
@@ -8583,14 +8694,22 @@ function renderDueBox() {
   const mastered = PHRASES.filter(p => boxOf(s[p.id]) >= 4).length;
   const q = dueQueue(), n = q.length;
   const cap = reviewCap();
+  const done = doneToday();                                 // 今日ここまでに答え合わせした問数
+  const full = n ? [] : dueQueue({ full: true });           // 今日ぶんを使い切ったあとの「もう少し」用
+  const capped = !n && full.length > 0;                     // 出せるものはあるが、今日の時間ぶんは使い切った
   const shownDue = q.filter(p => isLearned(p, s)).length;   // 今日出す期限ぶん
   const shownNew = n - shownDue;                            // 今日出す未着手ぶん
   const rest = Math.max(0, due - shownDue);                 // 翌日以降に回るぶん
   const over = duePhrases().filter(p => overdueDaysOf(s[p.id]) >= 1).length;
   const fc = dueForecast(), mx = Math.max(cap, ...fc, 1);
   const pct = PHRASES.length ? Math.round((learned / PHRASES.length) * 100) : 0;
+  /* 途中でやめた回も、答え合わせが済んだ問はここに入る（やった事実が消えない） */
+  const doneLine = done.n ? `<div class="due-done">✓ 今日はここまで <b>${done.n}</b> 問おわりました`
+    + (done.due ? `（うち今日の復習 ${done.due} 問）` : '')
+    + `<br><span class="due-done-sub">途中でやめた回のぶんも入っています</span></div>` : '';
   el.innerHTML = `
     <div class="due-title">📅 今日の復習</div>
+    ${doneLine}
     <div class="due-sub">${n
       ? `期限が来たのは <b>${due}</b> 件${over ? `（うち繰越 ${over} 件）` : ''}。`
         + `今日はそのうち <b>${shownDue}</b> 件${shownNew ? `＋まだ手をつけていない <b>${shownNew}</b> 件` : ''}を出します。`
@@ -8598,8 +8717,13 @@ function renderDueBox() {
         + `<br>正解した表現ほど次に出るまでの間隔が延びます（1→3→7→14→30→60→120日）。`
         + `<br><span class="due-fc">この先7日: ${fc.map((x, i) =>
             `<i class="${x > cap ? 'over' : ''}" style="height:${Math.max(2, Math.round(x / mx * 18))}px" title="${i + 1}日後 ${x}件"></i>`).join('')}</span>`
-      : '今日ぶんの復習は終わりました 🎉<br>下の範囲を選べば、いつでも追加で練習できます。'}</div>
-    <button class="due-btn" onclick="startDueTest()" ${n ? '' : 'disabled'}>${n ? `▶ ${n}問はじめる` : '✓ 今日は完了'}</button>
+      : capped
+        ? `今日つかう時間ぶん（約 <b>${cap}</b> 問）はやりきりました 🎉`
+          + `<br>期限が来ているのはあと <b>${due}</b> 件。ここまでで切り上げて大丈夫です。`
+          + `<br>まだやれる日は下のボタンでどうぞ（解いたぶんはそのまま記録されます）。`
+        : '今日ぶんの復習は終わりました 🎉<br>下の範囲を選べば、いつでも追加で練習できます。'}</div>
+    <button class="due-btn" onclick="startDueTest(${capped ? 'true' : ''})" ${n || capped ? '' : 'disabled'}>${
+      n ? `▶ ${n}問はじめる` : capped ? `＋ もう ${full.length} 問やる` : '✓ 今日は完了'}</button>
     ${reviewMinChipsHtml()}
     <div class="due-stats">
       <div class="due-stat"><b>${learned}</b><span>学習ずみ</span></div>
@@ -8609,7 +8733,7 @@ function renderDueBox() {
     <div class="due-bar"><div style="width:${pct}%"></div></div>`;
 }
 
-function startDueTest() {
+function startDueTest(full) {
   const sel = document.getElementById('testWeekSel');
   if ([...sel.options].some(o => o.value === '__due__')) sel.value = '__due__';
   if (testScope === 'weak' || testScope === 'apply') {   // 今日の復習は絞り込みなしで始める
@@ -8617,7 +8741,8 @@ function startDueTest() {
     document.querySelectorAll('#testScopeSeg .seg-btn').forEach(x => x.classList.toggle('active', x.dataset.scope === 'all'));
   }
   updateSetupInfo();
-  startTest();
+  /* 「もう少しやる」は今日ぶんを使い切ったあとの追加なので、上限いっぱいで組み直す */
+  startTest(full ? dueQueue({ full: true }).slice().sort(() => Math.random() - 0.5) : undefined);
 }
 
 /* ==========================================================
@@ -8749,7 +8874,10 @@ function updateSetupInfo() {
     : testScope === 'weak' ? '<br>直近で間違えた・まだ解いていないフレーズだけを出します'
     : key === '__due__' ? '<br>📅 忘れかけている順に、今日つかう時間（' + reviewMinutes()
         + '分＝約' + reviewCap() + '問）に収まるぶんだけ出します。溢れたぶんは翌日以降。'
+        + (doneToday().due ? '<br>今日はすでに <b>' + doneToday().due + '</b> 問おわり（残りは約 '
+            + dueCapLeft() + ' 問ぶん）。' : '')
         + '<br>まちがえた表現は、そのセッションの最後にもう一度だけ出ます（この1問は記録に入りません）。'
+        + '<br>途中でやめても、答え合わせが済んだ問はそこまで記録されます。'
         + '結果は週の成績には記録されません'
     : '';
   document.getElementById('testSetupInfo').innerHTML =
@@ -8764,7 +8892,7 @@ function renderTestHistory() {
     const best = bestScoreOf(k);
     return `<div class="card">
       <div class="card-head"><div class="head-left"><span class="badge badge-week">${testTargetLabel(k)}</span></div></div>
-      <div class="week-score">直近 <b>${last.pct}%</b>（${last.correct}/${last.total}・${fmtDateShort(last.at)}） ／ 最高 <b>${best.pct}%</b> ／ ${h.length} 回受験</div>
+      <div class="week-score">直近 <b>${last.pct}%</b>（${last.correct}/${last.total}・${fmtDateShort(last.at)}${last.partial ? '・途中まで' : ''}） ／ 最高 ${best ? `<b>${best.pct}%</b>` : '—（通しで受けると記録されます）'} ／ ${h.length} 回受験</div>
     </div>`;
   }).join('');
   document.getElementById('testHistory').innerHTML = rows || `<div class="empty">まだ受験履歴がありません</div>`;
@@ -8789,24 +8917,43 @@ function startTest(customQueue) {
   if (!queue.length) {
     showToast(testScope === 'apply' ? '応用問題はまだ出せません（まず本体のテストに正解してください）'
       : testScope === 'weak' ? '苦手フレーズはありません 🎉'
-      : weekKey === '__due__' ? '今日ぶんの復習は終わりました 🎉'
+      : weekKey === '__due__' ? (dueQueue({ full: true }).length
+          ? '今日つかう時間ぶんは終わりました（上のカードの「＋ もう◯問やる」で続けられます）'
+          : '今日ぶんの復習は終わりました 🎉')
       : weekKey === '__fav__' ? 'お気に入りがまだありません（☆をタップして登録）'
       : 'この週にはフレーズがありません');
     return;
   }
   pauseSeqIfPlaying();   // テスト中に通し再生の音が流れ続けないようにする
-  testState = { weekKey, mode: testMode, queue, idx: 0, revealed: false, results: [], startedAt: Date.now() };
+  sealIfRunning(true);   // 前の回が締まっていなければ、そこまでで確定させてから始める
+  const stale = loadJSON(RUN_KEY, null);
+  if (stale && stale.rows && stale.rows.length) commitRun(stale, true);
+  testState = { weekKey, mode: testMode, queue, idx: 0, revealed: false, results: [],
+    startedAt: Date.now(), lastAt: 0, sealed: false };
   document.getElementById('testSetup').hidden = true;
   document.getElementById('testResult').hidden = true;
   document.getElementById('testRun').hidden = false;
   renderQuestion();
 }
 
+/* ✕やめる。答え合わせが済んだ問はすでに記録されているので、
+   ここでは「そこまでの回」として締めて、結果画面まで見せる（やった事実を捨てない） */
 function quitTest() {
-  if (!confirm('テストを中断します。よろしいですか？')) return;
-  testState = null;
-  renderTestSetup();
-  window.scrollTo(0, 0);
+  const st = testState;
+  const doneN = runRows(st).length;
+  const qN = st ? (st.queue.filter(x => !x.again).length || st.queue.length) : 0;
+  const restN = Math.max(0, qN - doneN);
+  if (!doneN) {
+    if (!confirm('まだ1問も答え合わせをしていません。テストをやめますか？')) return;
+    testState = null;
+    clearRun();
+    renderTestSetup();
+    window.scrollTo(0, 0);
+    return;
+  }
+  if (!confirm('ここまでの ' + doneN + ' 問は記録ずみです（成績・復習の箱・やる気の記録に反映されます）。\n'
+    + '残り ' + restN + ' 問は次回にまわります。ここでやめますか？')) return;
+  finishTest(true);
 }
 
 function renderQuestion() {
@@ -8893,6 +9040,8 @@ function selfGrade(ok) {
   const before = p.again ? null : recordStat(p.id, ok);   // おかわりは記録に入れない
   if (!p.again) mvGain(ok);   // やる気の記録（連続日数・XP・バッジ）
   testState.results[testState.idx] = { phrase: p, level: ok ? 'correct' : 'wrong', user: '', selfGraded: true, before };
+  /* 途中でやめても消えないように、1問ごとに「今日の問数」と「この回の控え」を残す */
+  if (!p.again) { bumpDayLog(testState.weekKey === '__due__'); saveRun(); }
   testState.revealed = false;
   nextQuestion();
 }
@@ -8906,6 +9055,8 @@ function submitAnswer() {
   const before = p.again ? null : recordStat(p.id, j.level === 'correct');   // おかわりは記録に入れない
   if (!p.again) mvGain(j.level === 'correct' ? true : (j.level === 'close' ? 'half' : false));   // やる気の記録
   testState.results[testState.idx] = { phrase: p, level: j.level, user: val, judge: j, before };
+  /* 途中でやめても消えないように、1問ごとに「今日の問数」と「この回の控え」を残す */
+  if (!p.again) { bumpDayLog(testState.weekKey === '__due__'); saveRun(); }
   renderQuestion();
 }
 
@@ -8966,6 +9117,7 @@ function overrideGrade(ok) {
     restoreStat(r.phrase.id, r.before);
     r.before = recordStat(r.phrase.id, ok);
   }
+  saveRun();   // 付け替えた判定を控えにも反映（数え直しはしない）
   renderQuestion();
 }
 
@@ -8995,30 +9147,29 @@ function nextQuestion() {
   }
 }
 
-function finishTest() {
+/* partial = true は「最後まで行かずに締めた回」（✕やめる）。
+   通しでも中断でも、記録の確定は commitRun() ひとつを通る */
+function finishTest(partial) {
   const st = testState;
+  st.sealed = true;
   /* おかわり（もう一度）は点数にも復習リストにも入れない。1回は正解して終えるための練習で、
      記録はすべて1回目の答えで確定している */
   const scored = st.results.filter(r => r && !r.phrase.again);
-  /* 1問あたりに実際どれくらいかかったかを控える（次からの「今日つかう時間 → 問数」の換算に使う） */
-  if (st.weekKey === '__due__' && st.startedAt && scored.length)
-    pushPace((Date.now() - st.startedAt) / 1000, scored.length);
+  /* 週の成績と「1問あたりの秒数」をここで確定させる（途中で締めた回も同じ道を通る） */
+  commitRun({ weekKey: st.weekKey, mode: st.mode, startedAt: st.startedAt,
+    lastAt: st.lastAt || Date.now(), rows: runRows(st) }, !!partial);
   const total = scored.length;
   const correct = scored.filter(r => r.level === 'correct').length;
   const close = scored.filter(r => r.level === 'close').length;
   const wrong = total - correct - close;
   const pct = total ? Math.round((correct / total) * 100) : 0;
 
-  /* 週の成績には本体の問題だけを記録する（応用はおまけ扱いで回ごとの問題数が変わるため） */
+  /* 週の成績は commitRun が本体の問題だけを記録ずみ。ここでは内訳の表示に使う */
   const graded = scored.filter(r => !r.phrase.isApply);
-  if (!isSpecialKey(st.weekKey) && graded.length) {
-    const gc = graded.filter(r => r.level === 'correct').length;
-    saveScore(st.weekKey, {
-      at: new Date().toISOString(), correct: gc, total: graded.length,
-      pct: Math.round((gc / graded.length) * 100), mode: st.mode
-    });
-  }
   const applyCount = total - graded.length;
+  /* まだ答え合わせまで行っていない問（＝次回にまわるぶん） */
+  const qN = st.queue.filter(x => !x.again).length || st.queue.length;
+  const restList = st.queue.filter((x, i) => !st.results[i] && !x.again);
 
   const missed = scored.filter(r => r.level !== 'correct').map(r => r.phrase);
   const comment = pct === 100 ? '完璧です！🎉' : pct >= 80 ? 'いい調子です。落とした表現だけ復習しましょう。'
@@ -9030,15 +9181,18 @@ function finishTest() {
   el.innerHTML = `
     <div class="capture-box">
       <div class="score-big">${pct}%</div>
-      <div class="score-sub">${testTargetLabel(st.weekKey)}／${st.mode === 'type' ? '書くモード' : '言うモード'}</div>
+      <div class="score-sub">${testTargetLabel(st.weekKey)}／${st.mode === 'type' ? '書くモード' : '言うモード'}${partial ? `／途中まで（${total}/${qN}問）` : ''}</div>
       <div class="score-row">
         <div class="score-cell"><b class="v-correct">${correct}</b><span>正解</span></div>
         <div class="score-cell"><b class="v-close">${close}</b><span>惜しい</span></div>
         <div class="score-cell"><b class="v-wrong">${wrong}</b><span>不正解</span></div>
       </div>
       <div class="hint-line">${comment}${applyCount ? `<br>🚀 応用 ${applyCount} 問を含みます（週の成績には本体のみ記録）。` : ''}</div>
+      ${partial ? `<div class="hint-line">✓ ここまでの <b>${total}</b> 問は記録しました（復習の箱・やる気の記録に反映ずみ）。`
+        + (restList.length ? `残り ${restList.length} 問は次回にまわります。` : '') + `</div>` : ''}
       <div class="test-btn-row">
-        ${missed.length ? `<button class="btn-primary" onclick="retryMissed()">🔁 間違えた${missed.length}問だけ再挑戦</button>` : ''}
+        ${restList.length ? `<button class="btn-primary" onclick="resumeRest()">▶ 残り${restList.length}問を続ける</button>` : ''}
+        ${missed.length ? `<button class="${restList.length ? 'btn-outline' : 'btn-primary'}" onclick="retryMissed()">🔁 間違えた${missed.length}問だけ再挑戦</button>` : ''}
         <button class="btn-outline" onclick="renderTestSetup()">設定に戻る</button>
       </div>
     </div>
@@ -9055,6 +9209,7 @@ function finishTest() {
     ` : ''}`;
   window.scrollTo(0, 0);
   testState.missed = missed;
+  testState.rest = restList;
   updateDueBadge();
 }
 
@@ -9062,6 +9217,13 @@ function retryMissed() {
   const missed = testState.missed || [];
   if (!missed.length) return;
   startTest(missed.slice().sort(() => Math.random() - 0.5));
+}
+
+/* 途中でやめた回の続き。答えた問はもう出さず、残りだけを出し直す */
+function resumeRest() {
+  const rest = (testState && testState.rest) || [];
+  if (!rest.length) return;
+  startTest(rest.slice());
 }
 
 /* ---- テスト画面のイベント配線 ---- */
@@ -9151,6 +9313,8 @@ document.querySelectorAll('#polishedViewSeg .seg-btn').forEach(b => {
   b.classList.toggle('active', b.dataset.pview === polishedView);
 });
 render();
+/* 前回、答え合わせまで進んだのに締めずに閉じた回を、開いたときに確定させる */
+recoverRun();
 </script>
 
 </body>
