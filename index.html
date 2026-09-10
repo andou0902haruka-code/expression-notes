@@ -23,6 +23,8 @@
     --green-bg: #e9f7ef;
     --gold: #d69e2e;
     --gold-bg: #fffaf0;
+    --mine: #6b46c1;
+    --mine-bg: #f3ecff;
   }
   * { box-sizing: border-box; }
   body {
@@ -89,6 +91,9 @@
     font-family: inherit;
   }
   .capture-box textarea:focus { outline: 2px solid var(--blue); }
+  .capture-mode { margin-bottom: 10px; }
+  .capture-box #enInput { margin-top: 8px; min-height: 52px; }
+  .capture-box #enInput:focus { outline: 2px solid var(--mine); }
   .capture-row {
     display: flex;
     gap: 8px;
@@ -212,9 +217,16 @@
   }
   .badge-pending { background: var(--orange-bg); color: var(--orange); }
   .badge-done { background: var(--green-bg); color: var(--green); }
+  .badge-mine { background: var(--mine-bg); color: var(--mine); }
   .card .ja { font-size: 1rem; margin: 6px 0 4px; font-weight: 600; }
   .card .en { font-size: 0.95rem; margin: 2px 0; color: var(--blue-dark); }
   .card .en-rough { font-size: 0.9rem; margin: 2px 0; color: var(--sub); font-style: italic; }
+  .card .en-mine { font-size: 0.95rem; margin: 2px 0; color: var(--mine); font-weight: 500; }
+  .card .en-orig {
+    font-size: 0.82rem; color: var(--sub); margin-top: 6px; line-height: 1.5;
+    border-left: 3px solid var(--mine-bg); padding-left: 8px;
+  }
+  .card .en-orig b { color: var(--mine); }
   .card .explanation { font-size: 0.82rem; color: var(--sub); margin-top: 6px; line-height: 1.5; }
   .card .related { font-size: 0.8rem; color: var(--sub); margin-top: 4px; }
   .card .related b { color: var(--text); }
@@ -733,17 +745,24 @@
 <section id="view-notes">
 
   <div class="capture-box">
+    <div class="seg capture-mode" id="captureModeSeg">
+      <button class="seg-btn active" data-cmode="ja">📝 日本語だけ</button>
+      <button class="seg-btn" data-cmode="pair">✍️ 日本語＋英語</button>
+    </div>
     <textarea id="jaInput" placeholder="日本語で入力（単語でも文でもOK）" autocomplete="off"></textarea>
+    <textarea id="enInput" placeholder="英語で入力（自分の英訳）" autocomplete="off" autocapitalize="off" hidden></textarea>
     <div class="capture-row">
       <button class="btn-save" id="saveBtn">＋ 保存する</button>
     </div>
+    <div class="hint-line" id="captureHint" hidden>✍️ 書いた英語はそのまま残ります。あとで解説・音声・応用問題だけ付きます（スペルミスと明らかな文法の誤りだけ直します）</div>
     <div class="dup-notice" id="dupNotice" hidden></div>
   </div>
 
   <details class="howto">
     <summary>使い方</summary>
     <ol>
-      <li>思いついた日本語を書いて「保存する」。その場で簡易英訳（機械翻訳）が表示される</li>
+      <li><b>📝 日本語だけ</b>… 思いついた日本語を書いて「保存する」。その場で簡易英訳（機械翻訳）が表示され、あとでClaudeが英訳ごと清書する</li>
+      <li><b>✍️ 日本語＋英語</b>… 自分で英訳まで書いて保存する。<b>書いた英語はそのまま残り</b>、あとから解説・言い換え・応用問題・音声だけが付く（スペルミスと明らかな文法の誤りだけ直す。直したときはカードに「書いた英語」として元の文も残る）</li>
       <li>未清書メモが溜まったら「📋 コピー」でJSONをコピー</li>
       <li>Claude Codeに貼り付けて <code>/phrase-note-add</code> と伝える → 自然な英訳＋解説＋音声付きで「保存済みフレーズ」に清書される</li>
       <li>サイトが更新されたら、清書済みと同じ内容の未清書メモは自動で一覧から消える</li>
@@ -7838,6 +7857,37 @@ function showToast(msg) {
   showToast._timer = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
+/* ==========================================================
+   入力モード（📝 日本語だけ ／ ✍️ 日本語＋英語）
+   ---------------------------------------------------------
+   「日本語だけ」= 今までどおり。簡易機械翻訳を添えて貯め、
+   あとで /phrase-note-add が英訳ごと清書する。
+   「日本語＋英語」= 自分で英訳まで書いてしまうモード。
+   機械翻訳は呼ばず、書いた英語（en_mine）をそのまま残す。
+   清書では解説・言い換え・応用問題・音声だけを後付けし、
+   英語の言い回しは変えない（スペルミスと明らかな文法の誤りだけ直す）。
+   ========================================================== */
+const CAPTURE_MODE_KEY = 'phraseNote_captureMode';
+let captureMode = localStorage.getItem(CAPTURE_MODE_KEY) === 'pair' ? 'pair' : 'ja';
+
+function setCaptureMode(m) {
+  captureMode = (m === 'pair') ? 'pair' : 'ja';
+  localStorage.setItem(CAPTURE_MODE_KEY, captureMode);
+  applyCaptureMode();
+}
+function applyCaptureMode() {
+  const pair = captureMode === 'pair';
+  document.getElementById('enInput').hidden = !pair;
+  document.getElementById('captureHint').hidden = !pair;
+  document.getElementById('jaInput').placeholder = pair
+    ? '日本語で入力（言いたいこと）'
+    : '日本語で入力（単語でも文でもOK）';
+  document.querySelectorAll('#captureModeSeg .seg-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.cmode === captureMode);
+  });
+  hideDupNotice();
+}
+
 async function translateRough(text) {
   try {
     const res = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=ja|en');
@@ -7875,6 +7925,7 @@ function findDuplicate(text) {
 }
 
 let dupPendingText = null;   // 「それでも保存する」で使う一時退避
+let dupPendingEn = null;     // 同上（日本語＋英語モードで書いた英語）
 let dupRevealed = false;     // 🙈英訳を隠すモード中に、お知らせ内の英訳だけ表示したか
 
 function hideDupNotice() {
@@ -7882,6 +7933,7 @@ function hideDupNotice() {
   el.hidden = true;
   el.innerHTML = '';
   dupPendingText = null;
+  dupPendingEn = null;
 }
 
 function showDupNotice(dup) {
@@ -7890,9 +7942,12 @@ function showDupNotice(dup) {
   const isPolished = dup.kind === 'polished';
   const badge = isPolished
     ? `<span class="badge badge-done">📚 清書済み</span>`
-    : `<span class="badge badge-pending">🕓 未清書メモ</span>`;
+    : `<span class="badge badge-pending">🕓 未清書メモ</span>`
+      + (e.en_mine ? `<span class="badge badge-mine">✍️ 自分の英語</span>` : '');
   const enBlock = !isPolished
-    ? `<div class="dup-en">${e.en_rough ? escapeHtml(e.en_rough) : '（簡易訳を取得中）'}</div>`
+    ? (e.en_mine
+        ? `<div class="dup-en">${escapeHtml(e.en_mine)}</div>`
+        : `<div class="dup-en">${e.en_rough ? escapeHtml(e.en_rough) : '（簡易訳を取得中）'}</div>`)
     : (hideMode && !dupRevealed
         ? `<button class="btn-mini" onclick="dupRevealEn()">👁 英訳を表示</button>`
         : `<div class="dup-en">${escapeHtml(e.en)}</div>` +
@@ -7933,20 +7988,32 @@ function dupShowInList() {
 /* 重複を承知のうえで保存する */
 function dupSaveAnyway() {
   const input = document.getElementById('jaInput');
-  if (dupPendingText && !input.value.trim()) input.value = dupPendingText;
+  const enBox = document.getElementById('enInput');
+  const ja = dupPendingText, en = dupPendingEn;
   hideDupNotice();
+  if (ja && !input.value.trim()) input.value = ja;
+  if (en && !enBox.value.trim()) enBox.value = en;
   saveEntry(true);
 }
 
 async function saveEntry(force) {
   const input = document.getElementById('jaInput');
+  const enBox = document.getElementById('enInput');
+  const pair = captureMode === 'pair';
   const text = input.value.trim();
+  const enText = pair ? enBox.value.trim() : '';
   if (!text) return;
+  if (pair && !enText) {
+    showToast('英語も入力してください（日本語だけ貯めるときは「📝 日本語だけ」に切り替え）');
+    enBox.focus();
+    return;
+  }
 
   if (force !== true) {
     const dup = findDuplicate(text);
     if (dup) {
       dupPendingText = text;
+      dupPendingEn = enText || null;
       dupRevealed = false;
       showDupNotice(dup);
       showToast('この表現はすでに追加されています');
@@ -7955,12 +8022,18 @@ async function saveEntry(force) {
   }
   hideDupNotice();
   input.value = '';
+  if (pair) enBox.value = '';
 
-  const entry = { id: Date.now(), ja: text, en_rough: null, savedAt: new Date().toISOString() };
+  const entry = pair
+    ? { id: Date.now(), ja: text, en_mine: enText, mode: 'pair', en_rough: null, savedAt: new Date().toISOString() }
+    : { id: Date.now(), ja: text, en_rough: null, savedAt: new Date().toISOString() };
   const list = getPending();
   list.unshift(entry);
   setPending(list);
   render();
+
+  /* 自分で英訳を書いたぶんは機械翻訳を呼ばない（書いた英語をそのまま残す） */
+  if (pair) return;
 
   const rough = await translateRough(text);
   const list2 = getPending();
@@ -8041,7 +8114,7 @@ function render() {
   if (pending.length !== getPending().length) setPending(pending);
 
   const pendingFiltered = query
-    ? pending.filter(e => (e.ja || '').toLowerCase().includes(query) || (e.en_rough || '').toLowerCase().includes(query))
+    ? pending.filter(e => [e.ja, e.en_rough, e.en_mine].some(t => (t || '').toLowerCase().includes(query)))
     : pending;
 
   const polishedFiltered = (query
@@ -8058,12 +8131,15 @@ function render() {
       <div class="card-head">
         <div class="head-left">
           <span class="badge badge-pending">🕓 未清書</span>
+          ${e.en_mine ? `<span class="badge badge-mine">✍️ 自分の英語</span>` : ''}
           <span class="card-date">📅 ${fmtDateFull(e.savedAt)}</span>
         </div>
         <button class="del-btn" onclick="deletePending(${e.id})">✕ 削除</button>
       </div>
       <div class="ja">${escapeHtml(e.ja)}</div>
-      <div class="en-rough">${e.en_rough ? escapeHtml(e.en_rough) : '翻訳中...'}</div>
+      ${e.en_mine
+        ? `<div class="en-mine">${escapeHtml(e.en_mine)}</div>`
+        : `<div class="en-rough">${e.en_rough ? escapeHtml(e.en_rough) : '翻訳中...'}</div>`}
     </div>
   `).join('') : `<div class="empty">未清書メモはありません</div>`;
 
@@ -8093,9 +8169,10 @@ function render() {
 /* 保存済みフレーズのカード（📝メモ / ⭐お気に入り 共通） */
 function phraseCardHtml(p, context) {
   const isRevealed = !hideMode || revealedIds.has(p.id);
-  const badge = context === 'fav'
+  const badge = (context === 'fav'
     ? `<span class="badge badge-fav">⭐ お気に入り</span>`
-    : `<span class="badge badge-done">📚 清書済み</span>`;
+    : `<span class="badge badge-done">📚 清書済み</span>`)
+    + (p.mine ? `<span class="badge badge-mine">✍️ 自分の英語</span>` : '');
   return `
     <div class="card">
       <div class="card-head">
@@ -8108,6 +8185,7 @@ function phraseCardHtml(p, context) {
       <div class="ja">${escapeHtml(p.ja)}</div>
       ${isRevealed ? `
       <div class="en">${escapeHtml(p.en)}</div>
+      ${p.en_orig && p.en_orig !== p.en ? `<div class="en-orig"><b>書いた英語:</b> ${escapeHtml(p.en_orig)}</div>` : ''}
       ${p.explanation ? `<div class="explanation">💡 ${escapeHtml(p.explanation)}</div>` : ''}
       ${p.related && p.related.length ? `<div class="related"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
       ${hasApply(p) ? `<details class="apply-details">
@@ -9820,7 +9898,22 @@ document.getElementById('testScopeSeg').addEventListener('click', e => {
 document.getElementById('testStartBtn').addEventListener('click', () => startTest());
 
 document.getElementById('saveBtn').addEventListener('click', () => saveEntry());
+document.getElementById('captureModeSeg').addEventListener('click', e => {
+  const b = e.target.closest('.seg-btn'); if (!b) return;
+  setCaptureMode(b.dataset.cmode);
+  if (captureMode === 'pair' && document.getElementById('jaInput').value.trim()) {
+    document.getElementById('enInput').focus();
+  }
+});
 document.getElementById('jaInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+    /* 日本語＋英語モードで英語がまだ空なら、保存せず英語欄へ移る */
+    if (captureMode === 'pair' && !document.getElementById('enInput').value.trim()) {
+      document.getElementById('enInput').focus();
+    } else saveEntry();
+  }
+});
+document.getElementById('enInput').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) saveEntry();
 });
 /* 入力を書き換えたら重複お知らせは引っ込める */
@@ -9885,6 +9978,7 @@ document.getElementById('plShowEn').addEventListener('change', e => {
 loadSeqPrefs();
 syncPlayerControls();
 updateHideModeBtn();
+applyCaptureMode();
 document.querySelectorAll('#polishedViewSeg .seg-btn').forEach(b => {
   b.classList.toggle('active', b.dataset.pview === polishedView);
 });
