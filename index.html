@@ -25,6 +25,8 @@
     --gold-bg: #fffaf0;
     --mine: #6b46c1;
     --mine-bg: #f3ecff;
+    --note: #8b5e34;
+    --note-bg: #fbf1e6;
   }
   * { box-sizing: border-box; }
   body {
@@ -143,6 +145,7 @@
     font-size: 0.78rem;
     color: var(--sub);
   }
+  .btn-mini.on { background: var(--note-bg); border-color: var(--note); color: var(--note); font-weight: 600; }
   /* ---- 重複お知らせ（同じ表現をもう一度保存しようとしたとき） ---- */
   .dup-notice {
     margin-top: 10px;
@@ -172,6 +175,10 @@
     margin-bottom: 10px;
   }
   .list-toolbar .seg-btn { flex: 0 0 auto; padding: 6px 10px; font-size: 0.74rem; }
+  /* 「📓 ノートから」ボタンが増えたぶん、狭い画面では右のボタンを次の行へ回す（週ごと／新しい順を押しつぶさない） */
+  .list-toolbar { flex-wrap: wrap; row-gap: 6px; }
+  .list-toolbar .seg { flex: 0 0 auto; }
+  .toolbar-right { display: flex; gap: 6px; align-items: center; margin-left: auto; }
   .wk-group { margin-bottom: 12px; }
   .wk-toggle {
     width: 100%;
@@ -218,6 +225,9 @@
   .badge-pending { background: var(--orange-bg); color: var(--orange); }
   .badge-done { background: var(--green-bg); color: var(--green); }
   .badge-mine { background: var(--mine-bg); color: var(--mine); }
+  .badge-note { background: var(--note-bg); color: var(--note); }
+  .card .src-line { font-size: 0.72rem; color: var(--note); margin-top: 4px; }
+  .mini-note { font-size: 0.72rem; margin-left: 5px; color: var(--note); font-weight: 600; white-space: nowrap; }
   .card .ja { font-size: 1rem; margin: 6px 0 4px; font-weight: 600; }
   .card .en { font-size: 0.95rem; margin: 2px 0; color: var(--blue-dark); }
   .card .en-rough { font-size: 0.9rem; margin: 2px 0; color: var(--sub); font-style: italic; }
@@ -771,6 +781,7 @@
       <li>フレーズの <b>☆</b> をタップすると<b>⭐ お気に入り</b>タブに集まる（この端末のみ保存）。覚えにくい表現・よく使う表現をここに貯めて、まとめてテストできる</li>
       <li><b>📅 週まとめ</b>タブ … 月曜〜日曜の週ごとに、その週覚えた表現が日付順にまとまる。<b>🎧 通し再生</b>でその週の全フレーズを「日本語 →（間）→ 英語」の順に自動再生できる（英語だけ速度変更可）</li>
       <li><b>✍️ テスト</b>タブ … 週（または全期間・⭐お気に入り）を選んで日本語→英語の産出テスト。「書く」は自動採点＋差分表示、「言う」は口頭で答えて自己採点。スコアは週ごとに記録される</li>
+      <li><b>📓 ノートから</b> … 手書きノートの写真から <code>/note-phrase-add</code> で取り込んだフレーズ。カードに「📓 ノートから」と出典（ノート名・画像名）が付く。一覧の「📓 ノートから」ボタンで絞り込めて、テストの出題範囲でも選べる</li>
     </ol>
   </details>
 
@@ -796,7 +807,10 @@
       <button class="seg-btn active" data-pview="week">📅 週ごと</button>
       <button class="seg-btn" data-pview="flat">🕘 新しい順</button>
     </div>
-    <button class="btn-mini" id="wkExpandBtn">全て開く</button>
+    <div class="toolbar-right">
+      <button class="btn-mini" id="noteOnlyBtn" hidden>📓 ノートから</button>
+      <button class="btn-mini" id="wkExpandBtn">全て開く</button>
+    </div>
   </div>
   <div id="polishedList"></div>
 
@@ -881,7 +895,7 @@
     <div class="due-box" id="dueBox"></div>
     <div class="capture-box">
       <h2 class="panel-title">✍️ 復習テスト（日本語 → 英語）</h2>
-      <label class="field-label">出題する範囲（📅今日の復習 / 週 / 全期間 / ⭐お気に入り）</label>
+      <label class="field-label">出題する範囲（📅今日の復習 / 週 / 全期間 / ⭐お気に入り / 📓ノートから）</label>
       <select id="testWeekSel" class="select"></select>
       <label class="field-label">解答のしかた</label>
       <div class="seg" id="testModeSeg">
@@ -927,6 +941,7 @@
 /* ---- 保存済みフレーズ（/phrase-note-add が追記する） ---- */
 const PHRASES = [
   // { id, ja, en, explanation, related: ["...", "..."], savedAt }
+  // ノートの写真から取り込んだもの（/note-phrase-add）は src: "note", srcRef: "ノート名/画像名" が付く
   {
     id: 1784255455493,
     ja: "できるだけ早く",
@@ -7730,6 +7745,34 @@ const PHRASES = [
       { ja: "別に彼が嫌いなわけじゃないんだけど、一緒に働くと疲れる", en: "It is not like I dislike him or anything, but working with him is exhausting." }
     ],
     savedAt: "2026-09-09T02:45:01.067Z"
+  },
+  {
+    id: 1789107663244,
+    ja: "ポイントカード",
+    en: "a loyalty card for A",
+    explanation: "「ポイントカード」は和製英語で、英語では「常連（loyal な客）向けのカード」という発想で loyalty card と言う。どの店のカードかは for のあとに店名を置いて表す（a loyalty card for this store）。",
+    related: ["a rewards card", "a points card"],
+    apply: [
+      { ja: "このお店のポイントカードはお持ちですか？", en: "Do you have a loyalty card for this store?" },
+      { ja: "近所のカフェのポイントカードを作ったら、10杯目が無料になった", en: "I got a loyalty card for the café near my house, and my tenth coffee was free." }
+    ],
+    src: "note",
+    srcRef: "Bizmate 表現まとめ/IMG_2158.HEIC",
+    savedAt: "2026-09-11T06:21:03.244Z"
+  },
+  {
+    id: 1789107663245,
+    ja: "寝る／床につく",
+    en: "hit the sack",
+    explanation: "sack はもともとわらを詰めた寝袋・布団のことで、そこに体を投げ出す＝「寝床に入る」。go to bed と同じ意味のくだけた口語なので、友人との会話向き。エッセイやビジネスの文書では go to bed を使う。",
+    related: ["go to bed", "turn in"],
+    apply: [
+      { ja: "明日は朝が早いから、今夜は早めに寝るよ", en: "I have an early morning tomorrow, so I'm going to hit the sack early tonight." },
+      { ja: "昨夜、弟はゲームをやめなくて午前3時まで寝なかった", en: "Last night, my brother didn't hit the sack until 3 a.m. because he kept playing games." }
+    ],
+    src: "note",
+    srcRef: "Bizmate 表現まとめ/IMG_2158.HEIC",
+    savedAt: "2026-09-11T06:21:03.245Z"
   }
 ];
 
@@ -8117,9 +8160,10 @@ function render() {
     ? pending.filter(e => [e.ja, e.en_rough, e.en_mine].some(t => (t || '').toLowerCase().includes(query)))
     : pending;
 
+  const base = polishedBase();
   const polishedFiltered = (query
-    ? PHRASES.filter(p => [p.ja, p.en, p.explanation].some(s => (s || '').toLowerCase().includes(query)))
-    : PHRASES
+    ? base.filter(p => [p.ja, p.en, p.explanation, p.srcRef].some(s => (s || '').toLowerCase().includes(query)))
+    : base
   ).slice().sort((a, b) => new Date(b.savedAt || 0) - new Date(a.savedAt || 0));
 
   document.getElementById('pendingCount').textContent = pending.length;
@@ -8153,7 +8197,7 @@ function render() {
   const polishedEl = document.getElementById('polishedList');
   if (!polishedFiltered.length) {
     polishedEl.innerHTML = query
-      ? `<div class="empty">「${escapeHtml(query)}」に一致する保存済みフレーズはありません</div>`
+      ? `<div class="empty">「${escapeHtml(query)}」に一致する${noteFilterOn() ? 'ノートからの' : '保存済み'}フレーズはありません</div>`
       : `<div class="empty">保存済みフレーズはまだありません</div>`;
   } else if (polishedView === 'flat') {
     polishedEl.innerHTML = polishedFiltered.map(p => phraseCardHtml(p)).join('');
@@ -8161,9 +8205,45 @@ function render() {
     polishedEl.innerHTML = polishedWeeksHtml(polishedFiltered);
   }
   updateWkToolbar();
+  updateNoteOnlyBtn();
 
   updateFavCounts();
   updateDueBadge();
+}
+
+/* ==========================================================
+   📓 ノートから
+   ---------------------------------------------------------
+   /note-phrase-add が手書きノートの写真（赤で書いた英語・赤下線の英語）
+   から取り込んだフレーズには src: "note" と srcRef（"ノート名/画像名"）が付く。
+   カードのバッジと出典、一覧の絞り込み、テストの出題範囲で使う。
+   ========================================================== */
+const NOTE_ONLY_KEY = 'phraseNote_noteOnly';
+let noteOnly = localStorage.getItem(NOTE_ONLY_KEY) === '1';
+
+function isNotePhrase(p) { return !!(p && p.src === 'note'); }
+function notePhrases() { return PHRASES.filter(isNotePhrase); }
+/* 絞り込みが効いているか（ノート由来が1件も無いときは押せないので効かない） */
+function noteFilterOn() { return noteOnly && notePhrases().length > 0; }
+/* 📚 保存済みフレーズの一覧に出す元の集合 */
+function polishedBase() { return noteFilterOn() ? notePhrases() : PHRASES; }
+function noteSrcLabel(p) { return String(p.srcRef || '').split('/').filter(Boolean).join(' ・ '); }
+function noteBadgeHtml(p) { return isNotePhrase(p) ? `<span class="badge badge-note">📓 ノートから</span>` : ''; }
+function noteSrcHtml(p) {
+  return isNotePhrase(p) && p.srcRef ? `<div class="src-line">出典: ${escapeHtml(noteSrcLabel(p))}</div>` : '';
+}
+function setNoteOnly(on) {
+  noteOnly = !!on;
+  localStorage.setItem(NOTE_ONLY_KEY, noteOnly ? '1' : '0');
+  render();
+}
+function updateNoteOnlyBtn() {
+  const btn = document.getElementById('noteOnlyBtn');
+  if (!btn) return;
+  const n = notePhrases().length;
+  btn.hidden = !n;
+  btn.textContent = `📓 ノートから（${n}）`;
+  btn.classList.toggle('on', noteFilterOn());
 }
 
 /* 保存済みフレーズのカード（📝メモ / ⭐お気に入り 共通） */
@@ -8172,7 +8252,8 @@ function phraseCardHtml(p, context) {
   const badge = (context === 'fav'
     ? `<span class="badge badge-fav">⭐ お気に入り</span>`
     : `<span class="badge badge-done">📚 清書済み</span>`)
-    + (p.mine ? `<span class="badge badge-mine">✍️ 自分の英語</span>` : '');
+    + (p.mine ? `<span class="badge badge-mine">✍️ 自分の英語</span>` : '')
+    + noteBadgeHtml(p);
   return `
     <div class="card">
       <div class="card-head">
@@ -8182,6 +8263,7 @@ function phraseCardHtml(p, context) {
         </div>
         ${favBtnHtml(p.id)}
       </div>
+      ${noteSrcHtml(p)}
       <div class="ja">${escapeHtml(p.ja)}</div>
       ${isRevealed ? `
       <div class="en">${escapeHtml(p.en)}</div>
@@ -8278,12 +8360,12 @@ function togglePolishedWeek(key) {
 
 /* いま画面に出ている週が全て開いているか */
 function allWeeksOpen() {
-  const keys = groupPhrasesByWeek(PHRASES).map(w => w.key);
+  const keys = groupPhrasesByWeek(polishedBase()).map(w => w.key);
   return keys.length > 0 && keys.every(k => polishedOpenWeeks.has(k));
 }
 
 function toggleAllPolishedWeeks() {
-  const keys = groupPhrasesByWeek(PHRASES).map(w => w.key);
+  const keys = groupPhrasesByWeek(polishedBase()).map(w => w.key);
   if (allWeeksOpen()) polishedOpenWeeks.clear();
   else keys.forEach(k => polishedOpenWeeks.add(k));
   savePolishedOpen();
@@ -8391,7 +8473,7 @@ function renderWeeks() {
           const open = weekRevealSet.has(p.id);
           return `<div class="mini-row">
             <div class="mini-head">
-              <div class="mini-ja">${escapeHtml(p.ja)}</div>
+              <div class="mini-ja">${escapeHtml(p.ja)}${isNotePhrase(p) ? `<span class="mini-note" title="ノートから">📓 ノート</span>` : ''}</div>
               ${favBtnHtml(p.id, 'small')}
             </div>
             ${open ? `
@@ -9482,7 +9564,8 @@ function renderTestSetup() {
       return `<option value="${w.key}">${tag}${w.label}（${w.items.length}件）</option>`;
     }).join('')
     + `<option value="__all__">全期間（${PHRASES.length}件）</option>`
-    + `<option value="__fav__">⭐ お気に入り（${favPhrases().length}件）</option>`;
+    + `<option value="__fav__">⭐ お気に入り（${favPhrases().length}件）</option>`
+    + (notePhrases().length ? `<option value="__note__">📓 ノートから（${notePhrases().length}件）</option>` : '');
   if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
   else if (weeks.length) sel.value = (weeks.find(w => w.key === LAST_WEEK_KEY) || weeks[0]).key;
 
@@ -9497,15 +9580,17 @@ function testTargetLabel(key) {
   if (key === '__due__') return '📅 今日の復習';
   if (key === '__all__') return '全期間';
   if (key === '__fav__') return '⭐ お気に入り';
+  if (key === '__note__') return '📓 ノートから';
   return weekRangeLabel(key);
 }
 /* 週ごとのスコア記録の対象外（週に属さない出題範囲） */
-function isSpecialKey(key) { return key === '__all__' || key === '__fav__' || key === '__due__'; }
+function isSpecialKey(key) { return key === '__all__' || key === '__fav__' || key === '__due__' || key === '__note__'; }
 
 function poolFor(weekKey, scope) {
   let pool = weekKey === '__all__' ? PHRASES.slice()
     : weekKey === '__due__' ? dueQueue()
     : weekKey === '__fav__' ? favPhrases()
+    : weekKey === '__note__' ? notePhrases()
     : PHRASES.filter(p => weekKeyOf(p.savedAt) === weekKey);
   if (scope === 'weak') pool = pool.filter(p => isWeak(p.id));
   if (scope === 'apply') {
@@ -9575,6 +9660,7 @@ function startTest(customQueue) {
           ? '今日つかう時間ぶんは終わりました（上のカードの「＋ もう◯問やる」で続けられます）'
           : '今日ぶんの復習は終わりました 🎉')
       : weekKey === '__fav__' ? 'お気に入りがまだありません（☆をタップして登録）'
+      : weekKey === '__note__' ? 'ノートから取り込んだフレーズはまだありません'
       : 'この週にはフレーズがありません');
     return;
   }
@@ -9926,6 +10012,7 @@ document.getElementById('polishedViewSeg').addEventListener('click', e => {
   setPolishedView(b.dataset.pview);
 });
 document.getElementById('wkExpandBtn').addEventListener('click', toggleAllPolishedWeeks);
+document.getElementById('noteOnlyBtn').addEventListener('click', () => setNoteOnly(!noteFilterOn()));
 document.getElementById('copyBtn').addEventListener('click', copyPending);
 document.getElementById('clearBtn').addEventListener('click', clearAllPending);
 document.getElementById('searchBox').addEventListener('input', render);
