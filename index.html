@@ -529,6 +529,17 @@
   }
   .test-input:focus { outline: 2px solid var(--blue); }
   .test-btn-row { display: flex; gap: 8px; margin-top: 10px; }
+  /* 言うモードの自己採点（100〜0%の6段階。狭い画面でも3×2で並ぶ） */
+  .self-label { font-size: 0.78rem; color: var(--sub); font-weight: 700; margin-top: 12px; }
+  .self-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
+  .self-btn {
+    border-radius: 10px; padding: 11px 4px; font-size: 0.95rem; font-weight: 700;
+    background: var(--card); border: 1px solid var(--border); color: var(--text);
+  }
+  .self-btn.s-ok { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .self-btn.s-mid { background: var(--orange-bg); border-color: var(--orange); color: var(--orange); }
+  .self-btn.s-ng { background: #fdecec; border-color: #c53030; color: #c53030; }
+  .self-btn:active { filter: brightness(0.93); }
   .verdict { font-size: 1rem; font-weight: 700; margin: 4px 0 8px; }
   .v-correct { color: var(--green); }
   .v-close { color: var(--orange); }
@@ -780,7 +791,7 @@
       <li><b>📚 保存済みフレーズ</b>は<b>週ごとのトグル</b>でまとまる（初期表示は今週だけ開く）。見出しをタップで開閉、「全て開く」で一括展開。<b>🕘 新しい順</b>に切り替えれば従来どおりの通し一覧になる</li>
       <li>フレーズの <b>☆</b> をタップすると<b>⭐ お気に入り</b>タブに集まる（この端末のみ保存）。覚えにくい表現・よく使う表現をここに貯めて、まとめてテストできる</li>
       <li><b>📅 週まとめ</b>タブ … 月曜〜日曜の週ごとに、その週覚えた表現が日付順にまとまる。<b>🎧 通し再生</b>でその週の全フレーズを「日本語 →（間）→ 英語」の順に自動再生できる（英語だけ速度変更可）</li>
-      <li><b>✍️ テスト</b>タブ … 週（または全期間・⭐お気に入り）を選んで日本語→英語の産出テスト。「書く」は自動採点＋差分表示、「言う」は口頭で答えて自己採点。スコアは週ごとに記録される</li>
+      <li><b>✍️ テスト</b>タブ … 週（または全期間・⭐お気に入り）を選んで日本語→英語の産出テスト。「書く」は自動採点＋差分表示、「言う」は口頭で答えて100〜0%の6段階で自己採点。スコアは週ごとに記録される</li>
       <li><b>📓 ノートから</b> … 手書きノートの写真から <code>/note-phrase-add</code> で取り込んだフレーズ。カードに「📓 ノートから」と出典（ノート名・画像名）が付く。一覧の「📓 ノートから」ボタンで絞り込めて、テストの出題範囲でも選べる</li>
     </ol>
   </details>
@@ -9933,6 +9944,286 @@ const PHRASES = [
     src: "note",
     srcRef: "Bizmate 表現まとめ/IMG_2183.HEIC",
     savedAt: "2026-09-14T04:39:19.190Z"
+  },
+  {
+    id: 1789029696368,
+    ja: "より貢献できる",
+    en: "be able to contribute more",
+    explanation: "「より〜できる」は contribute more でそのまま言える。何に貢献するかは contribute more to the team のように to で続ける。be able to を付けると「（〜すれば）もっと貢献できる」という見込みが出る。",
+    related: ["make a greater contribution", "add more value"],
+    apply: [
+      { ja: "英語を上達させて、海外のプロジェクトにもっと貢献したい", en: "I want to improve my English so I can contribute more to international projects." }
+    ],
+    savedAt: "2026-09-10T08:41:36.368Z"
+  },
+  {
+    id: 1789040490234,
+    ja: "私のスライドチェックして",
+    en: "Can you check my slides for any mistakes?",
+    en_orig: "Can you check my slides for any mistakes？",
+    mine: true,
+    explanation: "文末の「？」が全角だったので半角の ? にした（直したのはここだけ）。check A for B は「Bがないか Aを確認する」という定番の形で、for any mistakes まで言うと何を見てほしいかがはっきり伝わる。",
+    related: ["Could you look over my slides?", "Would you mind proofreading my slides?"],
+    apply: [
+      { ja: "提出する前に、私のレポートに誤字がないかチェックしてもらえますか", en: "Can you check my report for any typos before I submit it?" }
+    ],
+    savedAt: "2026-09-10T11:41:30.234Z"
+  },
+  {
+    id: 1789040753256,
+    ja: "近くの沿岸で釣りする",
+    en: "go fishing at the nearby coast",
+    mine: true,
+    explanation: "go fishing は〈go＋-ing〉で「〜しに出かける」の定番の形で、at the nearby coast で場所まで自然に伝わる。このまま日常会話で通じる。",
+    related: ["go fishing along the coast near here", "go fishing at a nearby beach"],
+    apply: [
+      { ja: "夏休みは祖父と近くの湖へ釣りに行った", en: "During summer vacation, I went fishing at a nearby lake with my grandfather." }
+    ],
+    savedAt: "2026-09-10T11:45:53.256Z"
+  },
+  {
+    id: 1789040790107,
+    ja: "AI学習アプリを作る",
+    en: "build an AI study app",
+    en_orig: "build an AI study apps",
+    mine: true,
+    explanation: "an（1つの）と複数形の apps が食い違っていたので、単数の app にそろえた。build an app は「アプリを開発する」の定番の言い方で、作る中身が伝わる自然な表現。",
+    related: ["develop an AI-powered learning app", "create an app for studying with AI"],
+    apply: [
+      { ja: "週末は、英単語を覚えるためのアプリを作っています", en: "On weekends, I'm building an app to help me memorize English words." }
+    ],
+    savedAt: "2026-09-10T11:46:30.107Z"
+  },
+  {
+    id: 1789088283363,
+    ja: "蛹、メタモルフォーゼの途中",
+    en: "A pupa, in the middle of its metamorphosis",
+    explanation: "「〜の途中」は in the middle of ~ が基本で、its を付けると「その蛹自身の変態」とつながる。蝶の蛹や「成長途中の自分」のたとえには chrysalis もよく使われる。",
+    related: ["a chrysalis, midway through its transformation", "in the middle of a transformation"],
+    apply: [
+      { ja: "今は引っ越しの途中なので、部屋が段ボールだらけだ", en: "We're in the middle of moving, so the room is full of boxes." }
+    ],
+    savedAt: "2026-09-11T00:58:03.363Z"
+  },
+  {
+    id: 1789088299850,
+    ja: "まだ子供が食べてる途中でしょうが！",
+    en: "Can't you see the kids are still eating?!",
+    explanation: "「〜でしょうが！」は相手を叱りつける強い抗議なので、Can't you see ~?（見てわからないのか）で怒りを出す。I'm sure は「きっと〜だ」という推量になり、怒りが消えてしまう。",
+    related: ["The kids aren't done eating yet!", "Hey, the kids are still eating!"],
+    apply: [
+      { ja: "まだ私が話している途中でしょう！", en: "Can't you see I'm still talking?!" }
+    ],
+    savedAt: "2026-09-11T00:58:19.850Z"
+  },
+  {
+    id: 1789088336425,
+    ja: "校庭の端から端まで行くのに自転車で20分かかる",
+    en: "It takes 20 minutes by bike to get from one end of the schoolyard to the other.",
+    explanation: "「端から端まで」は from one end of A to the other が定番（the other のあとの end は省く）。所要時間は It takes＋時間＋to do で言う。簡易訳もほぼこのままで正しい。",
+    related: ["It's a 20-minute bike ride across the schoolyard.", "Biking across the schoolyard takes 20 minutes."],
+    apply: [
+      { ja: "この橋の端から端まで歩くと10分かかる", en: "It takes 10 minutes to walk from one end of this bridge to the other." }
+    ],
+    savedAt: "2026-09-11T00:58:56.425Z"
+  },
+  {
+    id: 1789088671402,
+    ja: "一カ月じゃそんなもんだろ",
+    en: "That's about what you'd expect after just a month.",
+    explanation: "「そんなもんだろ」は that's about what you'd expect（まあ予想どおりだ）で表す。in a month は「1か月後に」とも読めるので、after just a month で「たった1か月では」を出す。",
+    related: ["What do you expect after only a month?", "That's pretty normal for just one month."],
+    apply: [
+      { ja: "初めてのマラソンで5時間なら、そんなもんだよ", en: "Five hours for your first marathon is about what you'd expect." }
+    ],
+    savedAt: "2026-09-11T01:04:31.402Z"
+  },
+  {
+    id: 1789118676346,
+    ja: "まじでほんとにどうでもいい",
+    en: "I seriously couldn't care less.",
+    explanation: "couldn't care less は「これ以上気にしようがない＝心底どうでもいい」という強調の定番。I don't really care は really が否定の中に入って「そこまで気にしない」と弱まるので、「まじでほんとに」の強さが出ない。",
+    related: ["I literally don't care at all.", "It doesn't matter to me one bit."],
+    apply: [
+      { ja: "他人が自分をどう思うかなんて、心底どうでもいい", en: "I couldn't care less what other people think of me." }
+    ],
+    savedAt: "2026-09-11T09:24:36.346Z"
+  },
+  {
+    id: 1789182155263,
+    ja: "人生上手くいかないことばっかり",
+    en: "Nothing in life ever goes my way.",
+    explanation: "「〜ばっかり」の嘆きは Nothing ever ~ と否定で強めるのが英語らしい。go one's way は「思いどおりにいく」。All the things that don't work out... は名詞のかたまりだけで文になっていない。",
+    related: ["Life never goes the way I want.", "It's just one thing after another."],
+    apply: [
+      { ja: "今週は何をやってもうまくいかない", en: "Nothing has gone my way this week." }
+    ],
+    savedAt: "2026-09-12T03:02:35.263Z"
+  },
+  {
+    id: 1789182194113,
+    ja: "欲しいと思ったものは絶対に手に入らないものだったから",
+    en: "Because the things I wanted were always out of reach.",
+    explanation: "「手に入らないもの」は out of reach（手の届かないところにある）で短く言える。I never got what I wanted だと「手に入らなかった」結果だけになり、「欲しくなるのはいつも手の届かないものだった」というニュアンスが落ちる。",
+    related: ["Because I always wanted things I could never have.", "Because whatever I wanted was always just out of reach."],
+    apply: [
+      { ja: "子どもの頃、欲しいおもちゃはいつも高すぎて手が届かなかった", en: "When I was a kid, the toys I wanted were always out of reach because they were too expensive." }
+    ],
+    savedAt: "2026-09-12T03:03:14.113Z"
+  },
+  {
+    id: 1789182432426,
+    ja: "タイムルールに関しては、",
+    en: "When it comes to the time rules, ...",
+    explanation: "「〜に関しては」と話題を切り出すときは When it comes to ~ が会話で自然（regarding は書き言葉寄り）。to は前置詞なので、あとには名詞か -ing 形が来る（When it comes to cooking）。",
+    related: ["As for the time rules, ...", "Regarding the time limits, ..."],
+    apply: [
+      { ja: "料理に関しては、兄のほうがずっと上手だ", en: "When it comes to cooking, my older brother is much better than I am." }
+    ],
+    savedAt: "2026-09-12T03:07:12.426Z"
+  },
+  {
+    id: 1789188165204,
+    ja: "人1番がんばらないと",
+    en: "I have to work harder than anyone else.",
+    explanation: "「人一番」は〈比較級＋than anyone else〉で表す。People have to do their best は「人々は」が主語になり、自分の決意が消えてしまう。",
+    related: ["I need to put in more effort than anyone.", "I have to outwork everyone."],
+    apply: [
+      { ja: "才能がない分、人一番練習するしかない", en: "Since I'm not naturally talented, I have to practice harder than anyone else." }
+    ],
+    savedAt: "2026-09-12T04:42:45.204Z"
+  },
+  {
+    id: 1789194552941,
+    ja: "突拍子もない話だけど",
+    en: "This might sound crazy, but...",
+    explanation: "話の前置きの「突拍子もない話だけど」は This might sound crazy, but が定番。It's not an unusual story は「珍しくない話だ」で意味が逆になっている。",
+    related: ["I know this sounds out there, but...", "This may sound far-fetched, but..."],
+    apply: [
+      { ja: "突拍子もない話だけど、会社を辞めて海外でVFXを学ぼうと思っている", en: "This might sound crazy, but I'm thinking of quitting my job to study VFX abroad." }
+    ],
+    savedAt: "2026-09-12T06:29:12.941Z"
+  },
+  {
+    id: 1789197002236,
+    ja: "器用な人だ",
+    en: "He's really good with his hands.",
+    explanation: "手先が器用なことは good with one's hands が会話の定番。dexterous も正しいが硬い書き言葉。「何でもそつなくこなす」の意味の器用なら jack of all trades を使う。",
+    related: ["He's very handy.", "He's a jack of all trades."],
+    apply: [
+      { ja: "祖母は手先が器用で、服を全部自分で作っていた", en: "My grandmother was really good with her hands and made all her own clothes." }
+    ],
+    savedAt: "2026-09-12T07:10:02.236Z"
+  },
+  {
+    id: 1789216936148,
+    ja: "お世辞でも嬉しいよ、嘘でも嬉しい",
+    en: "Even if you're just flattering me, I'm still happy to hear it.",
+    explanation: "「〜でも嬉しい」は Even if ~, I'm still happy と still で「それでも」を出す。I'm happy to be flattering は「自分がお世辞を言えて嬉しい」になり、言う側と言われる側が逆になる。",
+    related: ["Even if it's a lie, it still makes my day.", "Flattery or not, thank you!"],
+    apply: [
+      { ja: "お世辞だとわかっていても、先生にほめられて嬉しかった", en: "Even though I knew my teacher was just flattering me, I was still happy to hear it." }
+    ],
+    savedAt: "2026-09-12T12:42:16.148Z"
+  },
+  {
+    id: 1789257273990,
+    ja: "卑怯",
+    en: "unfair",
+    explanation: "「卑怯だ」は「ずるい・正々堂々としていない」なので unfair が基本（卑怯な手＝a dirty trick）。cowardice は「臆病さ」で、怖がって逃げる意味に寄るためずれる。",
+    related: ["dirty (a dirty trick)", "sneaky"],
+    apply: [
+      { ja: "後ろから攻撃するなんて卑怯だよ", en: "Attacking someone from behind is so unfair." }
+    ],
+    savedAt: "2026-09-12T23:54:33.990Z"
+  },
+  {
+    id: 1789257287068,
+    ja: "うまく寝れなかった",
+    en: "I didn't sleep well.",
+    explanation: "日本語で省かれている主語 I を補う。寝つけなかったことを言いたいなら I couldn't fall asleep、眠りが浅かったなら I didn't sleep well と使い分ける。",
+    related: ["I had a rough night.", "I couldn't get a good night's sleep."],
+    apply: [
+      { ja: "緊張して、試験の前の晩はうまく寝れなかった", en: "I was so nervous that I didn't sleep well the night before the exam." }
+    ],
+    savedAt: "2026-09-12T23:54:47.068Z"
+  },
+  {
+    id: 1789267443834,
+    ja: "できるのは大前提だ",
+    en: "Being able to do it is a given.",
+    explanation: "「大前提＝言うまでもない当然のこと」は a given で表す。premise は議論の「前提」という硬い語で、big premise は英語として不自然。",
+    related: ["That goes without saying.", "That's the bare minimum."],
+    apply: [
+      { ja: "この仕事では、英語が話せるのは大前提だ", en: "In this job, being able to speak English is a given." }
+    ],
+    savedAt: "2026-09-13T02:44:03.834Z"
+  },
+  {
+    id: 1789270000285,
+    ja: "それを聞いて安心しました",
+    en: "I'm relieved to hear that.",
+    explanation: "「〜を聞いて安心した」は be relieved to hear ~ の定型。相手の話にその場で返すなら現在形が自然。簡易訳は別の文になっていて使えない。",
+    related: ["That's a relief.", "Good to hear."],
+    apply: [
+      { ja: "手術が無事に終わったと聞いて、家族はみんな安心した", en: "The whole family was relieved to hear that the surgery went well." }
+    ],
+    savedAt: "2026-09-13T03:26:40.285Z"
+  },
+  {
+    id: 1789281676914,
+    ja: "誤魔化す",
+    en: "cover up",
+    explanation: "ミスや事実を隠す「誤魔化す」は cover up が最も広く使える。話をはぐらかすなら dodge / gloss over、数字をごまかすなら fudge と場面で変わる。masquerade は「〜のふりをする・仮装する」で意味がずれる。",
+    related: ["gloss over", "fudge the numbers"],
+    apply: [
+      { ja: "彼はミスを誤魔化そうとしたが、すぐにばれた", en: "He tried to cover up his mistake, but he got caught right away." }
+    ],
+    savedAt: "2026-09-13T06:41:16.914Z"
+  },
+  {
+    id: 1789281682203,
+    ja: "小手先だけだ",
+    en: "It's all just superficial tricks.",
+    explanation: "「小手先」は中身や実力を伴わない、うわべだけのうまさ。trick だけだと「手品・いたずら」に寄るので、superficial（表面的な）を足して「うわべのテクニック」を出す。",
+    related: ["There's no real substance to it.", "It's just a quick fix."],
+    apply: [
+      { ja: "小手先のテクニックだけでは、面接官にすぐ見抜かれる", en: "Interviewers can see right through superficial tricks." }
+    ],
+    savedAt: "2026-09-13T06:41:22.203Z"
+  },
+  {
+    id: 1789387106816,
+    ja: "居残り勉強をする",
+    en: "stay late to study",
+    explanation: "「居残り」は stay late / stay behind で表す。overtime は給料が出る仕事の残業を指すので、study overtime は不自然。学校での居残りなら stay after school to study。",
+    related: ["stay after school to study", "stay behind to study"],
+    apply: [
+      { ja: "新人のころは会社に居残って、ソフトの使い方を勉強していた", en: "When I was new at the company, I used to stay late to study how to use the software." }
+    ],
+    savedAt: "2026-09-14T11:58:26.816Z"
+  },
+  {
+    id: 1789387134518,
+    ja: "残業",
+    en: "overtime",
+    explanation: "overtime は名詞でも副詞でも使え、「残業する」は work overtime、「残業代」は overtime pay。サービス残業のような無給の居残りは unpaid overtime。",
+    related: ["extra hours", "work late"],
+    apply: [
+      { ja: "今週は毎日残業しなければならなかった", en: "I had to work overtime every day this week." }
+    ],
+    savedAt: "2026-09-14T11:58:54.518Z"
+  },
+  {
+    id: 1789392072330,
+    ja: "自分は英語の初心者です",
+    en: "I'm a beginner at English.",
+    explanation: "「〜の初心者」は a beginner at / in ~。an English beginner は「イギリス人の初心者」とも読めるので避ける。自己紹介で控えめに言うなら just を足して I'm just a beginner at English。",
+    related: ["My English is at a beginner level.", "I'm new to learning English."],
+    apply: [
+      { ja: "プログラミングは初心者なので、ゆっくり説明してもらえますか", en: "I'm a beginner at programming, so could you explain it slowly?" }
+    ],
+    savedAt: "2026-09-14T13:21:12.330Z"
   }
 ];
 
@@ -11767,7 +12058,7 @@ function updateSetupInfo() {
   const n = poolFor(key, testScope).length;
   const modeText = testMode === 'type'
     ? '日本語を見て英語を入力 → 語単位で自動採点（言い換えも正解判定）'
-    : '日本語を見て口に出して言う → 答えを見て自分で ⭕/❌ を付ける';
+    : '日本語を見て口に出して言う → 答えを見て 100〜0% の6段階で自己採点（80%以上＝正解・40〜60%＝惜しい）';
   const scopeText = testScope === 'apply'
     ? '<br>🚀 <b>応用</b>：覚えた表現を、別の場面の日本語で英訳します（本体に一度正解したフレーズだけ出ます）'
     : testScope === 'weak' ? '<br>直近で間違えた・まだ解いていないフレーズだけを出します'
@@ -11886,10 +12177,10 @@ function renderQuestion() {
       ${baseNoteHtml(p)}
       ${p.explanation ? `<div class="mini-exp">💡 ${escapeHtml(p.explanation)}</div>` : ''}
       ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
-      <div class="test-btn-row">
-        <button class="btn-primary" onclick="selfGrade(true)">⭕ 言えた</button>
-        <button class="btn-outline" onclick="selfGrade(false)">❌ 言えなかった</button>
-      </div>` : `
+      <div class="self-label">どれくらい言えた？（押すと次へ）</div>
+      <div class="self-grid">${SELF_SCORES.map(v =>
+        `<button class="self-btn s-${selfVerdict(v)}" onclick="selfGrade(${v})">${selfPct(v)}</button>`).join('')}</div>
+      <div class="diff-legend">80%以上＝正解（次に出るまでの間隔が延びる）／40〜60%＝惜しい／20%以下＝不正解</div>` : `
       <div class="hint-line">${p.isApply ? '覚えた表現を<b>この場面に合わせて</b>使い、声に出して言ってみましょう。' : '日本語を見て、英語で声に出して言ってみましょう。'}</div>
       <div class="test-btn-row">
         <button class="btn-primary" onclick="revealOral()">👁 答えを見る</button>
@@ -11935,11 +12226,23 @@ function showHint() {
 
 function revealOral() { testState.revealed = true; renderQuestion(); }
 
-function selfGrade(ok) {
+/* ---- 言うモードの自己採点（2026-09-14 ⭕❌ → 100〜0%の6段階） ----
+   区切りは「書く」の ⭕/🔺/❌ と speaking-compose の自己採点に揃える:
+   80%以上＝正解（箱が1段上がる）／40〜60%＝惜しい／20%以下＝不正解（惜しい・不正解は箱1に戻る）。
+   押した瞬間が答え合わせ（押し直しの画面は出さない） */
+const SELF_SCORES = [1, 0.8, 0.6, 0.4, 0.2, 0];
+function selfVerdict(s) { return s >= 0.8 ? 'ok' : (s >= 0.4 ? 'mid' : 'ng'); }
+function selfPct(s) { return Math.round(s * 100) + '%'; }
+
+function selfGrade(score) {
+  if (score === true) score = 1; else if (score === false) score = 0;   // 旧 ⭕❌ の呼び方も受ける
+  score = Math.max(0, Math.min(1, Number(score) || 0));
+  const v = selfVerdict(score);
+  const level = v === 'ok' ? 'correct' : (v === 'mid' ? 'close' : 'wrong');
   const p = testState.queue[testState.idx];
-  const before = p.again ? null : recordStat(p.id, ok);   // おかわりは記録に入れない
-  if (!p.again) mvGain(ok);   // やる気の記録（連続日数・XP・バッジ）
-  testState.results[testState.idx] = { phrase: p, level: ok ? 'correct' : 'wrong', user: '', selfGraded: true, before };
+  const before = p.again ? null : recordStat(p.id, level === 'correct');   // おかわりは記録に入れない
+  if (!p.again) mvGain(level === 'correct' ? true : (level === 'close' ? 'half' : false));   // やる気の記録（連続日数・XP・バッジ）
+  testState.results[testState.idx] = { phrase: p, level, user: '', selfGraded: true, self: score, before };
   /* 途中でやめても消えないように、1問ごとに「今日の問数」と「この回の控え」を残す */
   if (!p.again) { bumpDayLog(testState.weekKey === '__due__'); saveRun(); }
   testState.revealed = false;
@@ -12072,6 +12375,8 @@ function finishTest(partial) {
   const restList = st.queue.filter((x, i) => !st.results[i] && !x.again);
 
   const missed = scored.filter(r => r.level !== 'correct').map(r => r.phrase);
+  const selfRows = scored.filter(r => typeof r.self === 'number');
+  const selfAvg = selfRows.length ? selfRows.reduce((a, r) => a + r.self, 0) / selfRows.length : null;
   const comment = pct === 100 ? '完璧です！🎉' : pct >= 80 ? 'いい調子です。落とした表現だけ復習しましょう。'
     : pct >= 50 ? 'あと一息。間違えたものをもう一度回しましょう。' : 'まずは間違えた表現を音声付きで読み直しましょう。';
 
@@ -12087,6 +12392,7 @@ function finishTest(partial) {
         <div class="score-cell"><b class="v-close">${close}</b><span>惜しい</span></div>
         <div class="score-cell"><b class="v-wrong">${wrong}</b><span>不正解</span></div>
       </div>
+      ${selfAvg !== null ? `<div class="hint-line">自己採点の平均 <b>${Math.round(selfAvg * 100)}%</b>（${selfRows.length}問）</div>` : ''}
       <div class="hint-line">${comment}${applyCount ? `<br>🚀 応用 ${applyCount} 問を含みます（週の成績には本体のみ記録）。` : ''}</div>
       ${partial ? `<div class="hint-line">✓ ここまでの <b>${total}</b> 問は記録しました（復習の箱・やる気の記録に反映ずみ）。`
         + (restList.length ? `残り ${restList.length} 問は次回にまわります。` : '') + `</div>` : ''}
