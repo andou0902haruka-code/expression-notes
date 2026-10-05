@@ -29,6 +29,8 @@
     --note-bg: #fbf1e6;
     --web: #0f766e;
     --web-bg: #e6f4f1;
+    --photo: #9d174d;
+    --photo-bg: #fce7f3;
   }
   * { box-sizing: border-box; }
   body {
@@ -229,11 +231,14 @@
   .badge-mine { background: var(--mine-bg); color: var(--mine); }
   .badge-note { background: var(--note-bg); color: var(--note); }
   .badge-web { background: var(--web-bg); color: var(--web); }
+  .badge-photo { background: var(--photo-bg); color: var(--photo); }
   .card .src-line { font-size: 0.72rem; color: var(--note); margin-top: 4px; }
   .card .src-line.web { color: var(--web); }
   .card .src-line.web a { color: inherit; text-decoration: underline; }
+  .card .src-line.photo { color: var(--photo); }
   .mini-note { font-size: 0.72rem; margin-left: 5px; color: var(--note); font-weight: 600; white-space: nowrap; }
   .mini-web { font-size: 0.72rem; margin-left: 5px; color: var(--web); font-weight: 600; white-space: nowrap; }
+  .mini-photo { font-size: 0.72rem; margin-left: 5px; color: var(--photo); font-weight: 600; white-space: nowrap; }
   /* 調べて取り込んだフレーズのタグ（カジュアル／フォーマル／会話 など） */
   .tag-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
   .tag-chip { font-size: 0.7rem; padding: 1px 8px; border-radius: 999px; background: #f1efe9; color: var(--sub); }
@@ -878,6 +883,7 @@
       <li><b>✍️ テスト</b>タブ … 週（または全期間・⭐お気に入り）を選んで日本語→英語の産出テスト。「書く」は自動採点＋差分表示、「言う」は口頭で答えて100〜0%の6段階で自己採点。スコアは週ごとに記録される</li>
       <li><b>📓 ノートから</b> … 手書きノートの写真から <code>/note-phrase-add</code> で取り込んだフレーズ。カードに「📓 ノートから」と出典（ノート名・画像名）が付く。一覧の「📓 ノートから」ボタンで絞り込めて、テストの出題範囲でも選べる</li>
       <li><b>🌐 調べて</b> … テーマを決めて複数のサイトを調べ、<code>/phrase-research</code> で取り込んだフレーズ。カードにテーマと調べたサイトのリンク、タグ（カジュアル／フォーマル／会話 など）が付く。こちらも一覧のボタンで絞り込めて、テストの出題範囲で選べる</li>
+      <li><b>📷 写真から</b> … SNS・アプリのスクショなど、英語と日本語訳が載った写真から <code>/photo-phrase-add</code> で取り込んだフレーズ。カードに「📷 写真から」と出典（投稿者・フォルダ名・画像名）が付く。こちらも一覧のボタンで絞り込めて、テストの出題範囲で選べる</li>
     </ol>
   </details>
 
@@ -906,6 +912,7 @@
     <div class="toolbar-right">
       <button class="btn-mini" id="noteOnlyBtn" hidden>📓 ノートから</button>
       <button class="btn-mini" id="webOnlyBtn" hidden>🌐 調べて</button>
+      <button class="btn-mini" id="photoOnlyBtn" hidden>📷 写真から</button>
       <button class="btn-mini" id="wkExpandBtn">全て開く</button>
     </div>
   </div>
@@ -992,7 +999,7 @@
     <div class="due-box" id="dueBox"></div>
     <div class="capture-box">
       <h2 class="panel-title">✍️ 復習テスト（日本語 → 英語）</h2>
-      <label class="field-label">出題する範囲（📅今日の復習 / 週 / 全期間 / ⭐お気に入り / 📓ノートから）</label>
+      <label class="field-label">出題する範囲（📅今日の復習 / 週 / 全期間 / ⭐お気に入り / 📓ノートから / 📷写真から）</label>
       <select id="testWeekSel" class="select"></select>
       <label class="field-label">解答のしかた</label>
       <div class="seg" id="testModeSeg">
@@ -1049,6 +1056,8 @@ const PHRASES = [
   // ノートの写真から取り込んだもの（/note-phrase-add）は src: "note", srcRef: "ノート名/画像名" が付く
   // テーマで調べて取り込んだもの（/phrase-research）は src: "web", srcRef: "テーマ名",
   //   srcUrl: [{name, url}]（載っていたサイト）, tags: ["カジュアル", ...] が付く
+  // 英語と日本語訳が載った写真（SNSのスクショなど）から取り込んだもの（/photo-phrase-add）は src: "photo",
+  //   srcRef: "フォルダ名/画像名"、読めたときは srcFrom: "@投稿者" が付く
   {
     id: 1784255455493,
     ja: "できるだけ早く",
@@ -12946,6 +12955,4440 @@ const PHRASES = [
       { ja: "卒業生のうち、海外で働くことを目指す割合はどのくらいですか？", en: "What percentage of your graduates are aiming to work overseas?" }
     ],
     savedAt: "2026-09-23T12:27:28.251Z"
+  },
+  {
+    id: 1791181932268,
+    ja: "持ち帰り？",
+    en: "Can I get it to go?",
+    explanation: "get it to go で「持ち帰りにする」。カフェの注文で Can I get it ...? の形にすると、iced（アイスで）や for here（店内で）も同じ形で言える。",
+    related: ["Can I get it iced?", "Can I get it for here?"],
+    apply: [
+      { ja: "そのサンドイッチを持ち帰りにしてもらえますか？", en: "Can I get the sandwich to go?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.268Z"
+  },
+  {
+    id: 1791181932269,
+    ja: "アーモンドミルクはありますか？",
+    en: "Do you have almond milk?",
+    explanation: "Do you have ...? は店に「〜は置いてありますか」と聞く基本形。牛乳の種類やメニューにもそのまま使える。",
+    related: ["Do you have skim milk?", "Do you have a drink menu?"],
+    apply: [
+      { ja: "オーツミルクはありますか？", en: "Do you have oat milk?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.269Z"
+  },
+  {
+    id: 1791181932270,
+    ja: "乳成分不使用のオプションある？",
+    en: "Do you have any dairy-free options?",
+    explanation: "dairy-free は「乳成分を使っていない」。any ... options で「〜の選択肢はありますか」と広く聞ける。",
+    related: ["Do you have any decaf options?", "Do you have any gluten-free options?"],
+    apply: [
+      { ja: "ヴィーガンの選択肢はありますか？", en: "Do you have any vegan options?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.270Z"
+  },
+  {
+    id: 1791181932271,
+    ja: "食品メニューはどんなのある？",
+    en: "What food options do you have?",
+    explanation: "What 名詞 do you have? で「どんな〜がありますか」と品ぞろえを聞く。options は「選べるもの」でメニュー全般に使える。",
+    related: ["What sandwiches do you have?", "What pastries do you have?"],
+    apply: [
+      { ja: "どんなデザートがありますか？", en: "What desserts do you have?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.271Z"
+  },
+  {
+    id: 1791181932272,
+    ja: "温めてほしい",
+    en: "Could you warm it up for me?",
+    explanation: "warm it up で「温め直す」。for me を付けると「私のために」と頼む気持ちがやわらかく出る。",
+    related: ["Could you heat it up for me?"],
+    apply: [
+      { ja: "このスープを温めていただけますか？", en: "Could you warm this soup up for me?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.272Z"
+  },
+  {
+    id: 1791181932273,
+    ja: "袋に入れて",
+    en: "Could you bag it up for me?",
+    explanation: "bag it up は「袋に詰める」。bag を動詞として使う口語的な言い方で、レジでよく使う。",
+    related: ["Could you put it in a bag for me?"],
+    apply: [
+      { ja: "これらを袋に入れていただけますか？", en: "Could you bag these up for me?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.273Z"
+  },
+  {
+    id: 1791181932274,
+    ja: "切ってほしい",
+    en: "Could you cut it up for me?",
+    explanation: "cut it up は「細かく切り分ける」。up が「すっかり・ばらばらに」の感じを足す。",
+    related: ["Could you slice it for me?"],
+    apply: [
+      { ja: "子どもの分のピザを切っていただけますか？", en: "Could you cut up the pizza for my kid?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.274Z"
+  },
+  {
+    id: 1791181932275,
+    ja: "ここの住所は何ですか？",
+    en: "What's the address here?",
+    explanation: "What's the ... here? で「ここの〜は何ですか」とその場所の情報を聞く。Wi-Fi のパスワードやトイレの暗証番号も同じ形で聞ける。",
+    related: ["What's the Wi-Fi password?", "What's the bathroom code?"],
+    apply: [
+      { ja: "このホテルの住所は何ですか？", en: "What's the address of this hotel?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.275Z"
+  },
+  {
+    id: 1791181932276,
+    ja: "どこでパソコンをつなげられる？",
+    en: "Where can I plug in my laptop?",
+    explanation: "plug in は「コンセントにつなぐ」。Where can I ...? で「どこで〜できますか」と場所を聞ける。",
+    related: ["Is there an outlet I can use?", "Where can I plug in my charger?"],
+    apply: [
+      { ja: "どこでスマホを充電できますか？", en: "Where can I plug in my phone?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.276Z"
+  },
+  {
+    id: 1791181932277,
+    ja: "明日いつ開く？",
+    en: "When do you open tomorrow?",
+    explanation: "お店の営業について you を主語にして When do you open? と聞くのが自然。the store を主語にするより会話的。",
+    related: ["What time do you open tomorrow?"],
+    apply: [
+      { ja: "図書館は日曜日はいつ開きますか？", en: "When do you open on Sundays?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.277Z"
+  },
+  {
+    id: 1791181932278,
+    ja: "今日いつ閉まる？",
+    en: "When do you close today?",
+    explanation: "close は「閉店する」。today を付けて「今日は何時までですか」と聞くお決まりの言い方。",
+    related: ["What time do you close today?"],
+    apply: [
+      { ja: "土曜日は何時に閉まりますか？", en: "When do you close on Saturdays?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.278Z"
+  },
+  {
+    id: 1791181932279,
+    ja: "朝食いつ始まる？",
+    en: "When do you start serving breakfast?",
+    explanation: "start serving で「提供を始める」。朝食・ランチの時間帯を聞くときの定番。",
+    related: ["What time does breakfast start?"],
+    apply: [
+      { ja: "ランチはいつから出していますか？", en: "When do you start serving lunch?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.279Z"
+  },
+  {
+    id: 1791181932280,
+    ja: "12オンス、アイス、持ち帰り",
+    en: "Can I get a twelve ounce americano, iced, to go?",
+    explanation: "サイズ→品名→温度→持ち帰りか、の順に並べると一息で注文できる。iced / hot と to go / for here を入れ替えるだけで応用できる。",
+    related: ["Can I get a small green tea, hot, for here?", "Can I get a caramel macchiato?"],
+    apply: [
+      { ja: "ラージのラテを、ホットで、店内でお願いできますか？", en: "Can I get a large latte, hot, for here?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.280Z"
+  },
+  {
+    id: 1791181932281,
+    ja: "めっちゃ最高の時間になる！",
+    en: "It's gonna be a blast!",
+    explanation: "blast は「すごく楽しいこと」。be gonna be a blast で「最高に楽しくなる」と期待をこめて言う口語。",
+    related: ["It's going to be so much fun!"],
+    apply: [
+      { ja: "週末のキャンプはめっちゃ楽しくなるよ！", en: "The camping trip this weekend is gonna be a blast!" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.281Z"
+  },
+  {
+    id: 1791181932282,
+    ja: "新しいラーメン屋は評判どおりだった。",
+    en: "The new ramen place was worth the hype.",
+    noteEn: ["worth the hype"],
+    explanation: "worth the hype は「騒がれるだけの価値がある＝評判どおり」。hype は宣伝・話題の盛り上がり。",
+    related: ["The new ramen place lived up to the hype."],
+    apply: [
+      { ja: "その映画は話題になっているだけの価値があった。", en: "The movie was totally worth the hype." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.282Z"
+  },
+  {
+    id: 1791181932283,
+    ja: "予約できますか？",
+    en: "Do you take reservations?",
+    explanation: "take は店が「受け付ける」の意味。reservations（予約）も walk-ins（予約なしの来店）も同じ形で聞ける。",
+    related: ["Do you take walk-ins?", "Can I make a reservation?"],
+    apply: [
+      { ja: "そのヘアサロンは予約を受け付けていますか？", en: "Does the hair salon take reservations?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.283Z"
+  },
+  {
+    id: 1791181932284,
+    ja: "予約したい！6人で！",
+    en: "I'd like to make a reservation for a party of six.",
+    explanation: "a party of six で「6名の一行」。レストランでは人数を party で言うのが決まった言い方。",
+    related: ["I'd like to make a reservation for next Sunday at noon.", "We're a party of two."],
+    apply: [
+      { ja: "金曜の夜に4名で予約したいです。", en: "I'd like to make a reservation for a party of four on Friday night." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.284Z"
+  },
+  {
+    id: 1791181932285,
+    ja: "2名のテーブルをお願い",
+    en: "Can we get a table for two?",
+    explanation: "Can we get a table for 人数? は入店時に席をお願いする定番。booth（ボックス席）など席の種類もこの形で頼める。",
+    related: ["Can we get a booth?", "Table for two, please."],
+    apply: [
+      { ja: "窓際の3名のテーブルをお願いできますか？", en: "Can we get a table for three by the window?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.285Z"
+  },
+  {
+    id: 1791181932286,
+    ja: "中で座れる？",
+    en: "Can we sit inside?",
+    explanation: "Can we sit ...? で座る場所の希望を伝える。inside / outside / by the wall など場所の語を入れ替えるだけ。",
+    related: ["Can we sit by the wall?", "Can we sit outside?"],
+    apply: [
+      { ja: "テラス席に座れますか？", en: "Can we sit on the patio?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.286Z"
+  },
+  {
+    id: 1791181932287,
+    ja: "追加で人は来る？",
+    en: "Is an extra person joining you?",
+    explanation: "join は「合流する」。進行形で「（あとから）合流する予定ですか」と店員が人数を確認するときの言い方。",
+    related: ["Is anyone else joining you?"],
+    apply: [
+      { ja: "今夜はあと誰か来ますか？", en: "Is anyone else joining us tonight?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.287Z"
+  },
+  {
+    id: 1791181932288,
+    ja: "少し時間をください",
+    en: "We need a minute.",
+    explanation: "注文を急かされたときに「もう少し考えます」と伝える短い一言。minute は「ちょっとの時間」。",
+    related: ["Could we have a few more minutes?"],
+    apply: [
+      { ja: "決めるのにもう少し時間が必要です。", en: "I need a minute to decide." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.288Z"
+  },
+  {
+    id: 1791181932289,
+    ja: "サイドメニューは何がある？",
+    en: "What sides do you have?",
+    explanation: "sides は side dishes（付け合わせ）の略。What ... do you have? で選択肢を聞く。",
+    related: ["What comes on the side?"],
+    apply: [
+      { ja: "どんなソースがありますか？", en: "What sauces do you have?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.289Z"
+  },
+  {
+    id: 1791181932290,
+    ja: "本日のスープは何ですか？",
+    en: "What's your soup of the day?",
+    explanation: "soup of the day で「本日のスープ」。catch of the day（本日の魚）・salad of the day も同じ形。",
+    related: ["What's your catch of the day?", "What's your salad of the day?"],
+    apply: [
+      { ja: "本日のデザートは何ですか？", en: "What's your dessert of the day?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.290Z"
+  },
+  {
+    id: 1791181932291,
+    ja: "キャセロールをお願いします",
+    en: "I'll get the casserole.",
+    explanation: "注文は I'll get ... / I'll have ... が自然。I want ... より丁寧で、決めたことを伝える響きになる。",
+    related: ["I'll have the casserole.", "I'll get the chicken."],
+    apply: [
+      { ja: "私はハンバーガーにします。", en: "I'll get the burger." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.291Z"
+  },
+  {
+    id: 1791181932292,
+    ja: "中と外どっちがいい？",
+    en: "Would you like to sit inside or outside?",
+    explanation: "Would you like to ...? は店員が丁寧に希望を聞く形。A or B で選択肢を示す。",
+    related: ["Inside or outside?"],
+    apply: [
+      { ja: "窓側と通路側、どちらの席がいいですか？", en: "Would you like to sit by the window or by the aisle?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0627.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.292Z"
+  },
+  {
+    id: 1791181932293,
+    ja: "ナッツアレルギーです",
+    en: "I'm allergic to nuts.",
+    explanation: "be allergic to ... で「〜にアレルギーがある」。to の後ろに原因の食べ物を置く。",
+    related: ["I have a nut allergy."],
+    apply: [
+      { ja: "私は貝類にアレルギーがあります。", en: "I'm allergic to shellfish." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.293Z"
+  },
+  {
+    id: 1791181932294,
+    ja: "それをパクチー抜きでお願いします",
+    en: "Can I get that with no cilantro?",
+    explanation: "Can I get that ...? で注文の仕方を指定する。with no ...（〜抜き）・gluten-free・grilled など後ろを入れ替えられる。",
+    related: ["Can I get that gluten-free?", "Can I get that grilled, please?"],
+    apply: [
+      { ja: "それを玉ねぎ抜きでお願いできますか？", en: "Can I get that with no onions?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.294Z"
+  },
+  {
+    id: 1791181932295,
+    ja: "別添えでもっとソースほしい",
+    en: "Can I get some extra sauce on the side?",
+    explanation: "on the side は「別添えで」。extra で「追加の」を表し、量を増やしたいときに使う。",
+    related: ["Can I get some extra veggies on the side?"],
+    apply: [
+      { ja: "ドレッシングを別添えでもらえますか？", en: "Can I get the dressing on the side?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.295Z"
+  },
+  {
+    id: 1791181932296,
+    ja: "私のステーキをミディアムレアで注文したかった",
+    en: "I wanted my steak medium-rare.",
+    explanation: "wanted 名詞 形容詞 で「〜を…の状態で欲しかった」。過去形にすることで、出てきた料理が違うとやんわり伝えられる。",
+    related: ["I ordered my steak medium-rare."],
+    apply: [
+      { ja: "チキンはグリルでお願いしたかったのですが。", en: "I wanted my chicken grilled." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.296Z"
+  },
+  {
+    id: 1791181932297,
+    ja: "このステーキは焼きすぎ",
+    en: "This steak is overcooked.",
+    explanation: "overcooked は「火が通りすぎた」、反対は undercooked。料理の状態を伝える苦情の定番。",
+    related: ["This steak is undercooked."],
+    apply: [
+      { ja: "この野菜は火が通りすぎています。", en: "These vegetables are overcooked." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.297Z"
+  },
+  {
+    id: 1791181932298,
+    ja: "このパスタは水っぽい",
+    en: "This pasta is soggy.",
+    explanation: "soggy は水分を吸って「ふにゃふにゃ・べちゃっとした」状態。パスタやポテトによく使う。",
+    related: ["This pasta is too mushy."],
+    apply: [
+      { ja: "このポテトはしなしなです。", en: "These fries are soggy." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.298Z"
+  },
+  {
+    id: 1791181932299,
+    ja: "夕食は私のおごりだ",
+    en: "Dinner is on me.",
+    explanation: "be on me で「私のおごり」。on は「〜の負担で」。気前よく言う決まり文句。",
+    related: ["I've got this.", "It's my treat."],
+    apply: [
+      { ja: "コーヒーは私がおごるよ。", en: "The coffee is on me." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.299Z"
+  },
+  {
+    id: 1791181932300,
+    ja: "前菜を私の勘定に入れてください",
+    en: "Can you put the appetizer on my tab?",
+    explanation: "tab はお店での「つけ・勘定」。put ... on my tab で「私の勘定に付けて」。",
+    related: ["Can you add the appetizer to my bill?"],
+    apply: [
+      { ja: "飲み物は私の勘定に付けてもらえますか？", en: "Can you put the drinks on my tab?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.300Z"
+  },
+  {
+    id: 1791181932301,
+    ja: "お会計は別々で",
+    en: "Separate, please.",
+    explanation: "会計を別々にしたいときの短い一言。Separate checks, please. とも言う。",
+    related: ["Separate checks, please.", "Can we split the bill?"],
+    apply: [
+      { ja: "支払いは別々でお願いできますか？", en: "Can we pay separately, please?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.301Z"
+  },
+  {
+    id: 1791181932302,
+    ja: "試着室はこの辺りにある？",
+    en: "Are there any fitting rooms around here?",
+    explanation: "Are there any ... around here? で「この辺に〜はありますか」と場所を探す。fitting room は「試着室」。",
+    related: ["Are there any mirrors around here?", "Where are the fitting rooms?"],
+    apply: [
+      { ja: "この辺りにATMはありますか？", en: "Are there any ATMs around here?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.302Z"
+  },
+  {
+    id: 1791181932303,
+    ja: "クリアランスのコーナーはどこか教えて？",
+    en: "Could you point me to the clearance section?",
+    explanation: "point me to ... で「〜の場所を（指さして）教える」。clearance section は売りつくしコーナー。",
+    related: ["Where's the clearance section?"],
+    apply: [
+      { ja: "靴売り場を教えていただけますか？", en: "Could you point me to the shoe section?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.303Z"
+  },
+  {
+    id: 1791181932304,
+    ja: "ただ見てるだけ",
+    en: "I'm just looking, thanks.",
+    explanation: "店員に声をかけられたときの決まり文句。just looking で「見ているだけ」、thanks で感じよく断る。",
+    related: ["I'm just browsing, thanks."],
+    apply: [
+      { ja: "今日は見ているだけです、ありがとう。", en: "I'm just looking today, thanks." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.304Z"
+  },
+  {
+    id: 1791181932305,
+    ja: "このパーカーはいくら？",
+    en: "How much is this hoodie?",
+    explanation: "How much is this ...? は値段を聞く基本形。複数なら How much are these ...? にする。",
+    related: ["How much are these joggers?", "How much is this hat?"],
+    apply: [
+      { ja: "このリュックはいくらですか？", en: "How much is this backpack?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.305Z"
+  },
+  {
+    id: 1791181932306,
+    ja: "何かセールをやってる？",
+    en: "Do you have any sales going on?",
+    explanation: "going on で「（今）行われている」。sales や promotions と組んでセール中かを聞く。",
+    related: ["Are there any promotions right now?"],
+    apply: [
+      { ja: "今、何か割引をやっていますか？", en: "Do you have any discounts going on?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.306Z"
+  },
+  {
+    id: 1791181932307,
+    ja: "クレジットカードは使える？",
+    en: "Do you take credit?",
+    explanation: "take は「（支払い手段を）受け付ける」。credit だけで credit card の意味になる口語。",
+    related: ["Do you accept credit cards?", "Do you take Apple Pay?"],
+    apply: [
+      { ja: "このお店は現金だけですか？デビットカードは使えますか？", en: "Is this store cash only? Do you take debit?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.307Z"
+  },
+  {
+    id: 1791181932308,
+    ja: "これの大きいのある？",
+    en: "Do you have this in a large?",
+    explanation: "in a large で「Lサイズで」。in red のように色にも in を使う。",
+    related: ["Do you have this in red?", "Do you have this in a bigger size?"],
+    apply: [
+      { ja: "これのMサイズはありますか？", en: "Do you have this in a medium?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.308Z"
+  },
+  {
+    id: 1791181932309,
+    ja: "返品規定はどうなってる？",
+    en: "What's your return policy?",
+    explanation: "return policy は「返品の決まり」。買う前に確認する定番の質問。",
+    related: ["What's your final sale policy?", "Can I return this?"],
+    apply: [
+      { ja: "このオンラインショップの返品規定はどうなっていますか？", en: "What's the return policy for this online shop?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.309Z"
+  },
+  {
+    id: 1791181932310,
+    ja: "許容価格をこえている",
+    en: "That's out of my price range.",
+    explanation: "price range は「予算の範囲」。out of ... で「範囲を超えている」と角を立てずに断れる。",
+    related: ["That's a bit over my budget."],
+    apply: [
+      { ja: "その車は私の予算を超えています。", en: "That car is out of my price range." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.310Z"
+  },
+  {
+    id: 1791181932311,
+    ja: "10ドルにして！",
+    en: "Can you do ten?",
+    explanation: "Can you do 金額? で「その値段にしてくれる？」と値引き交渉する口語。do が「その値段で売る」の意味。",
+    related: ["Can you go down to ten?"],
+    apply: [
+      { ja: "20ドルにしてもらえますか？", en: "Can you do twenty?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.311Z"
+  },
+  {
+    id: 1791181932312,
+    ja: "このスマホケースもつけて！",
+    en: "Can you throw in this phone case?",
+    explanation: "throw in は「おまけで付ける」。買い物の交渉でよく使う。",
+    related: ["Can you throw in this keychain?"],
+    apply: [
+      { ja: "そのケーブルもおまけで付けてもらえますか？", en: "Can you throw in the cable too?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.312Z"
+  },
+  {
+    id: 1791181932313,
+    ja: "なんて美しい夕焼けなんだろう",
+    en: "What a beautiful sunset!",
+    explanation: "What a 形容詞 名詞! で「なんて〜なんだ」と感動を表す感嘆文。",
+    related: ["The sunset is so beautiful!"],
+    apply: [
+      { ja: "なんて素晴らしい眺めなんだろう！", en: "What an amazing view!" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.313Z"
+  },
+  {
+    id: 1791181932314,
+    ja: "外はいい天気！",
+    en: "It's nice out, isn't it?",
+    explanation: "It's nice out. は「外はいい天気」。out で「屋外は」を表し、isn't it? を付けて相手に話しかける。",
+    related: ["It's chilly out, isn't it?"],
+    apply: [
+      { ja: "今日は外が蒸し暑いですね。", en: "It's humid out today, isn't it?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.314Z"
+  },
+  {
+    id: 1791181932315,
+    ja: "地元の人ですか？",
+    en: "Are you local?",
+    explanation: "local は名詞として「地元の人」。旅先での話しかけの定番。",
+    related: ["Are you from around here?"],
+    apply: [
+      { ja: "あなたはこの町の地元の人ですか？", en: "Are you local to this town?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.315Z"
+  },
+  {
+    id: 1791181932316,
+    ja: "このギャラリーに来たことある？",
+    en: "Have you been to this gallery before?",
+    explanation: "Have you been to ... before? で「前に〜に来た（行った）ことはありますか」と経験を聞く。",
+    related: ["Is this your first time at this gallery?"],
+    apply: [
+      { ja: "前にこのカフェに来たことはありますか？", en: "Have you been to this café before?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.316Z"
+  },
+  {
+    id: 1791181932317,
+    ja: "食べ物はどんな感じですか？",
+    en: "What's the food like?",
+    explanation: "What's 名詞 like? で「〜はどんな感じ？」と様子・印象を聞く。like は「〜のような」。",
+    related: ["What's the vibe like?", "What's Thailand like?"],
+    apply: [
+      { ja: "新しい職場はどんな感じ？", en: "What's your new office like?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.317Z"
+  },
+  {
+    id: 1791181932318,
+    ja: "休みが終わったので、現実に戻ります。",
+    en: "The vacation is over, so it's back to reality.",
+    noteEn: ["back to reality"],
+    explanation: "back to reality は休暇などの後に「現実（日常）に戻る」。it's back to ... の形でよく使う。",
+    related: ["The vacation is over, so it's back to normal life."],
+    apply: [
+      { ja: "週末が終わって、また現実に戻る時間だ。", en: "The weekend is over, and it's time to get back to reality." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0628.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.318Z"
+  },
+  {
+    id: 1791181932319,
+    ja: "会議のために来ている",
+    en: "I'm here for a conference.",
+    explanation: "I'm here for 名詞 で「〜のために来ています」と目的を言う。入国審査や旅先の会話で使う。",
+    related: ["I'm here for networking.", "I'm here for a wedding."],
+    apply: [
+      { ja: "私は語学研修のためにここに来ています。", en: "I'm here for a language program." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.319Z"
+  },
+  {
+    id: 1791181932320,
+    ja: "仕事で来ている",
+    en: "I'm here on business.",
+    noteEn: ["I'm here on business.", "I'm here on vacation."],
+    explanation: "on business で「仕事で」、on vacation で「休暇で」。on は「〜の用事で」。",
+    related: ["I'm here on vacation."],
+    apply: [
+      { ja: "兄は出張でロンドンにいます。", en: "My brother is in London on business." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.320Z"
+  },
+  {
+    id: 1791181932321,
+    ja: "ヒルトンに滞在している",
+    en: "I'm staying at the Hilton.",
+    explanation: "stay at 場所 で「〜に泊まる」。進行形で予定・現在の滞在を表す。",
+    related: ["I'm staying at my sister's place."],
+    apply: [
+      { ja: "私は駅の近くのホテルに泊まっています。", en: "I'm staying at a hotel near the station." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.321Z"
+  },
+  {
+    id: 1791181932322,
+    ja: "1週間滞在する",
+    en: "I'm staying for a week.",
+    explanation: "stay for 期間 で「〜の間滞在する」。for の後ろに長さを置く。",
+    related: ["I'm staying for five days."],
+    apply: [
+      { ja: "私たちは2週間滞在します。", en: "We're staying for two weeks." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.322Z"
+  },
+  {
+    id: 1791181932323,
+    ja: "手荷物受取所への行き方を教えて！",
+    en: "How do I get to baggage claim?",
+    explanation: "How do I get to ...? で「〜へはどう行けばいいですか」。baggage claim は手荷物受取所。",
+    related: ["How do I get to Gate 20?", "Where's baggage claim?"],
+    apply: [
+      { ja: "中央駅へはどう行けばいいですか？", en: "How do I get to Central Station?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.323Z"
+  },
+  {
+    id: 1791181932324,
+    ja: "荷物の上げ下げ手伝って",
+    en: "Could you help me with my luggage?",
+    explanation: "help 人 with 物 で「〜のことで手伝う」。with の後ろに手伝ってほしい対象を置く。Could you help me? だけでも使える。",
+    related: ["Could you help me?", "Could you give me a hand with my bags?"],
+    apply: [
+      { ja: "この箱を運ぶのを手伝っていただけますか？", en: "Could you help me with these boxes?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.324Z"
+  },
+  {
+    id: 1791181932325,
+    ja: "座席を起こして",
+    en: "Could you put your seat up?",
+    explanation: "put ... up / down で「（座席・窓などを）上げる・下げる」。機内でよく聞く頼み方。",
+    related: ["Could you put your window down?", "Could you raise your seat back?"],
+    apply: [
+      { ja: "ブラインドを下ろしていただけますか？", en: "Could you put the blind down?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.325Z"
+  },
+  {
+    id: 1791181932326,
+    ja: "追加の枕をください！",
+    en: "Could I get an extra pillow?",
+    explanation: "Could I get ...? は「〜をいただけますか」と物を頼む丁寧な形。extra で「追加の」。",
+    related: ["Could I get some slippers?", "Could I get an extra blanket, please?"],
+    apply: [
+      { ja: "お水をもう1本いただけますか？", en: "Could I get an extra bottle of water?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.326Z"
+  },
+  {
+    id: 1791181932327,
+    ja: "出させてもらっていいですか？",
+    en: "Do you mind letting me out?",
+    explanation: "Do you mind ...ing? は「〜してもらってもいいですか」と気をつかって頼む形。let me out で「（席から）出させる」。",
+    related: ["Excuse me, could I get out?"],
+    apply: [
+      { ja: "窓を開けてもらってもいいですか？", en: "Do you mind opening the window?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.327Z"
+  },
+  {
+    id: 1791181932328,
+    ja: "12月4日に出発する",
+    en: "I'm leaving on December fourth.",
+    explanation: "日付には on を使い、日は序数（fourth・fifteenth）で読む。進行形で確定した予定を表す。",
+    related: ["I'm leaving on March tenth.", "I'm leaving on the fifteenth."],
+    apply: [
+      { ja: "私たちは7月20日に日本へ帰ります。", en: "We're leaving for Japan on July twentieth." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.328Z"
+  },
+  {
+    id: 1791181932329,
+    ja: "チェックインカウンターはどこ？",
+    en: "Where's the check-in counter?",
+    explanation: "Where's the ...? で施設の場所を聞く基本形。check-in counter・info desk・security line など空港で使い回せる。",
+    related: ["Where's the info desk?", "Where's the security line?"],
+    apply: [
+      { ja: "手荷物預け所はどこですか？", en: "Where's the bag drop?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.329Z"
+  },
+  {
+    id: 1791181932330,
+    ja: "乗り継ぎがあります",
+    en: "I have a layover.",
+    explanation: "layover は飛行機の「乗り継ぎ（の待ち時間）」。have a layover in 都市 で場所も言える。",
+    related: ["I have a connecting flight."],
+    apply: [
+      { ja: "ドバイで5時間の乗り継ぎがあります。", en: "I have a five-hour layover in Dubai." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.330Z"
+  },
+  {
+    id: 1791181932331,
+    ja: "どこで両替できる？",
+    en: "Where can I exchange some currency?",
+    explanation: "exchange currency で「両替する」。some を付けると「いくらか」と量をぼかした自然な言い方になる。",
+    related: ["Where's the currency exchange?"],
+    apply: [
+      { ja: "空港で円をドルに両替できますか？", en: "Can I exchange yen for dollars at the airport?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.331Z"
+  },
+  {
+    id: 1791181932332,
+    ja: "どこでタクシーをつかまえられる？",
+    en: "Where can I grab a taxi?",
+    explanation: "grab a taxi は「タクシーをつかまえる」の口語。grab は「さっと手に入れる」。",
+    related: ["Where can I catch a taxi?", "Where's the taxi stand?"],
+    apply: [
+      { ja: "駅の前でタクシーをつかまえよう。", en: "Let's grab a taxi in front of the station." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.332Z"
+  },
+  {
+    id: 1791181932333,
+    ja: "便を逃した",
+    en: "I missed my flight.",
+    explanation: "miss は乗り物に「乗り遅れる」。connecting flight（乗り継ぎ便）にも使える。",
+    related: ["I missed my connecting flight to Seoul."],
+    apply: [
+      { ja: "寝坊して始発の電車に乗り遅れた。", en: "I overslept and missed the first train." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.333Z"
+  },
+  {
+    id: 1791181932334,
+    ja: "かばんが見つからない、なくした",
+    en: "My bag is missing.",
+    explanation: "be missing で「（あるべきものが）見当たらない」。lost より状況を淡々と伝える言い方。",
+    related: ["My suitcase is missing.", "I can't find my bag."],
+    apply: [
+      { ja: "私の財布が見当たりません。", en: "My wallet is missing." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.334Z"
+  },
+  {
+    id: 1791181932335,
+    ja: "このくらいの大きさのグレーのバックパックです",
+    en: "It's a gray backpack about this big.",
+    explanation: "色＋物の名前で特徴を伝え、about this big と手で示して大きさを補う。落とし物の説明の定番。",
+    related: ["It's a red backpack about this big.", "It's a dark green suitcase."],
+    apply: [
+      { ja: "このくらいの大きさの黒い傘です。", en: "It's a black umbrella about this big." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.335Z"
+  },
+  {
+    id: 1791181932336,
+    ja: "そろそろ失礼します！",
+    en: "Well, gotta go!",
+    explanation: "gotta は got to の口語で「〜しなきゃ」。Well, を付けて会話を切り上げる合図にする。",
+    related: ["I'd better get going.", "I have to run."],
+    apply: [
+      { ja: "もう遅いから帰らなきゃ！", en: "It's getting late, so I gotta go!" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.336Z"
+  },
+  {
+    id: 1791181932337,
+    ja: "よろこんで！",
+    en: "I'd love to!",
+    explanation: "誘われたときの「ぜひ」。I'd love to (join you). の後ろが省略された形。",
+    related: ["Sounds great!", "Count me in!"],
+    apply: [
+      { ja: "夕食に誘ってくれたの？喜んで行くよ！", en: "You're inviting me to dinner? I'd love to!" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.337Z"
+  },
+  {
+    id: 1791181932338,
+    ja: "田中の名前でチェックインをお願いします。",
+    en: "Checking in for Tanaka.",
+    explanation: "Checking in for 名字. はホテルの受付で予約名を伝える短い言い方。I'm checking in under Tanaka. とも言う。",
+    related: ["I'm checking in under Tanaka."],
+    apply: [
+      { ja: "スミスの名前で予約しています。", en: "I have a reservation under Smith." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.338Z"
+  },
+  {
+    id: 1791181932339,
+    ja: "オーシャンビューの部屋をお願いしたい",
+    en: "Can I get a room with an ocean view?",
+    explanation: "Can I get a room with ...? で部屋の希望を伝える。with two beds や on a higher floor も同じ形。",
+    related: ["Can I get a room on a higher floor?", "Can I get a room with two beds?"],
+    apply: [
+      { ja: "静かな部屋をお願いできますか？", en: "Can I get a quiet room?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.339Z"
+  },
+  {
+    id: 1791181932340,
+    ja: "無料の朝食を提供してる？",
+    en: "Do you offer complimentary breakfast?",
+    explanation: "complimentary は「無料の（サービスとしての）」。free より丁寧でホテルでよく使われる。",
+    related: ["Do you offer complimentary Wi-Fi?", "Is breakfast included?"],
+    apply: [
+      { ja: "空港までの無料シャトルはありますか？", en: "Do you offer a complimentary airport shuttle?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.340Z"
+  },
+  {
+    id: 1791181932341,
+    ja: "部屋に問題がある",
+    en: "There are some problems with my room.",
+    explanation: "There are some problems with ... で「〜に問題がある」と苦情を切り出す。具体的な中身は次の文で言う。",
+    related: ["I have a problem with my room."],
+    apply: [
+      { ja: "予約に問題があります。", en: "There are some problems with my reservation." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.341Z"
+  },
+  {
+    id: 1791181932342,
+    ja: "テレビが機能していない",
+    en: "The TV isn't working.",
+    explanation: "isn't working で「（機械が）動かない・壊れている」。AC や fridge でも同じ形。",
+    related: ["The AC isn't working.", "The TV is broken."],
+    apply: [
+      { ja: "シャワーのお湯が出ません。", en: "The hot water isn't working." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.342Z"
+  },
+  {
+    id: 1791181932343,
+    ja: "他の部屋に変えたい",
+    en: "Can I switch to a different room?",
+    explanation: "switch to ... で「〜に替える」。a different room で「別の部屋」。",
+    related: ["Could I change rooms?"],
+    apply: [
+      { ja: "窓側の席に替えられますか？", en: "Can I switch to a window seat?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.343Z"
+  },
+  {
+    id: 1791181932344,
+    ja: "あなたの家に泊まれる？",
+    en: "Can I crash at your place?",
+    explanation: "crash at ... で「（人の家に）泊まらせてもらう」くだけた言い方。place は「家・住まい」。",
+    related: ["Can I stay over at your place?"],
+    apply: [
+      { ja: "今夜は友達の家に泊まるよ。", en: "I'm going to crash at my friend's place tonight." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.344Z"
+  },
+  {
+    id: 1791181932345,
+    ja: "リモコンはどこに置いてある？",
+    en: "Where do you keep your remote?",
+    explanation: "Where do you keep ...? で「〜はふだんどこに置いてある？」。人の家の物の場所を聞くときに便利。",
+    related: ["Where do you keep your keys?", "Where's the remote?"],
+    apply: [
+      { ja: "お皿はどこにしまってある？", en: "Where do you keep your plates?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0630.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.345Z"
+  },
+  {
+    id: 1791181932346,
+    ja: "ゴミはどうしたらいい？",
+    en: "What should I do with the trash?",
+    explanation: "What should I do with ...? で「〜はどうしたらいい？」と処理の仕方を聞く。with の後ろに物を置く。",
+    related: ["What should I do with the recycling?", "Where does the trash go?"],
+    apply: [
+      { ja: "使い終わったタオルはどうしたらいいですか？", en: "What should I do with the used towels?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.346Z"
+  },
+  {
+    id: 1791181932347,
+    ja: "洗濯機と乾燥機を使ってもいいですか",
+    en: "Is it okay if I use the washer and dryer?",
+    explanation: "Is it okay if I ...? で「〜してもいいですか」と許可を求める。Would it be okay if ...? にするとさらに丁寧。",
+    related: ["Would it be okay if I joined you?", "Can I use the washer and dryer?"],
+    apply: [
+      { ja: "あなたのパソコンを使ってもいいですか？", en: "Is it okay if I use your computer?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.347Z"
+  },
+  {
+    id: 1791181932348,
+    ja: "チェックアウトは何時ですか",
+    en: "What time is check-out?",
+    explanation: "check-out は名詞で「チェックアウト（の時刻）」。What time is ...? で時刻を聞く。",
+    related: ["When is check-out?"],
+    apply: [
+      { ja: "朝食は何時ですか？", en: "What time is breakfast?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.348Z"
+  },
+  {
+    id: 1791181932349,
+    ja: "少し早めにチェックインできる？",
+    en: "Can I check in a bit earlier?",
+    explanation: "a bit earlier で「少し早めに」。a bit が控えめにお願いする感じを出す。",
+    related: ["Is early check-in possible?"],
+    apply: [
+      { ja: "少し遅めにチェックアウトできますか？", en: "Can I check out a bit later?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.349Z"
+  },
+  {
+    id: 1791181932350,
+    ja: "荷物を1時間置いていてもいい？",
+    en: "Can I leave my bags here for an hour?",
+    explanation: "leave ... here で「ここに置いていく」。for an hour など時間の長さを for で添える。",
+    related: ["Can I leave my bags here for a bit?"],
+    apply: [
+      { ja: "自転車をここに数時間置いておいてもいいですか？", en: "Can I leave my bike here for a few hours?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.350Z"
+  },
+  {
+    id: 1791181932351,
+    ja: "すべて素敵",
+    en: "Everything was amazing.",
+    explanation: "Everything was ... でまとめて感想を伝える。amazing・perfect・smooth と形容詞を入れ替えられる。",
+    related: ["Everything was perfect!", "Everything was smooth!"],
+    apply: [
+      { ja: "結婚式は何もかも完璧でした。", en: "Everything was perfect at the wedding." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.351Z"
+  },
+  {
+    id: 1791181932352,
+    ja: "素晴らしい滞在だった",
+    en: "I had a great stay.",
+    explanation: "stay は名詞で「滞在」。have a great stay で「素晴らしい滞在をする」。チェックアウト時のお礼に使う。",
+    related: ["I really enjoyed my stay."],
+    apply: [
+      { ja: "私たちは京都で素敵な滞在を過ごしました。", en: "We had a lovely stay in Kyoto." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.352Z"
+  },
+  {
+    id: 1791181932353,
+    ja: "プールの営業時間は何時ですか？",
+    en: "What are your pool hours?",
+    explanation: "hours は「営業（利用）時間」。pool hours・quiet hours のように名詞＋hours で言える。",
+    related: ["What are your quiet hours?", "When is the pool open?"],
+    apply: [
+      { ja: "ジムの利用時間は何時ですか？", en: "What are the gym hours?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.353Z"
+  },
+  {
+    id: 1791181932354,
+    ja: "変なニオイがする",
+    en: "The bathroom smells funky.",
+    explanation: "smell 形容詞 で「〜なにおいがする」。funky は「変な・妙な」のくだけた言い方。",
+    related: ["The room smells funky.", "The bathroom smells weird."],
+    apply: [
+      { ja: "冷蔵庫の中が変なにおいがする。", en: "The fridge smells funky." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.354Z"
+  },
+  {
+    id: 1791181932355,
+    ja: "自撮りしましょう",
+    en: "Let's take a selfie!",
+    explanation: "take a selfie で「自撮りする」。Let's ... で誘う。",
+    related: ["Let's take a picture together!"],
+    apply: [
+      { ja: "ステージの前で自撮りしよう！", en: "Let's take a selfie in front of the stage!" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.355Z"
+  },
+  {
+    id: 1791181932356,
+    ja: "私たちの写真を撮って",
+    en: "Can you take a picture of us?",
+    explanation: "take a picture of us で「私たちの写真を撮る」。観光地で頼む定番の一言。",
+    related: ["Could you take our picture?", "Can you take a vertical shot?"],
+    apply: [
+      { ja: "私の家族の写真を撮っていただけますか？", en: "Can you take a picture of my family?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.356Z"
+  },
+  {
+    id: 1791181932357,
+    ja: "ビーチを背景に1枚撮って",
+    en: "Can you take one with the beach in the background?",
+    explanation: "with ... in the background で「〜を背景に入れて」。one は a picture の言い換え。",
+    related: ["Can you take one with the Colosseum in the background?"],
+    apply: [
+      { ja: "富士山を背景に1枚撮ってもらえますか？", en: "Can you take one with Mt. Fuji in the background?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.357Z"
+  },
+  {
+    id: 1791181932358,
+    ja: "本当に感謝します！",
+    en: "I really appreciate it!",
+    explanation: "appreciate it は Thank you より気持ちのこもったお礼。really で強める。",
+    related: ["Thank you so much!"],
+    apply: [
+      { ja: "手伝ってくれて本当に感謝しています。", en: "I really appreciate your help." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.358Z"
+  },
+  {
+    id: 1791181932359,
+    ja: "ブロードウェイミュージカルは必見です",
+    en: "Broadway musicals are a must-see.",
+    explanation: "must-see は名詞で「必見のもの」。must-try（ぜひ試すべきもの）も同じ作り。",
+    related: ["You have to see a Broadway musical."],
+    apply: [
+      { ja: "この博物館は必見です。", en: "This museum is a must-see." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.359Z"
+  },
+  {
+    id: 1791181932360,
+    ja: "ライオンキングのチケットを4枚お願い",
+    en: "I'd like four tickets for The Lion King, please.",
+    explanation: "I'd like 枚数 tickets for 演目, please. でチケットを買う。for の後ろに作品名や施設名を置く。",
+    related: ["I'd like three tickets for the guided tour, please."],
+    apply: [
+      { ja: "博物館のチケットを2枚お願いします。", en: "I'd like two tickets for the museum, please." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.360Z"
+  },
+  {
+    id: 1791181932361,
+    ja: "大人一人と子供2人",
+    en: "One adult and two children, please.",
+    explanation: "券を買うときは「人数＋区分, please.」だけで通じる。adult / child / senior を入れ替える。",
+    related: ["Two adults and one child, please."],
+    apply: [
+      { ja: "大人2人とシニア1人でお願いします。", en: "Two adults and one senior, please." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.361Z"
+  },
+  {
+    id: 1791181932362,
+    ja: "子供割引はありますか？",
+    en: "Do you offer any discounts for children?",
+    explanation: "offer discounts for ... で「〜向けの割引がある」。seniors・students なども同じ形。",
+    related: ["Do you offer any discounts for students?", "Is there a child discount?"],
+    apply: [
+      { ja: "団体割引はありますか？", en: "Do you offer any discounts for groups?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.362Z"
+  },
+  {
+    id: 1791181932363,
+    ja: "モールで財布をなくしたと思う",
+    en: "I think I lost my wallet at the mall.",
+    explanation: "I think I lost ... で「〜をなくしたみたい」と断定を避けて伝える。場所は at / on で添える。",
+    related: ["I think I left my wallet on the bus.", "I think I lost my sunglasses."],
+    apply: [
+      { ja: "駅で傘をなくしたみたいです。", en: "I think I lost my umbrella at the station." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.363Z"
+  },
+  {
+    id: 1791181932364,
+    ja: "パスポートを家に忘れたみたい。",
+    en: "I think I left my passport at home.",
+    explanation: "leave は「置き忘れる」。忘れた場所を言うときは forget ではなく leave ... at 場所 を使う。",
+    related: ["I can't find my passport. I think I left it at the hotel."],
+    apply: [
+      { ja: "携帯をタクシーに置き忘れたみたい。", en: "I think I left my phone in the taxi." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.364Z"
+  },
+  {
+    id: 1791181932365,
+    ja: "やっぱり何でもない、ここにあったw",
+    en: "Never mind, it's right here.",
+    explanation: "Never mind で「やっぱりいいや」と前言を取り消す。right here で「すぐここに」。",
+    related: ["Oh, never mind. I found it."],
+    apply: [
+      { ja: "やっぱりいいや、鍵はかばんの中にあった。", en: "Never mind, my keys are right here in my bag." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.365Z"
+  },
+  {
+    id: 1791181932366,
+    ja: "一番近いバス停への行き方を教えてくれる？",
+    en: "Do you mind pointing me to the nearest bus stop?",
+    explanation: "point 人 to 場所 で「〜への道を教える」。Do you mind ...ing? で丁寧に頼む。",
+    related: ["Do you mind pointing me to the nearest subway station?"],
+    apply: [
+      { ja: "一番近い薬局への行き方を教えてもらえますか？", en: "Do you mind pointing me to the nearest pharmacy?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.366Z"
+  },
+  {
+    id: 1791181932367,
+    ja: "ここにすわっていい？",
+    en: "Do you mind if I sit here?",
+    explanation: "Do you mind if I ...? で「〜してもいいですか」。答えが No（気にしない）なら OK の意味になる点に注意。",
+    related: ["Is this seat taken?", "Mind if I sit here?"],
+    apply: [
+      { ja: "窓を開けてもいいですか？", en: "Do you mind if I open the window?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.367Z"
+  },
+  {
+    id: 1791181932368,
+    ja: "手伝ってもらっていい？",
+    en: "Do you mind giving me a hand?",
+    explanation: "give 人 a hand で「手を貸す」。Do you mind ...ing? と組んで丁寧に頼む。",
+    related: ["Could you give me a hand?"],
+    apply: [
+      { ja: "引っ越しを手伝ってもらってもいい？", en: "Do you mind giving me a hand with the move?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.368Z"
+  },
+  {
+    id: 1791181932369,
+    ja: "この辺りで大きな赤いスーツケースを見なかった？",
+    en: "Have you seen a big red suitcase around here?",
+    explanation: "Have you seen ... around here? で「この辺で〜を見かけませんでしたか」。物の特徴を形容詞で並べる。",
+    related: ["Have you seen a gray jacket around here?"],
+    apply: [
+      { ja: "この辺で小さな黒い犬を見かけませんでしたか？", en: "Have you seen a small black dog around here?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0631.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.369Z"
+  },
+  {
+    id: 1791181932370,
+    ja: "最高の時間を過ごしました！",
+    en: "I had the best time!",
+    explanation: "have the best time で「最高に楽しく過ごす」。旅や集まりの感想に使う。",
+    related: ["I had a blast!", "I had the worst time."],
+    apply: [
+      { ja: "私たちは沖縄で最高の時間を過ごした。", en: "We had the best time in Okinawa." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.370Z"
+  },
+  {
+    id: 1791181932371,
+    ja: "料理が神がかっていた",
+    en: "The food was divine.",
+    explanation: "divine は「神のような」から「最高においしい」。amazing より大げさで印象に残る。",
+    related: ["The food was amazing."],
+    apply: [
+      { ja: "そのケーキは絶品だった。", en: "The cake was divine." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.371Z"
+  },
+  {
+    id: 1791181932372,
+    ja: "景色が息をのむほどだった",
+    en: "The view was breathtaking.",
+    explanation: "breathtaking は「息をのむほど美しい」。景色をほめる強い形容詞。",
+    related: ["The view was stunning."],
+    apply: [
+      { ja: "山頂からの夕日は息をのむほどだった。", en: "The sunset from the top was breathtaking." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.372Z"
+  },
+  {
+    id: 1791181932373,
+    ja: "それはまあまあだった",
+    en: "It was okay.",
+    explanation: "okay は「悪くはない・まあまあ」。感想として言うと、すごく良かったわけではない含みが出る。",
+    related: ["It was all right.", "It was not bad."],
+    apply: [
+      { ja: "その映画はまあまあだった。", en: "The movie was okay." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.373Z"
+  },
+  {
+    id: 1791181932374,
+    ja: "後で何か（さっと）食べにいこう",
+    en: "Let's grab some food later.",
+    explanation: "grab some food で「さっと何か食べる」。grab で気軽な感じが出る。",
+    related: ["Let's meet up later.", "Let's get something to eat later."],
+    apply: [
+      { ja: "授業の後でコーヒーでも飲もう。", en: "Let's grab some coffee after class." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.374Z"
+  },
+  {
+    id: 1791181932375,
+    ja: "電話番号をください！",
+    en: "Can I get your number?",
+    explanation: "number は phone number の略。Can I get your ...? で連絡先を聞く。email や insta handle も同じ形。",
+    related: ["Do you wanna swap numbers?", "Can I get your insta handle?"],
+    apply: [
+      { ja: "メールアドレスを教えてもらえる？", en: "Can I get your email?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.375Z"
+  },
+  {
+    id: 1791181932376,
+    ja: "これはビジネス101の授業ですよね？",
+    en: "Is this Business 101?",
+    explanation: "Is this 授業名? で「ここは〜の授業ですか」と教室を確かめる。101 は「入門」の授業番号。",
+    related: ["Is this the room for Business 101?"],
+    apply: [
+      { ja: "ここは心理学入門の教室ですか？", en: "Is this Psychology 101?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.376Z"
+  },
+  {
+    id: 1791181932377,
+    ja: "何年生ですか？",
+    en: "What year are you?",
+    explanation: "大学で「何年生？」と聞くくだけた言い方。答えは I'm a sophomore. など。",
+    related: ["What year are you in?"],
+    apply: [
+      { ja: "弟さんは何年生？", en: "What year is your brother?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.377Z"
+  },
+  {
+    id: 1791181932378,
+    ja: "2年生です",
+    en: "I'm a sophomore.",
+    explanation: "アメリカの大学では学年を freshman（1年）・sophomore（2年）・junior（3年）・senior（4年）と呼ぶ。",
+    related: ["I'm a second-year student."],
+    apply: [
+      { ja: "姉は大学4年生です。", en: "My sister is a senior in college." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.378Z"
+  },
+  {
+    id: 1791181932379,
+    ja: "道に迷ってます。",
+    en: "I'm lost.",
+    explanation: "lost は形容詞で「道に迷った」。話の内容についていけないときにも使える。",
+    related: ["I think I'm lost."],
+    apply: [
+      { ja: "ごめん、話についていけなくなった。", en: "Sorry, I'm lost." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.379Z"
+  },
+  {
+    id: 1791181932380,
+    ja: "工学部棟のとなりにある",
+    en: "It's next to the engineering building.",
+    explanation: "next to ... で「〜の隣に」。建物の位置を説明する基本の前置詞。",
+    related: ["It's right beside the engineering building."],
+    apply: [
+      { ja: "カフェは図書館の隣にあります。", en: "The café is next to the library." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.380Z"
+  },
+  {
+    id: 1791181932381,
+    ja: "事務オフィスの向かいにある",
+    en: "It's across from the admin office.",
+    explanation: "across from ... で「〜の向かいに」。admin office は administration office（事務室）の略。",
+    related: ["It's opposite the admin office."],
+    apply: [
+      { ja: "バス停は郵便局の向かいにあります。", en: "The bus stop is across from the post office." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.381Z"
+  },
+  {
+    id: 1791181932382,
+    ja: "奨学金事務室に行かないといけない。",
+    en: "I need to visit the financial aid office.",
+    noteEn: ["financial aid office"],
+    explanation: "financial aid office は奨学金・学費援助を扱う大学の窓口。financial aid で「経済的支援」。",
+    related: ["I need to go to the financial aid office."],
+    apply: [
+      { ja: "奨学金事務室は何時に開きますか？", en: "When does the financial aid office open?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.382Z"
+  },
+  {
+    id: 1791181932383,
+    ja: "国際交流課は交換留学生を手助けしてくれる。",
+    en: "The international studies office helps exchange students.",
+    noteEn: ["international studies office"],
+    explanation: "international studies office は留学・国際交流を担当する窓口。留学生がまず頼る場所。",
+    related: ["The international office supports exchange students."],
+    apply: [
+      { ja: "ビザについて国際交流課に聞いてみた。", en: "I asked the international studies office about my visa." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.383Z"
+  },
+  {
+    id: 1791181932384,
+    ja: "学生会館で会おう。",
+    en: "Let's meet at the student union.",
+    noteEn: ["the student union"],
+    explanation: "student union は食堂や売店が入った学生会館。待ち合わせ場所としてよく使われる。",
+    related: ["Let's meet at the student center."],
+    apply: [
+      { ja: "学生会館でお昼を食べよう。", en: "Let's have lunch at the student union." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.384Z"
+  },
+  {
+    id: 1791181932385,
+    ja: "図書館とジムの間にあります。",
+    en: "It's between the library and the gym.",
+    noteEn: ["It's between A and B."],
+    explanation: "between A and B で「AとBの間に」。2つの目印を挙げて場所を説明する。",
+    related: ["It's in between the library and the gym."],
+    apply: [
+      { ja: "その店は銀行と駅の間にあります。", en: "The shop is between the bank and the station." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.385Z"
+  },
+  {
+    id: 1791181932386,
+    ja: "どこに向かってるの？",
+    en: "Where are you heading?",
+    explanation: "head は動詞で「向かう」。Where are you going? よりくだけていて、道で会った人に気軽に聞ける。",
+    related: ["Where are you off to?"],
+    apply: [
+      { ja: "授業の後はどこに向かうの？", en: "Where are you heading after class?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.386Z"
+  },
+  {
+    id: 1791181932387,
+    ja: "英語202の授業を取っています",
+    en: "I'm taking English 202.",
+    explanation: "take は授業を「取る・履修する」。進行形で今学期取っている授業を言う。",
+    related: ["I'm enrolled in English 202."],
+    apply: [
+      { ja: "今学期は統計学を取っています。", en: "I'm taking Statistics this semester." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0632.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.387Z"
+  },
+  {
+    id: 1791181932388,
+    ja: "熱があったので保健センターに行った。",
+    en: "I went to the health center because I had a fever.",
+    noteEn: ["health center"],
+    explanation: "health center は大学の保健センター（学内の診療所）。体調が悪いときにまず行く場所。",
+    related: ["I visited the campus clinic because I had a fever."],
+    apply: [
+      { ja: "保健センターは学生会館の隣にあります。", en: "The health center is next to the student union." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.388Z"
+  },
+  {
+    id: 1791181932389,
+    ja: "体調が悪いので、今日は家にいます。",
+    en: "I feel unwell, so I'll stay home today.",
+    noteEn: ["feel unwell"],
+    explanation: "feel unwell は「体調がすぐれない」。sick より控えめで、欠席連絡などに使いやすい。",
+    related: ["I'm not feeling well, so I'll stay home today."],
+    apply: [
+      { ja: "朝から少し体調が悪いです。", en: "I've been feeling a bit unwell since this morning." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.389Z"
+  },
+  {
+    id: 1791181932390,
+    ja: "私は日本から来た留学生です。",
+    en: "I'm an international student from Japan.",
+    noteEn: ["international student"],
+    explanation: "international student は「留学生」。foreign student より今はこちらが一般的。",
+    related: ["I'm an exchange student from Japan."],
+    apply: [
+      { ja: "このクラスには留学生がたくさんいる。", en: "There are a lot of international students in this class." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.390Z"
+  },
+  {
+    id: 1791181932391,
+    ja: "授業に出席することは任意ですか？",
+    en: "Is attending class optional?",
+    explanation: "optional は「任意の」、反対は mandatory（必須の）。動名詞 attending class を主語にしている。",
+    related: ["Is attending class mandatory?", "Do we have to come to class?"],
+    apply: [
+      { ja: "この講座の課題は任意ですか？", en: "Is the homework for this course optional?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.391Z"
+  },
+  {
+    id: 1791181932392,
+    ja: "中間試験はいつですか",
+    en: "When is the midterm?",
+    explanation: "midterm は midterm exam（中間試験）の略。final（期末試験）と対で使う。",
+    related: ["When is the midterm exam?"],
+    apply: [
+      { ja: "期末試験はいつですか？", en: "When is the final?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.392Z"
+  },
+  {
+    id: 1791181932393,
+    ja: "オフィスアワーに先生に聞いてみます。",
+    en: "I'll ask the professor during office hours.",
+    noteEn: ["office hours"],
+    explanation: "office hours は教授が研究室で学生の質問を受ける時間。during office hours で「その時間に」。",
+    related: ["I'll go to the professor's office hours."],
+    apply: [
+      { ja: "先生のオフィスアワーは火曜日の午後です。", en: "The professor's office hours are on Tuesday afternoons." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.393Z"
+  },
+  {
+    id: 1791181932394,
+    ja: "課題の期限はいつですか？",
+    en: "When is the assignment due?",
+    explanation: "due は「提出期限の」。When is ... due? で締め切りを聞く定番。",
+    related: ["When is the deadline for the assignment?"],
+    apply: [
+      { ja: "レポートの締め切りはいつですか？", en: "When is the report due?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.394Z"
+  },
+  {
+    id: 1791181932395,
+    ja: "エッセイの期限は水曜日です",
+    en: "The essay is due on Wednesday.",
+    explanation: "be due on 曜日 で「〜曜日が締め切り」。日付や曜日には on を使う。",
+    related: ["The essay is due Wednesday."],
+    apply: [
+      { ja: "プロジェクトは来週の金曜日が締め切りです。", en: "The project is due on Friday next week." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.395Z"
+  },
+  {
+    id: 1791181932396,
+    ja: "診断書があれば認められた欠席になる。",
+    en: "A doctor's note counts as an excused absence.",
+    noteEn: ["excused absence"],
+    explanation: "excused absence は理由が認められた欠席。反対は unexcused absence（無断欠席）。",
+    related: ["A doctor's note makes it an excused absence."],
+    apply: [
+      { ja: "家族の緊急事態は認められた欠席になりますか？", en: "Is a family emergency an excused absence?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.396Z"
+  },
+  {
+    id: 1791181932397,
+    ja: "欠席しなければならない",
+    en: "I need to miss class.",
+    explanation: "miss class で「授業を休む」。need to で「やむを得ず」の感じが出る。",
+    related: ["I won't be able to make it to class."],
+    apply: [
+      { ja: "来週の月曜日は授業を休まないといけません。", en: "I need to miss class next Monday." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.397Z"
+  },
+  {
+    id: 1791181932398,
+    ja: "家族の緊急事態があって、試験を受けられなかった。",
+    en: "I had a family emergency, so I missed the exam.",
+    noteEn: ["family emergency"],
+    explanation: "family emergency は家族の急病・不幸などの緊急事態。欠席理由として詳しく言わずに済む便利な言い方。",
+    related: ["Something came up with my family, so I missed the exam."],
+    apply: [
+      { ja: "家族の緊急事態で早退しなければなりません。", en: "I have to leave early because of a family emergency." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.398Z"
+  },
+  {
+    id: 1791181932399,
+    ja: "欠席しても良いですか？",
+    en: "May I be excused?",
+    explanation: "be excused で「（授業などを）抜けることを許される」。May I ...? で丁寧に許可を求める。",
+    related: ["Could I be excused from class?"],
+    apply: [
+      { ja: "今日の会議を抜けてもよろしいですか？", en: "May I be excused from today's meeting?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.399Z"
+  },
+  {
+    id: 1791181932400,
+    ja: "なんとかしてクイズ（小テスト）を埋め合わせることはできますか？",
+    en: "Can I make up the quiz somehow?",
+    explanation: "make up は受けそびれた試験などを「あとで埋め合わせる」。somehow で「何とかして」。",
+    related: ["Is there any way I can make up the quiz?"],
+    apply: [
+      { ja: "なんとかして欠席した実習を埋め合わせることはできますか？", en: "Can I make up the missed lab somehow?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.400Z"
+  },
+  {
+    id: 1791181932401,
+    ja: "葬式に出席しなきゃ",
+    en: "I need to attend a funeral.",
+    explanation: "attend a funeral で「葬式に参列する」。attend は行事に「出席する」。",
+    related: ["I have to go to a funeral."],
+    apply: [
+      { ja: "来週、友人の結婚式に出席しないといけない。", en: "I need to attend my friend's wedding next week." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.401Z"
+  },
+  {
+    id: 1791181932402,
+    ja: "医者の予約がある",
+    en: "I have a doctor's appointment.",
+    explanation: "doctor's appointment で「病院の予約」。appointment は人と会う約束全般に使う。",
+    related: ["I have to see a doctor."],
+    apply: [
+      { ja: "明日の朝は歯医者の予約がある。", en: "I have a dentist's appointment tomorrow morning." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.402Z"
+  },
+  {
+    id: 1791181932403,
+    ja: "困っています",
+    en: "I'm struggling.",
+    explanation: "struggle は「苦戦する」。struggling with ... で何に困っているかを言える。",
+    related: ["I'm having a hard time.", "I'm struggling with this class."],
+    apply: [
+      { ja: "統計学の授業でかなり苦労しています。", en: "I'm really struggling with my statistics class." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.403Z"
+  },
+  {
+    id: 1791181932404,
+    ja: "今よろしいですか？",
+    en: "Is now a good time?",
+    explanation: "Is now a good time? で「今、お時間よろしいですか」。相手の都合をうかがう丁寧な切り出し方。",
+    related: ["Do you have a minute?"],
+    apply: [
+      { ja: "今、ちょっと話しても大丈夫？", en: "Is now a good time to talk?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.404Z"
+  },
+  {
+    id: 1791181932405,
+    ja: "成績について相談したい",
+    en: "I'd like to discuss my grade.",
+    explanation: "discuss は他動詞なので about を付けない（discuss my grade）。I'd like to ... で丁寧に用件を言う。",
+    related: ["I'd like to talk about my grade.", "I'd like to discuss my attendance."],
+    apply: [
+      { ja: "研究計画について相談したいのですが。", en: "I'd like to discuss my research plan." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.405Z"
+  },
+  {
+    id: 1791181932406,
+    ja: "期限の延長したい",
+    en: "I'd like to ask for an extension.",
+    explanation: "ask for an extension で「（締め切りの）延長をお願いする」。ask for の後ろに欲しいものを置く。",
+    related: ["I'd like to ask for a letter of recommendation.", "Could I get an extension?"],
+    apply: [
+      { ja: "上司に休みをお願いしたい。", en: "I'd like to ask my boss for a day off." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.406Z"
+  },
+  {
+    id: 1791181932407,
+    ja: "キャンパス外に住んでる？",
+    en: "Do you live off campus?",
+    explanation: "live off campus で「キャンパスの外に住む」。反対は live on campus / live in the dorm。",
+    related: ["Do you live in the dorm?"],
+    apply: [
+      { ja: "2年生からはキャンパスの外に住む予定です。", en: "I'm going to live off campus from my second year." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.407Z"
+  },
+  {
+    id: 1791181932408,
+    ja: "彼女は高校時代からの親しい友人です。",
+    en: "She's a close friend from high school.",
+    noteEn: ["a close friend"],
+    explanation: "close は「（距離が）近い」から「親しい」。a close friend で「親友・仲の良い友人」。",
+    related: ["She's a good friend from high school."],
+    apply: [
+      { ja: "親しい友人と一緒に旅行に行った。", en: "I went on a trip with a close friend." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.408Z"
+  },
+  {
+    id: 1791181932409,
+    ja: "私たちの寮には共同の洗濯室がある。",
+    en: "Our dorm has a shared laundry room.",
+    noteEn: ["a shared laundry room"],
+    explanation: "shared は「共同の」。反対に自分専用なら my own ...（own は「自分の」）。",
+    related: ["Our dorm has a common laundry room."],
+    apply: [
+      { ja: "新しいアパートは共同キッチンです。", en: "My new apartment has a shared kitchen." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.409Z"
+  },
+  {
+    id: 1791181932410,
+    ja: "食べ放題です",
+    en: "It's all-you-can-eat.",
+    explanation: "all-you-can-eat はハイフンでつないで「食べ放題の」。名詞の前にも置ける（an all-you-can-eat buffet）。",
+    related: ["It's a buffet."],
+    apply: [
+      { ja: "駅の近くに食べ放題の焼肉屋がある。", en: "There's an all-you-can-eat barbecue place near the station." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.410Z"
+  },
+  {
+    id: 1791181932411,
+    ja: "落ち着いて！",
+    en: "Let's be reasonable.",
+    explanation: "reasonable は「分別のある」。Let's be reasonable. で「冷静になろう・無茶はやめよう」となだめる。",
+    related: ["Let's calm down and think about it."],
+    apply: [
+      { ja: "予算の話では冷静になろう。", en: "Let's be reasonable about the budget." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.411Z"
+  },
+  {
+    id: 1791181932412,
+    ja: "少し割引してもらおう",
+    en: "How about we ask for a small discount instead?",
+    explanation: "How about we ...? で「〜するのはどう？」と提案する。instead で「その代わりに」。",
+    related: ["Why don't we ask for a small discount instead?"],
+    apply: [
+      { ja: "代わりに家で映画を見るのはどう？", en: "How about we watch a movie at home instead?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.412Z"
+  },
+  {
+    id: 1791181932413,
+    ja: "私たちは来月旅行に行きます。",
+    en: "We're going to go on a trip next month.",
+    noteEn: ["go on a trip"],
+    explanation: "go on a trip で「旅行に出かける」。go to a trip とは言わない点に注意。",
+    related: ["We're going to take a trip next month."],
+    apply: [
+      { ja: "夏休みに家族で旅行に行った。", en: "I went on a trip with my family over the summer." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.413Z"
+  },
+  {
+    id: 1791181932414,
+    ja: "別の言語を学ぶため海外へ移住を決める",
+    en: "He decided to move abroad to learn another language.",
+    explanation: "decide to do で「〜することに決める」。to learn は目的を表す不定詞で「〜するために」。",
+    related: ["He chose to move overseas to study a new language."],
+    apply: [
+      { ja: "彼女は料理を学ぶためにフランスへ移ることに決めた。", en: "She decided to move to France to learn cooking." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.414Z"
+  },
+  {
+    id: 1791181932415,
+    ja: "その気持ちは分かった",
+    en: "I hear you.",
+    explanation: "I hear you. は「言いたいことはわかるよ」と相手の気持ちを受け止める一言。必ずしも賛成ではない。",
+    related: ["I understand how you feel."],
+    apply: [
+      { ja: "気持ちはわかるけど、今はやめたほうがいいよ。", en: "I hear you, but it's better to wait." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.415Z"
+  },
+  {
+    id: 1791181932416,
+    ja: "もっと省エネできるように電気を消したほうがいい。",
+    en: "We should turn off the lights to save more energy.",
+    noteEn: ["to save more energy"],
+    explanation: "save energy で「エネルギーを節約する（省エネ）」。to をつけると「〜するために」と目的を表す。",
+    related: ["We should turn off the lights to use less energy."],
+    apply: [
+      { ja: "省エネのために古い冷蔵庫を買い替えた。", en: "We replaced the old fridge to save more energy." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.416Z"
+  },
+  {
+    id: 1791181932417,
+    ja: "留学は学生が国際的な視野を持つのに役立つ。",
+    en: "Studying abroad helps students have international perspectives.",
+    noteEn: ["have international perspectives"],
+    explanation: "perspective は「ものの見方・視野」。have international perspectives で「国際的な視野を持つ」。TOEFLのエッセイで使いやすい。",
+    related: ["Studying abroad helps students gain a global perspective."],
+    apply: [
+      { ja: "国際的な視野を持つリーダーが必要だ。", en: "We need leaders who have international perspectives." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.417Z"
+  },
+  {
+    id: 1791181932418,
+    ja: "決める前にもっと情報が必要",
+    en: "We need to have more information before deciding.",
+    explanation: "before deciding で「決める前に」。前置詞 before の後ろは動名詞。",
+    related: ["We need more information before we decide."],
+    apply: [
+      { ja: "契約する前にもっと情報が必要です。", en: "I need more information before signing the contract." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.418Z"
+  },
+  {
+    id: 1791181932419,
+    ja: "良い学校は、生徒が批判的思考を鍛えられる環境を提供する。",
+    en: "Good schools offer an environment where students can develop critical thinking.",
+    noteEn: ["offer an environment where students can develop critical thinking"],
+    explanation: "an environment where ... で「〜できる環境」。関係副詞 where が「その環境の中で」を表す。TOEFLのエッセイでそのまま使える。",
+    related: ["Good schools create a space where students can build critical thinking."],
+    apply: [
+      { ja: "その会社は社員が新しいことに挑戦できる環境を提供している。", en: "The company offers an environment where employees can try new things." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0633.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.419Z"
+  },
+  {
+    id: 1791181932420,
+    ja: "コストを下げるために創意工夫する必要がある。",
+    en: "We need to find creative ways to cut costs.",
+    noteEn: ["find creative ways"],
+    explanation: "find creative ways to do で「〜する工夫をする」。「創意工夫」をそのまま英語にしやすい言い方。",
+    related: ["We need to come up with creative ways to cut costs."],
+    apply: [
+      { ja: "先生たちは授業を楽しくするために創意工夫している。", en: "Teachers find creative ways to make lessons fun." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.420Z"
+  },
+  {
+    id: 1791181932421,
+    ja: "創造的思考力を身につけるのに役立つ",
+    en: "It helps students develop creative thinking.",
+    explanation: "help 人 do で「人が〜するのに役立つ」。to を入れずに原形を続けるのが自然。",
+    related: ["It helps students think more creatively."],
+    apply: [
+      { ja: "音楽は子どもが集中するのに役立つ。", en: "Music helps children focus." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.421Z"
+  },
+  {
+    id: 1791181932422,
+    ja: "この講座は自分で考える力を育てる。",
+    en: "This course builds independent thinking.",
+    noteEn: ["independent thinking"],
+    explanation: "independent thinking は「自分の頭で考える力」。critical thinking（批判的思考）と並ぶ教育の定番語。",
+    related: ["This course teaches students to think for themselves."],
+    apply: [
+      { ja: "大学では自分で考える力が大切だ。", en: "Independent thinking is important in college." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.422Z"
+  },
+  {
+    id: 1791181932423,
+    ja: "英語は早いうちに始めたほうがいい。",
+    en: "It's better to start learning English early on.",
+    noteEn: ["early on"],
+    explanation: "early on は「早い段階で・初期に」。文末に置くことが多い。",
+    related: ["It's better to start learning English at a young age."],
+    apply: [
+      { ja: "早い段階で問題に気づいた。", en: "We noticed the problem early on." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.423Z"
+  },
+  {
+    id: 1791181932424,
+    ja: "ピンとこなかった（盛り上がらなかった）",
+    en: "We didn't click.",
+    explanation: "click は「（人と）ウマが合う・すぐ打ち解ける」。否定で「ピンとこなかった・相性が合わなかった」。",
+    related: ["We didn't really hit it off."],
+    apply: [
+      { ja: "新しいルームメイトとはすぐ意気投合した。", en: "My new roommate and I clicked right away." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.424Z"
+  },
+  {
+    id: 1791181932425,
+    ja: "話がかみ合ってない気がする。",
+    en: "It feels like we're not on the same page.",
+    explanation: "be on the same page で「同じ認識でいる」。not を入れて話がかみ合っていないことを伝える。",
+    related: ["I don't think we're on the same page."],
+    apply: [
+      { ja: "始める前に、みんなの認識をそろえておこう。", en: "Let's make sure we're all on the same page before we start." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.425Z"
+  },
+  {
+    id: 1791181932426,
+    ja: "別の形にしてみない？",
+    en: "What if we split it up differently?",
+    explanation: "What if we ...? で「〜してみたらどう？」と提案する。split it up で「分ける・分担する」。",
+    related: ["How about we divide it differently?"],
+    apply: [
+      { ja: "仕事を3人で分けてみたらどう？", en: "What if we split the work up among three people?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.426Z"
+  },
+  {
+    id: 1791181932427,
+    ja: "正直にいうと（誤解なしでね）",
+    en: "I'm just trying to be upfront.",
+    explanation: "upfront は「率直な・包み隠さない」。just trying to で「ただ〜しようとしているだけ」と悪気がないことを示す。",
+    related: ["I just want to be honest with you."],
+    apply: [
+      { ja: "最初に正直に言っておくと、予算は限られています。", en: "To be upfront, our budget is limited." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.427Z"
+  },
+  {
+    id: 1791181932428,
+    ja: "最近、運動してる？",
+    en: "Have you been working out lately?",
+    explanation: "work out は「運動する・筋トレする」。現在完了進行形＋lately で「最近ずっと」。",
+    related: ["Have you been exercising lately?"],
+    apply: [
+      { ja: "最近ジムに行ってる？", en: "Have you been going to the gym lately?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.428Z"
+  },
+  {
+    id: 1791181932429,
+    ja: "体調大丈夫？",
+    en: "Have you been feeling okay?",
+    explanation: "Have you been feeling okay? で「（このところ）体調は大丈夫？」と続いている状態を気づかう。",
+    related: ["Are you feeling all right?"],
+    apply: [
+      { ja: "最近よく眠れてる？", en: "Have you been sleeping well?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.429Z"
+  },
+  {
+    id: 1791181932430,
+    ja: "お金を使ったことを後悔している",
+    en: "I regret spending so much money.",
+    explanation: "regret doing で「（過去に）〜したことを後悔する」。regret to do は「残念ながら〜する」と別の意味。",
+    related: ["I wish I hadn't spent so much money."],
+    apply: [
+      { ja: "もっと勉強しなかったことを後悔している。", en: "I regret not studying harder." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.430Z"
+  },
+  {
+    id: 1791181932431,
+    ja: "昨日の夜は終電を逃した。",
+    en: "I missed the last train home last night.",
+    noteEn: ["miss the last train home"],
+    explanation: "the last train home で「家に帰る最終電車＝終電」。miss で「乗り逃す」。",
+    related: ["I couldn't catch the last train home last night."],
+    apply: [
+      { ja: "終電を逃さないように早めに店を出た。", en: "We left early so we wouldn't miss the last train home." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.431Z"
+  },
+  {
+    id: 1791181932432,
+    ja: "気に入ると思う",
+    en: "You're going to love it.",
+    explanation: "be going to love ... で「きっと気に入るよ」と自信をもって勧める。ノートでは are が抜けていたので補った。",
+    related: ["I'm sure you'll love it."],
+    apply: [
+      { ja: "このレストラン、絶対気に入るよ。", en: "You're going to love this restaurant." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.432Z"
+  },
+  {
+    id: 1791181932433,
+    ja: "毎週電話するって約束するよ。",
+    en: "I promise to call you every week.",
+    noteEn: ["promise to do"],
+    explanation: "promise to do で「〜すると約束する」。to の後ろは動詞の原形。",
+    related: ["I promise I'll call you every week."],
+    apply: [
+      { ja: "彼は二度と遅れないと約束した。", en: "He promised to never be late again." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.433Z"
+  },
+  {
+    id: 1791181932434,
+    ja: "頑張ってきた",
+    en: "He has been working hard.",
+    explanation: "現在完了進行形 has been working で「（ずっと）頑張ってきた」と努力の積み重ねを表す。",
+    related: ["He has been putting in a lot of effort."],
+    apply: [
+      { ja: "彼女はこの1年、英語を一生懸命勉強してきた。", en: "She has been studying English hard this year." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.434Z"
+  },
+  {
+    id: 1791181932435,
+    ja: "彼女は2年で昇進を勝ち取った。",
+    en: "She earned a promotion after two years.",
+    noteEn: ["earn a promotion"],
+    explanation: "earn は「（努力して）得る」。earn a promotion で実力で昇進したニュアンスが出る。",
+    related: ["She got promoted after two years."],
+    apply: [
+      { ja: "昇進を勝ち取るために彼は懸命に働いた。", en: "He worked hard to earn a promotion." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.435Z"
+  },
+  {
+    id: 1791181932436,
+    ja: "日本経済は多くの問題に直面する",
+    en: "The economy in Japan is facing a lot of problems.",
+    en_orig: "The economy in Japan is facing a lot of ploblems.",
+    explanation: "face は「（問題に）直面する」。進行形で今まさに直面している状況を表す。ノートの綴り ploblems を problems に直した。",
+    related: ["Japan's economy is dealing with many problems."],
+    apply: [
+      { ja: "多くの小さな店が困難に直面している。", en: "Many small shops are facing difficulties." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.436Z"
+  },
+  {
+    id: 1791181932437,
+    ja: "物価上昇が多くの家庭を苦しめている。",
+    en: "Rising prices are hurting many families.",
+    noteEn: ["rising prices", "rising costs"],
+    explanation: "rising prices で「上がっていく物価」。rising costs（コストの上昇）も同じ意味で使える。ノートの綴り pries は prices に直した。",
+    related: ["Rising costs are hurting many families."],
+    apply: [
+      { ja: "物価上昇のせいで、外食を減らしている。", en: "Because of rising prices, I eat out less." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.437Z"
+  },
+  {
+    id: 1791181932438,
+    ja: "多くの会社が労働力不足に直面している。",
+    en: "Many companies face a labor shortage.",
+    noteEn: ["labor shortage"],
+    explanation: "labor shortage で「人手不足・労働力不足」。shortage は「不足」。",
+    related: ["Many companies don't have enough workers."],
+    apply: [
+      { ja: "人手不足のせいで、その店は早く閉まる。", en: "The store closes early because of a labor shortage." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.438Z"
+  },
+  {
+    id: 1791181932439,
+    ja: "その国は成長が鈍っている。",
+    en: "The country is facing slower growth.",
+    noteEn: ["facing slower growth"],
+    explanation: "slower growth で「より遅い成長＝成長の鈍化」。face と組んで経済の話でよく使う。",
+    related: ["The country's growth is slowing down."],
+    apply: [
+      { ja: "多くの企業が今年は成長の鈍化に直面している。", en: "Many companies are facing slower growth this year." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.439Z"
+  },
+  {
+    id: 1791181932440,
+    ja: "環境問題について話し合う必要がある。",
+    en: "We need to talk about environmental issues.",
+    noteEn: ["environmental issues"],
+    explanation: "issue は「（議論すべき）問題」。environmental issues で「環境問題」。",
+    related: ["We need to discuss environmental problems."],
+    apply: [
+      { ja: "学生たちは授業で環境問題について調べた。", en: "The students researched environmental issues in class." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.440Z"
+  },
+  {
+    id: 1791181932441,
+    ja: "そのプロジェクトには長期的な資金が必要だ。",
+    en: "The project needs long-term funding.",
+    noteEn: ["long-term funding"],
+    explanation: "funding は「資金（提供）」。long-term で「長期にわたる」。",
+    related: ["The project needs stable funding for years."],
+    apply: [
+      { ja: "研究には長期的な資金が欠かせない。", en: "Research depends on long-term funding." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.441Z"
+  },
+  {
+    id: 1791181932442,
+    ja: "この問題には緊急の対応が必要だ。",
+    en: "This problem needs urgent action.",
+    noteEn: ["urgent action"],
+    explanation: "urgent action で「緊急の対応・早急な行動」。take urgent action（緊急の対策を取る）の形でもよく使う。",
+    related: ["We need to act quickly on this problem."],
+    apply: [
+      { ja: "政府は緊急の対策を取るべきだ。", en: "The government should take urgent action." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.442Z"
+  },
+  {
+    id: 1791181932443,
+    ja: "気候変動には国際的な協力が必要だ。",
+    en: "Climate change requires international cooperation.",
+    noteEn: ["international cooperation"],
+    explanation: "cooperation は「協力」。international cooperation で国を越えた協力。TOEFLの社会問題トピックで頻出。",
+    related: ["Countries need to work together on climate change."],
+    apply: [
+      { ja: "国際的な協力なしにはこの病気は止められない。", en: "We can't stop this disease without international cooperation." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.443Z"
+  },
+  {
+    id: 1791181932444,
+    ja: "彼は科学の勉強に打ち込んだ。",
+    en: "He devoted himself to studying science.",
+    noteEn: ["devote oneself to doing"],
+    explanation: "devote oneself to doing で「〜に身をささげる・打ち込む」。to は前置詞なので後ろは動名詞。",
+    related: ["He dedicated himself to studying science."],
+    apply: [
+      { ja: "彼女は子どもたちを助けることに人生をささげた。", en: "She devoted herself to helping children." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.444Z"
+  },
+  {
+    id: 1791181932445,
+    ja: "彼は体力を戻すために休んでいる。",
+    en: "He's resting to rebuild his strength.",
+    noteEn: ["rebuild his strength"],
+    explanation: "rebuild one's strength で「（病気・けがの後に）体力を取り戻す」。",
+    related: ["He's resting to get his strength back."],
+    apply: [
+      { ja: "手術の後、母は少しずつ体力を取り戻している。", en: "After the surgery, my mom is slowly rebuilding her strength." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.445Z"
+  },
+  {
+    id: 1791181932446,
+    ja: "私たちはみんなでそのイベントを成功させるために頑張った。",
+    en: "We all worked hard to make the event a success.",
+    noteEn: ["make A a success"],
+    explanation: "make 物 a success で「〜を成功させる」。make 目的語 補語 の形。",
+    related: ["We all worked hard so the event would succeed."],
+    apply: [
+      { ja: "チームはその新製品を成功させた。", en: "The team made the new product a success." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.446Z"
+  },
+  {
+    id: 1791181932447,
+    ja: "私たちは一緒に課題を乗り越えた。",
+    en: "We overcame the challenges together.",
+    noteEn: ["overcome the challenges"],
+    explanation: "overcome は「（困難を）乗り越える」。challenge は「挑戦」より「乗り越えるべき課題」の意味でよく使う。",
+    related: ["We got through the challenges together."],
+    apply: [
+      { ja: "留学生は多くの課題を乗り越えなければならない。", en: "International students have to overcome many challenges." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.447Z"
+  },
+  {
+    id: 1791181932448,
+    ja: "両親は弟のために家庭教師を雇った。",
+    en: "My parents hired a tutor for my brother.",
+    noteEn: ["hire a tutor"],
+    explanation: "hire は「（人を）雇う」。tutor は「家庭教師・個別指導の先生」。",
+    related: ["My parents got a private teacher for my brother."],
+    apply: [
+      { ja: "数学の家庭教師を雇おうと思っている。", en: "I'm thinking of hiring a math tutor." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.448Z"
+  },
+  {
+    id: 1791181932449,
+    ja: "わからないときは、確認のために質問しよう。",
+    en: "If you're confused, ask for clarification.",
+    noteEn: ["ask for clarification"],
+    explanation: "clarification は「明確にすること」。ask for clarification で「（意味を）はっきりさせてほしいと頼む」。",
+    related: ["If you're confused, ask them to explain."],
+    apply: [
+      { ja: "指示について先生に確認の質問をした。", en: "I asked the teacher for clarification on the instructions." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.449Z"
+  },
+  {
+    id: 1791181932450,
+    ja: "彼はもっと英語を話そうと努力している。",
+    en: "He's making an effort to speak more English.",
+    noteEn: ["be making an effort"],
+    explanation: "make an effort to do で「〜しようと努力する」。進行形で今まさに頑張っている様子を表す。",
+    related: ["He's trying hard to speak more English."],
+    apply: [
+      { ja: "私は毎朝早く起きる努力をしている。", en: "I'm making an effort to get up early every morning." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.450Z"
+  },
+  {
+    id: 1791181932451,
+    ja: "彼は回復に向けて順調に進んでいる。",
+    en: "He's making progress on his recovery.",
+    noteEn: ["make progress on his recovery"],
+    explanation: "make progress on ... で「〜が進む・はかどる」。progress は数えない名詞なので a を付けない。",
+    related: ["He's recovering well."],
+    apply: [
+      { ja: "卒業論文がようやく進んできた。", en: "I'm finally making progress on my thesis." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.451Z"
+  },
+  {
+    id: 1791181932452,
+    ja: "仕事が終わったら、夕飯を食べに行こう。",
+    en: "After work is done, let's go get dinner.",
+    noteEn: ["After work is done,"],
+    explanation: "be done で「終わっている」。over や finished でも同じ意味で言える。",
+    related: ["After work is over, let's go get dinner.", "After work is finished, let's go get dinner."],
+    apply: [
+      { ja: "宿題が終わったら、ゲームしてもいいよ。", en: "After your homework is done, you can play games." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.452Z"
+  },
+  {
+    id: 1791181932453,
+    ja: "今夜出かけない？",
+    en: "Do you want to go out tonight?",
+    noteEn: ["go out"],
+    explanation: "go out は「（遊びや食事に）出かける」。家の外へ出るだけでなく、夜遊びに行く意味でもよく使う。",
+    related: ["Do you want to hang out tonight?"],
+    apply: [
+      { ja: "雨だったので、一日中出かけなかった。", en: "It was raining, so I didn't go out all day." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.453Z"
+  },
+  {
+    id: 1791181932454,
+    ja: "駅まで迎えに行くよ。",
+    en: "I'll pick you up at the station.",
+    noteEn: ["pick up"],
+    explanation: "pick 人 up で「（車などで）迎えに行く」。代名詞は pick と up の間に置く。",
+    related: ["I'll come get you at the station."],
+    apply: [
+      { ja: "子どもを3時に学校へ迎えに行かないといけない。", en: "I have to pick up my kids from school at three." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.454Z"
+  },
+  {
+    id: 1791181932455,
+    ja: "ここから空港まではどれくらいですか？",
+    en: "How long is it from here to the airport?",
+    noteEn: ["How long is it from here to A?"],
+    explanation: "How long is it from A to B? で「AからBまでどのくらい（時間が）かかる？」。it は距離・時間をばくぜんと指す。",
+    related: ["How long does it take to get to the airport from here?"],
+    apply: [
+      { ja: "ホテルから駅まではどれくらいですか？", en: "How long is it from the hotel to the station?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.455Z"
+  },
+  {
+    id: 1791181932456,
+    ja: "彼の準備ができたら出発します",
+    en: "If he is ready, we will leave.",
+    explanation: "if や when の節の中は、未来のことでも現在形（is ready）にする。主節は will。",
+    related: ["Once he's ready, we'll leave."],
+    apply: [
+      { ja: "雨がやんだら散歩に行こう。", en: "If the rain stops, we will go for a walk." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.456Z"
+  },
+  {
+    id: 1791181932457,
+    ja: "プロジェクトのしめきりに間に合わないか心配",
+    en: "I'm concerned about missing the project deadline.",
+    noteEn: ["I'm concerned about missing the project deadline.", "be concerned about"],
+    explanation: "be concerned about ... で「〜を心配している」。about の後ろは名詞か動名詞（missing）。worried より少し改まった言い方。",
+    related: ["I'm worried that we'll miss the project deadline."],
+    apply: [
+      { ja: "母は私の健康を心配している。", en: "My mom is concerned about my health." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0634.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.457Z"
+  },
+  {
+    id: 1791181932458,
+    ja: "1日おきにジムに行っている。",
+    en: "I go to the gym every other day.",
+    noteEn: ["every other day"],
+    explanation: "every other ... で「1つおきの〜」。every other week なら「隔週」。",
+    related: ["I go to the gym every two days."],
+    apply: [
+      { ja: "その授業は1週おきにある。", en: "The class meets every other week." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.458Z"
+  },
+  {
+    id: 1791181932459,
+    ja: "それについて教えてほしいと頼まれた",
+    en: "He asked me to tell him about it.",
+    explanation: "ask 人 to do で「人に〜するよう頼む」。tell 人 about ... で「〜について話す」。",
+    related: ["He wanted me to tell him about it."],
+    apply: [
+      { ja: "先生は私に結果を報告するよう頼んだ。", en: "The teacher asked me to report the results." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.459Z"
+  },
+  {
+    id: 1791181932460,
+    ja: "スーパーに行ってくるね。",
+    en: "I'm going to the grocery store.",
+    noteEn: ["the grocery store"],
+    explanation: "grocery store は食料品店＝日本の「スーパー」にあたる。supermarket より日常会話で多く使う。",
+    related: ["I'm going to the supermarket."],
+    apply: [
+      { ja: "スーパーで牛乳を買ってきてくれる？", en: "Can you get some milk at the grocery store?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.460Z"
+  },
+  {
+    id: 1791181932461,
+    ja: "時間管理をもっとうまくできるように取り組んでいる。",
+    en: "I'm working on managing my time better.",
+    noteEn: ["managing one's time"],
+    explanation: "manage one's time で「時間を管理する」。time management（名詞）とも言う。",
+    related: ["I'm trying to improve my time management."],
+    apply: [
+      { ja: "大学生にとって時間管理は難しい。", en: "Managing your time is hard for college students." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.461Z"
+  },
+  {
+    id: 1791181932462,
+    ja: "画面の指示にしたがってください。",
+    en: "Please follow the directions on the screen.",
+    noteEn: ["follow directions"],
+    explanation: "directions は複数形で「指示・使い方」。follow で「（指示に）従う」。",
+    related: ["Please follow the instructions on the screen."],
+    apply: [
+      { ja: "彼は指示に従わなかったので道に迷った。", en: "He didn't follow the directions, so he got lost." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.462Z"
+  },
+  {
+    id: 1791181932463,
+    ja: "自分の思っていることをうまくいえない",
+    en: "I'm poor at speaking my mind.",
+    noteEn: ["I'm poor at speaking my mind.", "be poor at doing"],
+    explanation: "be poor at doing で「〜が苦手だ」。speak one's mind は「思っていることをはっきり言う」。",
+    related: ["I'm not good at saying what I think."],
+    apply: [
+      { ja: "私は名前を覚えるのが苦手です。", en: "I'm poor at remembering names." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.463Z"
+  },
+  {
+    id: 1791181932464,
+    ja: "遠慮せずに先生に助けを頼んでね。",
+    en: "Don't be afraid to ask your teacher for help.",
+    noteEn: ["ask A for help"],
+    explanation: "ask 人 for help で「人に助けを求める」。for の後ろに求めるものを置く。",
+    related: ["Don't be afraid to ask your teacher to help you."],
+    apply: [
+      { ja: "困ったときは友達に助けを求めた。", en: "I asked my friend for help when I was in trouble." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.464Z"
+  },
+  {
+    id: 1791181932465,
+    ja: "どう成長するの？",
+    en: "How do you grow?",
+    explanation: "How do you do? の形で「どうやって〜するの？」と方法を聞く。grow は「成長する・（植物を）育てる」。",
+    related: ["How do you get better?"],
+    apply: [
+      { ja: "どうやって新しい単語を覚えるの？", en: "How do you remember new words?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.465Z"
+  },
+  {
+    id: 1791181932466,
+    ja: "お弁当を詰めることで節約している",
+    en: "They save money by packing lunch.",
+    explanation: "by doing で「〜することによって」と手段を表す。pack lunch で「お弁当を詰める（持参する）」。",
+    related: ["They save money by bringing their own lunch."],
+    apply: [
+      { ja: "私は自転車で通勤することでお金を節約している。", en: "I save money by riding my bike to work." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.466Z"
+  },
+  {
+    id: 1791181932467,
+    ja: "気持ちが落ち着く",
+    en: "I felt calmer.",
+    explanation: "calmer は calm（落ち着いた）の比較級。felt calmer で「（前より）気持ちが落ち着いた」。",
+    related: ["I felt more relaxed."],
+    apply: [
+      { ja: "深呼吸をしたら気持ちが落ち着いた。", en: "I felt calmer after taking a deep breath." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.467Z"
+  },
+  {
+    id: 1791181932468,
+    ja: "彼が仕事に上達するには時間がかかる",
+    en: "It takes him a lot of time to get good at work.",
+    explanation: "It takes 人 時間 to do で「人が〜するのに時間がかかる」。a lot of time を less time・no time に変えると「あまりかからない・すぐできる」。",
+    related: ["It takes him less time to commute by train.", "It takes him no time to fall asleep."],
+    apply: [
+      { ja: "新しい環境に慣れるのに私は時間がかかる。", en: "It takes me a lot of time to get used to a new place." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.468Z"
+  },
+  {
+    id: 1791181932469,
+    ja: "私たちはチームとして取り組む必要がある。",
+    en: "We need to work as a team.",
+    noteEn: ["work as a team"],
+    explanation: "as a team で「チームとして（一丸となって）」。as は「〜として」。",
+    related: ["We need to work together."],
+    apply: [
+      { ja: "チームとして取り組んだので、早く終わった。", en: "We worked as a team, so we finished early." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.469Z"
+  },
+  {
+    id: 1791181932470,
+    ja: "もっと早く警告されていれば、準備できたのに。",
+    en: "If warned earlier, we could have prepared.",
+    noteEn: ["if warned earlier"],
+    explanation: "if (we had been) warned earlier の省略形で「もっと早く知らされていれば」。後ろは could have done で過去の後悔を表す。",
+    related: ["If we had been warned earlier, we could have prepared."],
+    apply: [
+      { ja: "もっと早く知らされていれば、彼は会議に出られたのに。", en: "If warned earlier, he could have joined the meeting." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.470Z"
+  },
+  {
+    id: 1791181932471,
+    ja: "率直なご意見をありがとうございます。",
+    en: "Thank you for your honest feedback.",
+    noteEn: ["honest feedback"],
+    explanation: "feedback は数えない名詞で「意見・感想」。honest で「率直な・遠慮のない」。",
+    related: ["Thank you for being honest with me."],
+    apply: [
+      { ja: "私のエッセイに率直な意見をください。", en: "Please give me honest feedback on my essay." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.471Z"
+  },
+  {
+    id: 1791181932472,
+    ja: "明確な目標を立てることが大切だ。",
+    en: "It's important to set clear goals.",
+    noteEn: ["clear goals"],
+    explanation: "set goals で「目標を立てる」。clear で「はっきりした・明確な」。",
+    related: ["It's important to have specific goals."],
+    apply: [
+      { ja: "チームには明確な目標がなかった。", en: "The team didn't have clear goals." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.472Z"
+  },
+  {
+    id: 1791181932473,
+    ja: "必要な資料は全部持ってきた？",
+    en: "Did you bring all the necessary materials?",
+    noteEn: ["all the necessary materials"],
+    explanation: "materials は「資料・材料」。all the necessary ... で「必要な〜すべて」。",
+    related: ["Did you bring everything you need?"],
+    apply: [
+      { ja: "必要な資料はすべてメールで送りました。", en: "I sent you all the necessary materials by email." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.473Z"
+  },
+  {
+    id: 1791181932474,
+    ja: "明日の面接の準備をしています。",
+    en: "I'm preparing for the interview tomorrow.",
+    noteEn: ["prepare for the interview", "prepare for the storm by stocking supplies"],
+    explanation: "prepare for ... で「〜に備えて準備する」。for の後ろに目的のイベントを置く。prepare for the storm by stocking supplies（物資を備蓄して嵐に備える）のように by doing で手段も言える。",
+    related: ["I'm getting ready for the interview tomorrow."],
+    apply: [
+      { ja: "物資を備蓄して嵐に備えるべきだ。", en: "We should prepare for the storm by stocking supplies." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.474Z"
+  },
+  {
+    id: 1791181932475,
+    ja: "来月末までに報告書を仕上げます。",
+    en: "I'll finish the report by the end of next month.",
+    noteEn: ["by the end of next month"],
+    explanation: "by は「〜までに（期限）」。the end of next month で「来月末」。",
+    related: ["I'll finish the report before next month ends."],
+    apply: [
+      { ja: "来月末までに引っ越さないといけない。", en: "I have to move out by the end of next month." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.475Z"
+  },
+  {
+    id: 1791181932476,
+    ja: "まだ応募していない",
+    en: "He hasn't applied yet.",
+    explanation: "現在完了の否定＋yet で「まだ〜していない」。apply は「応募する・申し込む」。",
+    related: ["He still hasn't applied."],
+    apply: [
+      { ja: "まだその映画を見ていない。", en: "I haven't seen the movie yet." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.476Z"
+  },
+  {
+    id: 1791181932477,
+    ja: "いつか世界一周旅行に行きたい。",
+    en: "Someday I want to go on a trip around the world.",
+    noteEn: ["go on a trip around the world"],
+    explanation: "around the world で「世界を一周して」。go on a trip と組んで「世界一周旅行に出る」。",
+    related: ["Someday I want to travel around the world."],
+    apply: [
+      { ja: "彼らは退職後、世界一周旅行に出た。", en: "They went on a trip around the world after they retired." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.477Z"
+  },
+  {
+    id: 1791181932478,
+    ja: "私は彼に休憩するよう提案した。",
+    en: "I suggested that he take a break.",
+    noteEn: ["suggest that A do"],
+    explanation: "suggest that 人 do の that 節の動詞は原形（take）。三人称でも s を付けないのがポイント。ノートの綴り sugest は suggest に直した。",
+    related: ["I told him he should take a break."],
+    apply: [
+      { ja: "先生は私たちがもっと本を読むよう勧めた。", en: "The teacher suggested that we read more books." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.478Z"
+  },
+  {
+    id: 1791181932479,
+    ja: "壊れたヒーターのことで大家さんに電話した。",
+    en: "I called the landlord about the broken heater.",
+    noteEn: ["the landlord"],
+    explanation: "landlord は部屋を貸している「大家さん」。女性なら landlady とも言うが、今は landlord が一般的。",
+    related: ["I contacted the owner about the broken heater."],
+    apply: [
+      { ja: "大家さんが来月家賃を上げるそうだ。", en: "The landlord is raising the rent next month." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.479Z"
+  },
+  {
+    id: 1791181932480,
+    ja: "彼女はついにその難しいなぞなぞの答えを見つけた",
+    en: "She finally found the answer to that tricky riddle.",
+    noteEn: ["She finally found the answer to that tricky riddle.", "the answer to the question"],
+    explanation: "the answer to ... で「〜の答え」。前置詞は of ではなく to を使う。tricky は「ひっかけの・やっかいな」。",
+    related: ["She finally solved that tricky riddle."],
+    apply: [
+      { ja: "その質問の答えはまだわからない。", en: "I still don't know the answer to that question." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.480Z"
+  },
+  {
+    id: 1791181932481,
+    ja: "渋滞のせいで遅れた。",
+    en: "I was late because of traffic.",
+    noteEn: ["because of traffic"],
+    explanation: "traffic だけで「交通渋滞」の意味になる。because of の後ろは名詞。",
+    related: ["I was late because I got stuck in traffic."],
+    apply: [
+      { ja: "渋滞のせいで会議に間に合わなかった。", en: "I missed the meeting because of traffic." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.481Z"
+  },
+  {
+    id: 1791181932482,
+    ja: "運動が足りてない気がする",
+    en: "I feel I wasn't getting enough exercise.",
+    explanation: "I feel (that) ... で「〜な気がする」。get enough exercise で「十分運動する」。",
+    related: ["I feel like I haven't been exercising enough."],
+    apply: [
+      { ja: "最近十分に寝ていない気がする。", en: "I feel I wasn't getting enough sleep." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.482Z"
+  },
+  {
+    id: 1791181932483,
+    ja: "職場で英語を話すことにまだ慣れていない",
+    en: "He is still not used to speaking English at work.",
+    explanation: "be used to doing で「〜することに慣れている」。to は前置詞なので後ろは動名詞。still not で「まだ慣れない」。",
+    related: ["He still isn't used to the noise downtown."],
+    apply: [
+      { ja: "私はまだ早起きに慣れていない。", en: "I'm still not used to waking up early." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.483Z"
+  },
+  {
+    id: 1791181932484,
+    ja: "お誘いいただいてうれしい",
+    en: "I'm happy to receive your invitation.",
+    en_orig: "I'm happy to recieve your invitation.",
+    explanation: "be happy to do で「〜してうれしい」。invitation は「招待・お誘い」。ノートの綴り recieve を receive に直した（i before e, except after c）。",
+    related: ["Thank you for inviting me."],
+    apply: [
+      { ja: "またあなたに会えてうれしいです。", en: "I'm happy to see you again." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.484Z"
+  },
+  {
+    id: 1791181932485,
+    ja: "急すぎるかな？",
+    en: "Is that too last-minute?",
+    explanation: "last-minute は「直前の・ぎりぎりの」。too を付けて「急すぎる？」と相手を気づかう。",
+    related: ["Is that too short notice?"],
+    apply: [
+      { ja: "今夜の予約は急すぎますか？", en: "Is a reservation for tonight too last-minute?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.485Z"
+  },
+  {
+    id: 1791181932486,
+    ja: "英語でなんていうかわからない",
+    en: "I'm not sure how to say it in English.",
+    explanation: "how to say it で「どう言えばいいか」。not sure で「よくわからない」とやわらかく伝える。",
+    related: ["I don't know how to say it in English."],
+    apply: [
+      { ja: "この料理を英語でどう説明すればいいかわからない。", en: "I'm not sure how to explain this dish in English." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.486Z"
+  },
+  {
+    id: 1791181932487,
+    ja: "なんでここに来たの",
+    en: "What brought you here?",
+    explanation: "Why did you come here? だと問い詰める響きになるので、物を主語にして「何があなたをここへ？」と聞く。",
+    related: ["What brought you to Japan?"],
+    apply: [
+      { ja: "どうしてこの大学に来ようと思ったの？", en: "What brought you to this university?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0635.png",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.487Z"
+  },
+  {
+    id: 1791181932488,
+    ja: "彼は私にそのプロジェクトについて意見を言ってほしいと思っています。",
+    en: "He wants me to give my opinion about that project.",
+    explanation: "want 人 to do で「人に〜してほしい」。give my opinion about ... で「〜について意見を言う」。",
+    related: ["They asked her to give her opinion about the proposal."],
+    apply: [
+      { ja: "上司は私にその企画について意見を言ってほしいと思っている。", en: "My boss wants me to give my opinion about the plan." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0981.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.488Z"
+  },
+  {
+    id: 1791181932489,
+    ja: "日本の企業は、目標を達成するためにイノベーションが重要だと考えている。",
+    en: "Japan's companies regard innovation as important for accomplishing goals.",
+    explanation: "regard A as B で「AをBと見なす」。as の後ろに形容詞 important も置ける。",
+    related: ["Japanese companies see innovation as key to reaching their goals."],
+    apply: [
+      { ja: "多くの学生は英語を将来に重要だと考えている。", en: "Many students regard English as important for their future." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0982.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.489Z"
+  },
+  {
+    id: 1791181932490,
+    ja: "今の経済状況では、お金を貯めるのがこれまで以上に難しく感じます。",
+    en: "In today's economy, saving money feels harder than ever.",
+    explanation: "動名詞 saving money を主語にして feels harder（より難しく感じる）。than ever で「これまでになく」。",
+    related: ["These days, it's harder than ever to save money."],
+    apply: [
+      { ja: "今の時代、家を買うのはこれまで以上に難しく感じる。", en: "These days, buying a house feels harder than ever." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0982.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.490Z"
+  },
+  {
+    id: 1791181932491,
+    ja: "苦難は人生観を形作ることがある。",
+    en: "Hardships can shape their outlook on life.",
+    explanation: "shape は動詞で「形作る」。outlook on life で「人生観」。can で「〜することがある」。",
+    related: ["Good mentors can shape their confidence early."],
+    apply: [
+      { ja: "子ども時代の経験は性格を形作ることがある。", en: "Childhood experiences can shape your personality." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0982.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.491Z"
+  },
+  {
+    id: 1791181932492,
+    ja: "プロジェクトが承認されるまではお祝いできません。",
+    en: "We can't celebrate until the project is approved.",
+    explanation: "not ... until ... で「〜するまでは…しない」。until 節の中は未来でも現在形（is approved）。",
+    related: ["They will wait until the project is finished."],
+    apply: [
+      { ja: "結果が出るまでは安心できない。", en: "I can't relax until I get the results." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0983.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.492Z"
+  },
+  {
+    id: 1791181932493,
+    ja: "発音を早く上達させるには練習が大切です。",
+    en: "Practice is important for improving pronunciation quickly.",
+    explanation: "be important for doing で「〜するのに大切だ」。for の後ろは動名詞。",
+    related: ["You need to practice to improve your pronunciation quickly."],
+    apply: [
+      { ja: "よく眠ることは健康を保つのに大切です。", en: "Sleeping well is important for staying healthy." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0983.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.493Z"
+  },
+  {
+    id: 1791181932494,
+    ja: "チームがこれから何をするのかに興味があります。",
+    en: "I'm interested in what the team is going to do.",
+    explanation: "be interested in what ... で「何を〜するのかに興味がある」。what 以下は平叙文の語順（the team is going to do）。",
+    related: ["I'm curious about what the team will do next."],
+    apply: [
+      { ja: "彼が次に何を言うのか興味がある。", en: "I'm interested in what he is going to say next." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0984.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.494Z"
+  },
+  {
+    id: 1791181932495,
+    ja: "私たちは集中し続けるのが難しいと感じています。",
+    en: "We find staying focused challenging.",
+    explanation: "find 名詞 形容詞 で「〜を…だと感じる」。find staying focused challenging のように目的語に動名詞も置ける。",
+    related: ["She finds public speaking challenging."],
+    apply: [
+      { ja: "多くの学生は早起きを難しいと感じている。", en: "Many students find getting up early challenging." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0984.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.495Z"
+  },
+  {
+    id: 1791181932496,
+    ja: "金利の上昇は住宅市場に影響を与えます。",
+    en: "Rising interest rates affect the housing market.",
+    explanation: "affect は動詞で「〜に影響を与える」。名詞の effect と混同しやすいので注意。",
+    related: ["Bright screens at night affect the quality of sleep."],
+    apply: [
+      { ja: "天気は私の気分に影響する。", en: "The weather affects my mood." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0985.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.496Z"
+  },
+  {
+    id: 1791181932497,
+    ja: "友達に「ノー」と言うのが苦手なんです。",
+    en: "It's difficult for me to say no to friends.",
+    explanation: "It's difficult for 人 to do で「人にとって〜するのは難しい」。say no to ... で「〜に断る」。",
+    related: ["I find it hard to say no to friends."],
+    apply: [
+      { ja: "私にとって朝早く起きるのは難しい。", en: "It's difficult for me to get up early." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0985.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.497Z"
+  },
+  {
+    id: 1791181932498,
+    ja: "日本経済が改善している理由は何だと思いますか？",
+    en: "What do you think is the reason for the Japanese economy improving?",
+    explanation: "What do you think is ...? で「何が〜だと思いますか」。do you think を疑問詞の直後に入れる語順に注意。the reason for 名詞 doing で「〜が…している理由」。",
+    related: ["Why do you think the Japanese economy is improving?"],
+    apply: [
+      { ja: "彼が会社を辞めた理由は何だと思う？", en: "What do you think is the reason for him quitting his job?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0986.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.498Z"
+  },
+  {
+    id: 1791181932499,
+    ja: "SNSが世界に与える影響について、どう思いますか？",
+    en: "How do you feel about how social media affects the world?",
+    explanation: "How do you feel about ...? で「〜についてどう思う？」。how 名詞 affects ... で「〜がどう影響するか」。",
+    related: ["What do you think about the impact of social media on the world?"],
+    apply: [
+      { ja: "AIが仕事に与える影響についてどう思いますか？", en: "How do you feel about how AI affects our jobs?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0987.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.499Z"
+  },
+  {
+    id: 1791181932500,
+    ja: "現在のお仕事について教えていただけますか？",
+    en: "Can you tell me about your current role?",
+    explanation: "Can you tell me about ...? で「〜について教えてもらえますか」。current role は「今の役職・仕事内容」。面接やネットワーキングの定番。",
+    related: ["Can you tell me about your career goals?"],
+    apply: [
+      { ja: "あなたの研究について教えてもらえますか？", en: "Can you tell me about your research?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0988.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.500Z"
+  },
+  {
+    id: 1791181932501,
+    ja: "お仕事で一番大変なことは何ですか？",
+    en: "What is the biggest challenge in your job?",
+    explanation: "the biggest challenge in ... で「〜でいちばん大変なこと」。challenge は「乗り越えるべき課題」。",
+    related: ["What's the hardest part of your job?"],
+    apply: [
+      { ja: "留学生活で一番大変なことは何でしたか？", en: "What was the biggest challenge in your life abroad?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0988.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.501Z"
+  },
+  {
+    id: 1791181932502,
+    ja: "今、その計画についてどう思いますか？",
+    en: "What do you think about that plan now?",
+    explanation: "What do you think about ...? で意見を聞く。now を付けて「（以前と比べて）今は」を強調する。",
+    related: ["How do you feel about that plan now?"],
+    apply: [
+      { ja: "今、新しい職場についてどう思う？", en: "What do you think about your new job now?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0989.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.502Z"
+  },
+  {
+    id: 1791181932503,
+    ja: "プロジェクトの進捗はいかがですか？",
+    en: "How is the project's progress?",
+    explanation: "progress は「進み具合」。How is ...? で状況を聞く。How is the project going? も同じ意味。",
+    related: ["How is the project going?"],
+    apply: [
+      { ja: "引っ越しの準備の進み具合はどう？", en: "How is the progress on your move?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0989.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.503Z"
+  },
+  {
+    id: 1791181932504,
+    ja: "どんな仕事をするかは、どうやって決めていますか？",
+    en: "How do you decide what jobs to do?",
+    explanation: "decide what 名詞 to do で「どの〜をするか決める」。疑問詞＋to do の形。",
+    related: ["She couldn't decide what to do next."],
+    apply: [
+      { ja: "夕食に何を作るか、どうやって決めていますか？", en: "How do you decide what to cook for dinner?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0989.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.504Z"
+  },
+  {
+    id: 1791181932505,
+    ja: "近いうちに旅行に行く予定はありますか？",
+    en: "Do you have any plans to take a trip soon?",
+    explanation: "Do you have any plans to do? で「〜する予定はありますか」。take a trip で「旅行する」。",
+    related: ["Are you planning to travel soon?"],
+    apply: [
+      { ja: "今年、引っ越す予定はありますか？", en: "Do you have any plans to move this year?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0990.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.505Z"
+  },
+  {
+    id: 1791181932506,
+    ja: "彼女は期末試験が終わったら休憩を取るつもりです。",
+    en: "She plans to take a break after finals.",
+    explanation: "plan to do で「〜するつもりだ」。take a break（休む）・take a class（授業を取る）など take の組み合わせと一緒に覚える。",
+    related: ["She's going to take a break after finals."],
+    apply: [
+      { ja: "私たちは来年の春に家を買うつもりだ。", en: "We plan to buy a house next spring." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0990.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.506Z"
+  },
+  {
+    id: 1791181932507,
+    ja: "新しいテクノロジーは私たちのライフスタイルにどんな影響を与えていますか？",
+    en: "What's the influence that new technology has on our lifestyle?",
+    noteEn: ["What's the influence that new technology has on our lifestyle?", "New technology has a big impact on our lifestyle.", "New technology has effects on our lifestyle at work."],
+    explanation: "the influence that A has on B で「AがBに与える影響」。have a big impact on ... / have effects on ... でも同じ内容を言える。",
+    related: ["New technology has a big impact on our lifestyle.", "New technology has effects on our lifestyle at work."],
+    apply: [
+      { ja: "SNSは若者にどんな影響を与えていますか？", en: "What's the influence that social media has on young people?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0991.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.507Z"
+  },
+  {
+    id: 1791181932508,
+    ja: "新しい技術は、私たちの生活様式をさまざまな面で変えてきました。",
+    en: "New technology has changed our lifestyle in many ways.",
+    explanation: "現在完了 has changed で「（これまでに）変えてきた」。in many ways で「さまざまな面で」。",
+    related: ["New technology has transformed the way we live."],
+    apply: [
+      { ja: "留学は私の考え方をさまざまな面で変えた。", en: "Studying abroad has changed my way of thinking in many ways." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0991.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.508Z"
+  },
+  {
+    id: 1791181932509,
+    ja: "私と一緒に住みませんか？",
+    en: "Do you wanna move in with me?",
+    explanation: "move in with 人 で「人と一緒に住み始める」。wanna は want to の口語。",
+    related: ["Do you wanna get a new place with me?"],
+    apply: [
+      { ja: "来月、彼女と一緒に住む予定です。", en: "I'm going to move in with my girlfriend next month." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0992.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.509Z"
+  },
+  {
+    id: 1791181932510,
+    ja: "私の賃貸契約は8月に切れます・終わります。",
+    en: "My lease is up in August.",
+    explanation: "lease は「賃貸契約」。be up で「（期限が）切れる・終わる」。",
+    related: ["My lease ends in August."],
+    apply: [
+      { ja: "賃貸契約が学期末に切れるので、新しい部屋を探している。", en: "My lease is up at the end of the semester, so I'm looking for a new place." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0992.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.510Z"
+  },
+  {
+    id: 1791181932511,
+    ja: "このプロジェクトの締め切りはいつですか？",
+    en: "When is the deadline for this project?",
+    explanation: "the deadline for ... で「〜の締め切り」。前置詞は for を使う。",
+    related: ["When is this project due?"],
+    apply: [
+      { ja: "応募の締め切りはいつですか？", en: "When is the deadline for applications?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0992.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.511Z"
+  },
+  {
+    id: 1791181932512,
+    ja: "税金の申告期限に間に合いませんでした。",
+    en: "I missed the deadline for my taxes.",
+    explanation: "miss the deadline で「締め切りに間に合わない」。taxes は「税金（の申告）」。",
+    related: ["I didn't file my taxes on time."],
+    apply: [
+      { ja: "彼は奨学金の締め切りに間に合わなかった。", en: "He missed the deadline for the scholarship." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0992.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.512Z"
+  },
+  {
+    id: 1791181932513,
+    ja: "秋に向けてルームメイトを探しています。",
+    en: "I'm looking for a roommate for the fall.",
+    explanation: "look for 名詞 for 時期 で「〜に向けて…を探す」。for the fall で「秋（学期）に向けて」。",
+    related: ["I'm looking for a place for the spring.", "I'm looking for a gift for my friend."],
+    apply: [
+      { ja: "夏休みのアルバイトを探しています。", en: "I'm looking for a part-time job for the summer." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0993.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.513Z"
+  },
+  {
+    id: 1791181932514,
+    ja: "この曲を聴くといつも感情が揺さぶられる。",
+    en: "The song always makes me feel emotional.",
+    explanation: "make 人 feel 形容詞 で「人を〜な気持ちにさせる」。emotional は「感情が揺さぶられた」。",
+    related: ["The reunion video made my dad feel emotional."],
+    apply: [
+      { ja: "その手紙を読んで彼女は胸がいっぱいになった。", en: "The letter made her feel emotional." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0994.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.514Z"
+  },
+  {
+    id: 1791181932515,
+    ja: "私は学士号に取り組んでいます。",
+    en: "I'm working on my bachelor's degree.",
+    explanation: "work on ... で「〜に取り組んでいる」。学位なら「〜の取得を目指している」の意味。",
+    related: ["I'm studying for my bachelor's degree."],
+    apply: [
+      { ja: "彼女は今、修士号を目指しています。", en: "She is working on her master's degree now." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0995.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.515Z"
+  },
+  {
+    id: 1791181932516,
+    ja: "私は演劇を専攻しています。",
+    en: "I'm majoring in performing arts.",
+    explanation: "major in ... で「〜を専攻する」、minor in ... で「〜を副専攻する」。in を忘れないこと。",
+    related: ["I'm minoring in computer science.", "My major is performing arts."],
+    apply: [
+      { ja: "私の友人は経済学を専攻している。", en: "My friend is majoring in economics." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0995.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.516Z"
+  },
+  {
+    id: 1791181932517,
+    ja: "それは自分の文化を共有する良い方法です。",
+    en: "It's a good way to share your culture.",
+    explanation: "It's a good way to do で「〜するのに良い方法だ」。to 以下を入れ替えて何にでも使える。",
+    related: ["It's a good way to get some exercise.", "It's a good way to make a difference."],
+    apply: [
+      { ja: "ボランティアは地域の人と知り合う良い方法です。", en: "Volunteering is a good way to meet local people." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0996.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.517Z"
+  },
+  {
+    id: 1791181932518,
+    ja: "あなたはクラブ勧誘に行きますか？",
+    en: "Are you going to Club Rush?",
+    explanation: "Club Rush はアメリカの大学で学期の初めに行われる「サークル勧誘イベント」。",
+    related: ["I'm going to Club Rush."],
+    apply: [
+      { ja: "クラブ勧誘で写真部に入ったよ。", en: "I joined the Photography Club at Club Rush." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0996.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.518Z"
+  },
+  {
+    id: 1791181932519,
+    ja: "（あなたは）連休（の週末）に何をする予定ですか？",
+    en: "What are you up to over the long weekend?",
+    explanation: "be up to ... で「〜をしている・するつもり」。over the long weekend で「連休の間に」。",
+    related: ["What are you up to over spring break?", "What are your plans for the long weekend?"],
+    apply: [
+      { ja: "冬休みは何をする予定？", en: "What are you up to over winter break?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0997.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.519Z"
+  },
+  {
+    id: 1791181932520,
+    ja: "私は、写真クラブに入っていて、サッカーチームに属しています。",
+    en: "I'm in the Photography Club and on the soccer team.",
+    explanation: "クラブ（部）には in、チーム（運動部）には on を使う。in the Drama Club / on the soccer team。",
+    related: ["I'm on the football team.", "I'm in the Drama Club."],
+    apply: [
+      { ja: "弟はバスケットボール部に入っている。", en: "My brother is on the basketball team." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0997.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.520Z"
+  },
+  {
+    id: 1791181932521,
+    ja: "私はただのんびりしています。",
+    en: "I'm just chilling.",
+    explanation: "chill は「のんびりする・くつろぐ」口語。just を付けて「特に何もしていない」。",
+    related: ["I'm just relaxing."],
+    apply: [
+      { ja: "週末は家でのんびりしてた。", en: "I was just chilling at home over the weekend." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0998.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.521Z"
+  },
+  {
+    id: 1791181932522,
+    ja: "アート展に行きませんか？",
+    en: "Do you wanna go to the art show?",
+    explanation: "Do you wanna ...? は「〜しない？」と気軽に誘う口語。art show は「アート展」。",
+    related: ["Do you wanna go to the football game?", "Let's go to the art show."],
+    apply: [
+      { ja: "今夜のコンサートに行かない？", en: "Do you wanna go to the concert tonight?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0998.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.522Z"
+  },
+  {
+    id: 1791181932523,
+    ja: "私はただキャンパスに（滞在して）います。",
+    en: "I'm just staying on campus.",
+    explanation: "stay on campus で「キャンパスに残る」。休みの予定を聞かれて「特にどこにも行かない」と答えるときに使う。",
+    related: ["I'm not going anywhere. I'm staying on campus."],
+    apply: [
+      { ja: "感謝祭の休みは寮に残るつもりです。", en: "I'm staying in the dorm over Thanksgiving break." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0998.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.523Z"
+  },
+  {
+    id: 1791181932524,
+    ja: "一緒に過ごしませんか？",
+    en: "Do you wanna hang out?",
+    explanation: "hang out で「一緒にぶらぶら過ごす・遊ぶ」。友達を気軽に誘う定番。",
+    related: ["Let's hang out at my place!", "Do you want to spend some time together?"],
+    apply: [
+      { ja: "放課後、一緒に遊ばない？", en: "Do you wanna hang out after school?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_0998.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.524Z"
+  },
+  {
+    id: 1791181932525,
+    ja: "親友と一緒に過ごしました。",
+    en: "I spent time with my best friend.",
+    explanation: "spend time with 人 で「人と時間を過ごす」。best friend は「親友」。",
+    related: ["I hung out with my best friend."],
+    apply: [
+      { ja: "週末は家族と過ごしました。", en: "I spent time with my family over the weekend." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2024.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.525Z"
+  },
+  {
+    id: 1791181932526,
+    ja: "（あなたの）休みはどうでしたか？",
+    en: "How was your break?",
+    explanation: "How was ...? で「〜はどうだった？」と感想を聞く。break は学校の「休み」。",
+    related: ["How was your long weekend?"],
+    apply: [
+      { ja: "旅行はどうだった？", en: "How was your trip?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2024.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.526Z"
+  },
+  {
+    id: 1791181932527,
+    ja: "（私は）家族・親戚の集まりがありました。",
+    en: "I had a family reunion.",
+    explanation: "family reunion は家族・親戚が集まる「同窓会」のような集まり。have で「（行事が）ある」。",
+    related: ["I had a get-together with my relatives."],
+    apply: [
+      { ja: "毎年夏に親戚の集まりがある。", en: "We have a family reunion every summer." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2024.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.527Z"
+  },
+  {
+    id: 1791181932528,
+    ja: "（それは）がっかりなものでした。",
+    en: "It was a letdown.",
+    explanation: "letdown は「期待はずれ・がっかりなもの」。let 人 down（人をがっかりさせる）から来た名詞。",
+    related: ["It was disappointing."],
+    apply: [
+      { ja: "その映画の結末は期待はずれだった。", en: "The ending of the movie was a letdown." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2024.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.528Z"
+  },
+  {
+    id: 1791181932529,
+    ja: "彼女の主張は説得力があります。",
+    en: "Her argument is convincing.",
+    explanation: "convincing は「説得力のある」。argument は「主張・論拠」で、口げんかではない。solid（しっかりした）に入れ替えても使える。",
+    related: ["Her argument is solid.", "Her argument is persuasive."],
+    apply: [
+      { ja: "あなたの説明はとても説得力があった。", en: "Your explanation was very convincing." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2025.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.529Z"
+  },
+  {
+    id: 1791181932530,
+    ja: "オフィスアワーに課題について話し合いさせていただけますか？",
+    en: "Could we discuss the assignment during office hours?",
+    explanation: "Could we discuss ...? で丁寧に話し合いを申し出る。during office hours で「オフィスアワーの間に」。",
+    related: ["Could we discuss this more after class?"],
+    apply: [
+      { ja: "明日の会議でこの件を話し合えますか？", en: "Could we discuss this at tomorrow's meeting?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2029.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.530Z"
+  },
+  {
+    id: 1791181932531,
+    ja: "それを詳しく説明していただけますか？",
+    en: "Could you expand on that?",
+    explanation: "expand on ... で「〜についてもっと詳しく話す」。発表やディスカッションで相手に説明を求める表現。clarify は「はっきりさせる」。",
+    related: ["Could you clarify that?", "Could you expand on your methodology?"],
+    apply: [
+      { ja: "その案についてもう少し詳しく話してもらえますか？", en: "Could you expand on your idea a little?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2029.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.531Z"
+  },
+  {
+    id: 1791181932532,
+    ja: "SNSの利用は、グローバルな友人関係を築くことに繋がる可能性があります。しかし、それは取り残される恐怖をもたらす可能性もあります。",
+    en: "Using social media can lead to global friendships. However, it can also lead to FOMO.",
+    explanation: "lead to ... で「〜につながる・〜をもたらす」。However, it can also ... で良い面と悪い面を対比する。FOMO は fear of missing out（取り残される不安）。",
+    related: ["Studying abroad can lead to global friendships. However, it can also lead to culture shock."],
+    apply: [
+      { ja: "在宅勤務は自由な時間につながるが、孤独につながることもある。", en: "Working from home can lead to more free time. However, it can also lead to loneliness." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2030.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.532Z"
+  },
+  {
+    id: 1791181932533,
+    ja: "それは洞察に富んだ視点ですね。",
+    en: "That is an insightful point of view.",
+    explanation: "insightful は「洞察に富んだ」。point of view で「視点・観点」。相手の意見をほめるディスカッションの定番。",
+    related: ["That's a fascinating point of view.", "That's an insightful observation."],
+    apply: [
+      { ja: "それは洞察に富んだ指摘ですね。", en: "That's an insightful comment." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2031.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.533Z"
+  },
+  {
+    id: 1791181932534,
+    ja: "私は同意・賛成できるか分かりません。",
+    en: "I'm not sure I agree.",
+    explanation: "I'm not sure I agree. は「賛成できるかどうか…」と反対意見をやわらかく伝える言い方。completely を入れると一部は同意する含み。",
+    related: ["I'm not sure I completely agree."],
+    apply: [
+      { ja: "その計画が一番いいとは、ちょっと思えません。", en: "I'm not sure that plan is the best one." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2032.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.534Z"
+  },
+  {
+    id: 1791181932535,
+    ja: "それは珍しい・変わった主張です。",
+    en: "That's an unusual argument.",
+    explanation: "unusual は「珍しい・変わった」。strange より角が立たず、相手の主張を評価するときに使える。",
+    related: ["That's an interesting argument."],
+    apply: [
+      { ja: "それは変わった考え方ですね。", en: "That's an unusual way of thinking." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2032.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.535Z"
+  },
+  {
+    id: 1791181932536,
+    ja: "彼女はトラブルが起こる前に察知できる。",
+    en: "She can sense trouble before it starts.",
+    explanation: "sense は動詞で「（なんとなく）感じ取る・察知する」。before it starts で「始まる前に」。",
+    related: ["Dogs can sense fear in strangers.", "I can sense tension in the room."],
+    apply: [
+      { ja: "彼は相手が怒っているのを察知できた。", en: "He could sense that she was angry." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2033.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.536Z"
+  },
+  {
+    id: 1791181932537,
+    ja: "SNSの利用について、あなたはどう思いますか・考えていますか？",
+    en: "What are your thoughts on using social media?",
+    explanation: "What are your thoughts on ...? で「〜についてどう考えますか」。What do you think about ...? より少し改まった言い方。",
+    related: ["What do you think about using social media?"],
+    apply: [
+      { ja: "新しい校則についてどう考えますか？", en: "What are your thoughts on the new school rules?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2033.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.537Z"
+  },
+  {
+    id: 1791181932538,
+    ja: "このプロジェクト、一緒にやらない？",
+    en: "Do you wanna work together on the project?",
+    explanation: "work together on ... で「〜に一緒に取り組む」。Do you wanna ...? で気軽に誘う。",
+    related: ["Do you wanna team up on the project?"],
+    apply: [
+      { ja: "この課題、一緒にやらない？", en: "Do you wanna work together on this assignment?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2034.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.538Z"
+  },
+  {
+    id: 1791181932539,
+    ja: "一緒にアイデアを出し合いませんか？",
+    en: "Do you wanna brainstorm together?",
+    explanation: "brainstorm は動詞で「アイデアを出し合う」。",
+    related: ["Do you want to come up with ideas together?"],
+    apply: [
+      { ja: "イベント名のアイデアを一緒に出そうよ。", en: "Let's brainstorm names for the event." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2034.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.539Z"
+  },
+  {
+    id: 1791181932540,
+    ja: "（あなたは）下書きを書きましたか？",
+    en: "Have you written your rough draft?",
+    explanation: "Have you written ...? で「もう〜を書いた？」。rough draft は「下書き」、outline は「概要・構成」。",
+    related: ["Have you written your outline?"],
+    apply: [
+      { ja: "レポートの序論はもう書いた？", en: "Have you written the introduction to your paper?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2034.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.540Z"
+  },
+  {
+    id: 1791181932541,
+    ja: "（あなたは）専攻を選びましたか？",
+    en: "Have you chosen your major?",
+    explanation: "choose one's major で「専攻を決める」。現在完了で「もう決めた？」と聞く。",
+    related: ["Have you decided on your major?"],
+    apply: [
+      { ja: "卒業論文のテーマはもう選んだ？", en: "Have you chosen a topic for your thesis?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2034.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.541Z"
+  },
+  {
+    id: 1791181932542,
+    ja: "あなたは人前で話すのが得意なので、プレゼンテーションに対応・を担当してもらえますか？",
+    en: "You're good at public speaking, so can you handle the presentation?",
+    explanation: "be good at ... で「〜が得意」。so can you handle ...? で「だから〜を担当してくれる？」と理由をつけて頼む。handle は「担当する・対応する」。",
+    related: ["You're great at public speaking, so could you do the presentation?"],
+    apply: [
+      { ja: "あなたはデザインが得意だから、ポスターを担当してくれる？", en: "You're good at design, so can you handle the poster?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2035.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.542Z"
+  },
+  {
+    id: 1791181932543,
+    ja: "履歴書の更新は済んでいますか？",
+    en: "Have you updated your resume?",
+    explanation: "update は「最新の状態にする」。就職活動・インターン探しの場面でよく聞く質問。",
+    related: ["Is your resume up to date?"],
+    apply: [
+      { ja: "スマホのアプリはもう更新した？", en: "Have you updated the apps on your phone?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2035.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.543Z"
+  },
+  {
+    id: 1791181932544,
+    ja: "授業・講義計画を見直し・確認しませんか？",
+    en: "Do you wanna go over the syllabus?",
+    explanation: "go over ... で「〜に目を通す・見直す」。syllabus は授業計画、rubric は評価基準表。",
+    related: ["Do you wanna go over the rubric?", "Do you wanna review the syllabus together?"],
+    apply: [
+      { ja: "テストの前にノートを一緒に見直さない？", en: "Do you wanna go over our notes before the test?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2035.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.544Z"
+  },
+  {
+    id: 1791181932545,
+    ja: "私は要約する・簡潔にまとめるのがちょっと得意なので、プレゼンのスライド（の作成）に対応・を担当できます。",
+    en: "I'm pretty good at summarizing, so I can handle the slides.",
+    explanation: "pretty good at ... で「〜がなかなか得意」。pretty で控えめに自信を示す。so I can handle ... で役割を引き受ける。",
+    related: ["I'm good at making jump animations, so I will take part in this."],
+    apply: [
+      { ja: "私は計算が得意なので、予算を担当できます。", en: "I'm pretty good at math, so I can handle the budget." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2036.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.545Z"
+  },
+  {
+    id: 1791181932546,
+    ja: "私は今日中に、読解課題を終えておきます。",
+    en: "I'll have the reading done by the end of the day.",
+    explanation: "have 物 done で「〜を済ませておく」。by the end of the day で「今日中に」。完了させる約束をする言い方。",
+    related: ["I'll have the essay written by the end of the day.", "Can you have the revisions done by the deadline?"],
+    apply: [
+      { ja: "金曜日までに報告書を仕上げておきます。", en: "I'll have the report finished by Friday." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2037.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.546Z"
+  },
+  {
+    id: 1791181932547,
+    ja: "私は実習の遅れを取り戻しました。",
+    en: "I'm all caught up on the labs.",
+    explanation: "be caught up on ... で「〜の遅れを取り戻している」。all で「すっかり」を強める。",
+    related: ["I'm all caught up on the research."],
+    apply: [
+      { ja: "やっとメールの返信が全部追いついた。", en: "I'm finally all caught up on my emails." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2037.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.547Z"
+  },
+  {
+    id: 1791181932548,
+    ja: "徹夜しました。",
+    en: "I pulled an all-nighter.",
+    explanation: "pull an all-nighter で「徹夜する」。all-nighter は「徹夜」を表す名詞で、ハイフンでつなぐのが一般的。",
+    related: ["I stayed up all night."],
+    apply: [
+      { ja: "試験の前に徹夜しないほうがいいよ。", en: "You shouldn't pull an all-nighter before the exam." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2038.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.548Z"
+  },
+  {
+    id: 1791181932549,
+    ja: "音量を下げてもらってもいいですか？",
+    en: "Do you mind turning the volume down?",
+    explanation: "turn ... down で「（音量などを）下げる」。turn the lights off（電気を消す）も同じ形。",
+    related: ["Actually, do you mind turning the lights off?"],
+    apply: [
+      { ja: "エアコンを弱めてもらってもいいですか？", en: "Do you mind turning the AC down?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2459.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.549Z"
+  },
+  {
+    id: 1791181932550,
+    ja: "私は家族に会いにここに来ています。",
+    en: "I'm here to visit my family.",
+    explanation: "I'm here to do で「〜しに来ています」と目的を動詞で言う。I'm here for ...（名詞）と使い分ける。",
+    related: ["I'm here to visit a friend."],
+    apply: [
+      { ja: "私は大学を見学しに来ています。", en: "I'm here to visit the university." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2460.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.550Z"
+  },
+  {
+    id: 1791181932551,
+    ja: "私はスタートアップを経営しています。",
+    en: "I run a start-up.",
+    explanation: "run は「（会社・店を）経営する」。start-up は新しく立ち上げた会社。",
+    related: ["I run a bakery."],
+    apply: [
+      { ja: "両親は小さなレストランを経営している。", en: "My parents run a small restaurant." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2460.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.551Z"
+  },
+  {
+    id: 1791181932552,
+    ja: "自営業です。",
+    en: "I'm self-employed.",
+    explanation: "self-employed は「自営業の・フリーランスの」。会社に雇われていないことを表す。",
+    related: ["I work for myself."],
+    apply: [
+      { ja: "父は自営業でカメラマンをしている。", en: "My dad is self-employed as a photographer." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2460.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.552Z"
+  },
+  {
+    id: 1791181932553,
+    ja: "どこでバスのチケットを買うことができますか？",
+    en: "Where can I buy a bus ticket?",
+    explanation: "Where can I buy ...? で「どこで〜を買えますか」。駅や空港で切符の買い場所を聞く。",
+    related: ["Where do I get a bus ticket?"],
+    apply: [
+      { ja: "どこで電車の切符を買えますか？", en: "Where can I buy a train ticket?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2463.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.553Z"
+  },
+  {
+    id: 1791181932554,
+    ja: "鏡が汚いです（きれいじゃないです）。",
+    en: "The mirrors aren't clean.",
+    explanation: "aren't clean で「きれいじゃない＝汚れている」。dirty より角が立たない苦情の言い方。",
+    related: ["The toilet isn't working and the bathroom isn't clean."],
+    apply: [
+      { ja: "お皿がきれいじゃないです。", en: "The plates aren't clean." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2466.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.554Z"
+  },
+  {
+    id: 1791181932555,
+    ja: "タオルが汚くて、タバコ臭い（タバコのよう）です。",
+    en: "The towels aren't clean and smell like cigarettes.",
+    explanation: "smell like ... で「〜のにおいがする」。like の後ろににおいの元を置く。",
+    related: ["The sheets aren't clean and the room smells like cigarettes."],
+    apply: [
+      { ja: "私の服がたき火のにおいがする。", en: "My clothes smell like a campfire." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2466.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.555Z"
+  },
+  {
+    id: 1791181932556,
+    ja: "少しズームアウトしてもらえますか？",
+    en: "Can you zoom out a bit?",
+    explanation: "zoom out で「引いて撮る（広く写す）」、zoom in で「寄って撮る」。a bit で「少し」。",
+    related: ["Can you zoom in a bit?"],
+    apply: [
+      { ja: "もう少しズームインしてもらえますか？", en: "Can you zoom in a little more?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2469.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.556Z"
+  },
+  {
+    id: 1791181932557,
+    ja: "先に注文させてもらってもいいですか？",
+    en: "Do you mind if I order first?",
+    explanation: "Do you mind if I ...? で「〜してもいいですか」と気をつかって聞く。order first で「先に注文する」。",
+    related: ["Is it okay if I order first?"],
+    apply: [
+      { ja: "先に食べ始めてもいいですか？", en: "Do you mind if I start eating first?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2470.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.557Z"
+  },
+  {
+    id: 1791181932558,
+    ja: "一緒に行かせてもらってもいいですか？",
+    en: "Do you mind if I tag along?",
+    explanation: "tag along で「（人に）ついて行く・同行する」くだけた言い方。",
+    related: ["Can I come with you?"],
+    apply: [
+      { ja: "弟もついて行っていい？", en: "Can my brother tag along?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2470.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.558Z"
+  },
+  {
+    id: 1791181932559,
+    ja: "どこに（私の）お皿を置くことができますか？",
+    en: "Where can I put my plate?",
+    explanation: "Where can I put ...? で「〜はどこに置けばいいですか」。カフェで食器の返却場所を聞く定番。",
+    related: ["Where do the plates go?"],
+    apply: [
+      { ja: "このかさはどこに置けばいいですか？", en: "Where can I put this umbrella?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2477.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.559Z"
+  },
+  {
+    id: 1791181932560,
+    ja: "それらを買います！",
+    en: "I'll take them!",
+    explanation: "I'll take ... で「（買い物で）〜をください・買います」。them は複数の物を指す。",
+    related: ["I'll buy them!"],
+    apply: [
+      { ja: "これにします！", en: "I'll take this one!" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2480.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.560Z"
+  },
+  {
+    id: 1791181932561,
+    ja: "本当に大変でした。",
+    en: "It was really terrible.",
+    explanation: "terrible は「ひどい」。really で強めて、大変だった経験を伝える。",
+    related: ["It was awful."],
+    apply: [
+      { ja: "昨日の渋滞は本当にひどかった。", en: "The traffic yesterday was really terrible." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2481.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.561Z"
+  },
+  {
+    id: 1791181932562,
+    ja: "またタイに行きたいです。",
+    en: "I want to go to Thailand again.",
+    explanation: "want to go to 場所 again で「また〜に行きたい」。旅の感想をしめくくる一言。",
+    related: ["I'd love to go back to Thailand."],
+    apply: [
+      { ja: "いつかまた京都に行きたい。", en: "I want to go to Kyoto again someday." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2481.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.562Z"
+  },
+  {
+    id: 1791181932563,
+    ja: "私はその読解課題が興味深いと感じました。",
+    en: "I found the reading to be fascinating.",
+    explanation: "find A to be 形容詞 で「Aを〜だと感じる」。fascinating は「とても興味深い」。",
+    related: ["I found your presentation to be engaging.", "I found your methodology to be questionable."],
+    apply: [
+      { ja: "その講義はとても役に立つと感じた。", en: "I found the lecture to be very helpful." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2482.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.563Z"
+  },
+  {
+    id: 1791181932564,
+    ja: "もちろん、少し話せますよ。",
+    en: "Sure, I have a moment to chat.",
+    explanation: "have a moment で「少し時間がある」。to chat で「おしゃべりするための」。声をかけられたときの快い返事。",
+    related: ["Sure, I have a few minutes."],
+    apply: [
+      { ja: "今ちょっと話せる時間ある？", en: "Do you have a moment to chat?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2484.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.564Z"
+  },
+  {
+    id: 1791181932565,
+    ja: "報告書・課題考察を終えましたか？",
+    en: "Have you finished the report?",
+    explanation: "現在完了 Have you finished ...? で「もう〜を終えた？」と完了を確かめる。",
+    related: ["Are you done with the report?"],
+    apply: [
+      { ja: "もうその本を読み終えた？", en: "Have you finished the book?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2484.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.565Z"
+  },
+  {
+    id: 1791181932566,
+    ja: "このプロジェクトをしっかり終わらせましょう！",
+    en: "Let's finish this project strong!",
+    explanation: "finish strong で「最後までしっかりやり切る」。strong は副詞的に「力強く」。",
+    related: ["Let's give it our all until the end!"],
+    apply: [
+      { ja: "今学期をしっかり締めくくろう！", en: "Let's finish the semester strong!" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2484.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.566Z"
+  },
+  {
+    id: 1791181932567,
+    ja: "一方で、ファストフードは利便性を提供します。",
+    en: "On one hand, fast food provides convenience.",
+    explanation: "On one hand, ... で「一方では〜」と片方の面を示す。On the other hand と組で使う。provide は「提供する」。",
+    related: ["On one hand, social media provides connection."],
+    apply: [
+      { ja: "一方で、オンライン授業は柔軟性を与えてくれる。", en: "On one hand, online classes provide flexibility." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2485.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.567Z"
+  },
+  {
+    id: 1791181932568,
+    ja: "他方で、ファストフードには栄養が欠けて・不足しています。",
+    en: "On the other hand, fast food lacks nutrition.",
+    explanation: "On the other hand, ... で「他方では」。lack は動詞で「〜が欠けている」。前置詞は不要（lack of ではない）。",
+    related: ["On the other hand, social media lacks face-to-face interaction."],
+    apply: [
+      { ja: "他方で、オンライン授業には対面での交流が欠けている。", en: "On the other hand, online classes lack face-to-face interaction." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2485.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.568Z"
+  },
+  {
+    id: 1791181932569,
+    ja: "最新の研究・研究活動・リサーチによると、電子書籍が増加しています。",
+    en: "According to the latest research, ebooks are on the rise.",
+    explanation: "According to ... で「〜によると」と情報源を示す。be on the rise（増えている）と be in decline（減っている）は対で覚える。",
+    related: ["According to Smith's latest study, printed textbooks are in decline."],
+    apply: [
+      { ja: "新聞によると、観光客が増えている。", en: "According to the newspaper, tourists are on the rise." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2486.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.569Z"
+  },
+  {
+    id: 1791181932570,
+    ja: "何か質問はありますか？",
+    en: "Any questions?",
+    explanation: "Do you have any questions? の短い形。発表の最後に聞く。Any comments? も同じ形。",
+    related: ["Any comments?", "Do you have any questions?"],
+    apply: [
+      { ja: "説明は以上です。何か質問はありますか？", en: "That's all for my explanation. Any questions?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2487.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.570Z"
+  },
+  {
+    id: 1791181932571,
+    ja: "それは素晴らしい質問です。",
+    en: "That's an excellent question.",
+    explanation: "質問を受けたときにまず相手をほめて考える時間を作る一言。difficult に変えると「難しい質問ですね」。",
+    related: ["That's a great question.", "That's a difficult question."],
+    apply: [
+      { ja: "いい質問ですね。もう一度確認させてください。", en: "That's an excellent question. Let me check again." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2487.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.571Z"
+  },
+  {
+    id: 1791181932572,
+    ja: "それは鋭い指摘・見解です。",
+    en: "That's an astute observation.",
+    explanation: "astute は「鋭い・抜け目ない」。observation は「指摘・見解」。相手の意見を高く評価する言い方。",
+    related: ["That's a sharp observation.", "That's a surprising observation."],
+    apply: [
+      { ja: "あなたの指摘は鋭いですね。", en: "Your comment is an astute observation." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2488.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.572Z"
+  },
+  {
+    id: 1791181932573,
+    ja: "今学期があっという間に過ぎましたね！",
+    en: "The term really flew by!",
+    explanation: "fly by で「（時間が）あっという間に過ぎる」。term は「学期」。",
+    related: ["The term went by so fast!"],
+    apply: [
+      { ja: "夏休みがあっという間に過ぎた！", en: "Summer vacation really flew by!" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2489.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.573Z"
+  },
+  {
+    id: 1791181932574,
+    ja: "英文学・英語の授業の出来はどうでしたか？",
+    en: "How did you do in English class?",
+    explanation: "How did you do in ...? で「〜の出来はどうだった？」と成績・結果を聞く。",
+    related: ["How was your grade in English class?"],
+    apply: [
+      { ja: "面接はどうだった？", en: "How did you do in the interview?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2489.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.574Z"
+  },
+  {
+    id: 1791181932575,
+    ja: "私は良い成績を取りました！",
+    en: "I aced it!",
+    explanation: "ace は動詞で「（試験などで）満点・高得点を取る」。くだけた言い方。",
+    related: ["I did really well on the test!"],
+    apply: [
+      { ja: "彼は運転免許の試験で満点を取った。", en: "He aced his driving test." }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2489.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.575Z"
+  },
+  {
+    id: 1791181932576,
+    ja: "あなたは何を一番楽しみにしていますか？",
+    en: "What are you most excited about?",
+    explanation: "be excited about ... で「〜を楽しみにしている」。most を入れて「いちばん」。",
+    related: ["What are you looking forward to the most?"],
+    apply: [
+      { ja: "留学で何を一番楽しみにしている？", en: "What are you most excited about studying abroad?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2489.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.576Z"
+  },
+  {
+    id: 1791181932577,
+    ja: "（私は）卒業課題を受けるのが待ちきれません！",
+    en: "I can't wait to take my capstone.",
+    explanation: "can't wait to do で「〜するのが待ちきれない」。capstone は卒業前の総まとめの課題・授業。",
+    related: ["I can't wait to celebrate with you!", "I'm really looking forward to taking my capstone."],
+    apply: [
+      { ja: "夏休みが待ちきれない！", en: "I can't wait to start summer vacation!" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2489.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.577Z"
+  },
+  {
+    id: 1791181932578,
+    ja: "（履修）登録はいつ終了しますか？",
+    en: "When does registration close?",
+    explanation: "registration は授業の「履修登録」。close で「受付が終わる」。",
+    related: ["What's the deadline for registration?"],
+    apply: [
+      { ja: "申し込みはいつ締め切られますか？", en: "When do applications close?" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2489.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.578Z"
+  },
+  {
+    id: 1791181932579,
+    ja: "（私は）あなたが卒業式で壇上を歩くのを見るのが待ちきれません！",
+    en: "I'd love to see you walk!",
+    explanation: "walk はここでは「卒業式で壇上を歩く＝卒業する」の意味。see 人 do で「人が〜するのを見る」。",
+    related: ["I can't wait to see you graduate!"],
+    apply: [
+      { ja: "あなたがステージで歌うのを見たいな！", en: "I'd love to see you sing on stage!" }
+    ],
+    src: "photo",
+    srcRef: "speak_exploit/IMG_2489.PNG",
+    srcFrom: "アプリspeak",
+    savedAt: "2026-10-05T06:32:12.579Z"
   }
 ];
 
@@ -13335,7 +17778,7 @@ function render() {
 
   const base = polishedBase();
   const polishedFiltered = (query
-    ? base.filter(p => [p.ja, p.en, p.explanation, p.srcRef].some(s => (s || '').toLowerCase().includes(query)))
+    ? base.filter(p => [p.ja, p.en, p.explanation, p.srcRef, p.srcFrom].some(s => (s || '').toLowerCase().includes(query)))
     : base
   ).slice().sort((a, b) => new Date(b.savedAt || 0) - new Date(a.savedAt || 0));
 
@@ -13370,7 +17813,7 @@ function render() {
   const polishedEl = document.getElementById('polishedList');
   if (!polishedFiltered.length) {
     polishedEl.innerHTML = query
-      ? `<div class="empty">「${escapeHtml(query)}」に一致する${noteFilterOn() ? 'ノートからの' : webFilterOn() ? '調べて取り込んだ' : '保存済み'}フレーズはありません</div>`
+      ? `<div class="empty">「${escapeHtml(query)}」に一致する${noteFilterOn() ? 'ノートからの' : webFilterOn() ? '調べて取り込んだ' : photoFilterOn() ? '写真から取り込んだ' : '保存済み'}フレーズはありません</div>`
       : `<div class="empty">保存済みフレーズはまだありません</div>`;
   } else if (polishedView === 'flat') {
     polishedEl.innerHTML = polishedFiltered.map(p => phraseCardHtml(p)).join('');
@@ -13380,6 +17823,7 @@ function render() {
   updateWkToolbar();
   updateNoteOnlyBtn();
   updateWebOnlyBtn();
+  updatePhotoOnlyBtn();
 
   updateFavCounts();
   updateDueBadge();
@@ -13403,6 +17847,7 @@ function noteFilterOn() { return noteOnly && notePhrases().length > 0; }
 function polishedBase() {
   if (noteFilterOn()) return notePhrases();
   if (webFilterOn()) return webPhrases();
+  if (photoFilterOn()) return photoPhrases();
   return PHRASES;
 }
 function noteSrcLabel(p) { return String(p.srcRef || '').split('/').filter(Boolean).join(' ・ '); }
@@ -13412,7 +17857,7 @@ function noteSrcHtml(p) {
 }
 function setNoteOnly(on) {
   noteOnly = !!on;
-  if (noteOnly) { webOnly = false; localStorage.setItem(WEB_ONLY_KEY, '0'); }
+  if (noteOnly) { webOnly = false; localStorage.setItem(WEB_ONLY_KEY, '0'); photoOnly = false; localStorage.setItem(PHOTO_ONLY_KEY, '0'); }
   localStorage.setItem(NOTE_ONLY_KEY, noteOnly ? '1' : '0');
   render();
 }
@@ -13450,7 +17895,7 @@ function webSrcHtml(p) {
 }
 function setWebOnly(on) {
   webOnly = !!on;
-  if (webOnly) { noteOnly = false; localStorage.setItem(NOTE_ONLY_KEY, '0'); }
+  if (webOnly) { noteOnly = false; localStorage.setItem(NOTE_ONLY_KEY, '0'); photoOnly = false; localStorage.setItem(PHOTO_ONLY_KEY, '0'); }
   localStorage.setItem(WEB_ONLY_KEY, webOnly ? '1' : '0');
   render();
 }
@@ -13463,9 +17908,51 @@ function updateWebOnlyBtn() {
   btn.classList.toggle('on', webFilterOn());
 }
 
-/* 出典（📓ノート／🌐調べて）のバッジ・出典行・タグ。どちらでもないフレーズには何も出ない */
-function srcBadgeHtml(p) { return noteBadgeHtml(p) + webBadgeHtml(p); }
-function srcLineHtml(p) { return noteSrcHtml(p) + webSrcHtml(p); }
+/* ==========================================================
+   📷 写真から
+   ---------------------------------------------------------
+   /photo-phrase-add が英語と日本語訳の載った写真（SNS・アプリのスクショなど）から
+   取り込んだフレーズには src: "photo"、srcRef（"フォルダ名/画像名"）、
+   読めたときは srcFrom（"@投稿者" やアプリ名）が付く。
+   ========================================================== */
+const PHOTO_ONLY_KEY = 'phraseNote_photoOnly';
+let photoOnly = localStorage.getItem(PHOTO_ONLY_KEY) === '1';
+
+function isPhotoPhrase(p) { return !!(p && p.src === 'photo'); }
+function photoPhrases() { return PHRASES.filter(isPhotoPhrase); }
+function photoFilterOn() { return photoOnly && photoPhrases().length > 0; }
+/* アプリ名が出典（srcFrom が「アプリ〜」）のものは「📱 アプリ〜から」と出す（例: speak_exploit の写真＝アプリspeak） */
+function isAppPhoto(p) { return isPhotoPhrase(p) && /^アプリ/.test(String(p.srcFrom || '')); }
+function photoBadgeHtml(p) { return isPhotoPhrase(p) ? `<span class="badge badge-photo">${isAppPhoto(p) ? '📱 ' + escapeHtml(p.srcFrom) + 'から' : '📷 写真から'}</span>` : ''; }
+function photoSrcLabel(p) {
+  return [p.srcFrom, ...String(p.srcRef || '').split('/')].map(s => String(s || '').trim()).filter(Boolean).join(' ・ ');
+}
+function photoSrcHtml(p) {
+  if (!isPhotoPhrase(p)) return '';
+  const label = photoSrcLabel(p);
+  return label ? `<div class="src-line photo">出典: ${escapeHtml(label)}</div>` : '';
+}
+function setPhotoOnly(on) {
+  photoOnly = !!on;
+  if (photoOnly) {
+    noteOnly = false; localStorage.setItem(NOTE_ONLY_KEY, '0');
+    webOnly = false; localStorage.setItem(WEB_ONLY_KEY, '0');
+  }
+  localStorage.setItem(PHOTO_ONLY_KEY, photoOnly ? '1' : '0');
+  render();
+}
+function updatePhotoOnlyBtn() {
+  const btn = document.getElementById('photoOnlyBtn');
+  if (!btn) return;
+  const n = photoPhrases().length;
+  btn.hidden = !n;
+  btn.textContent = `📷 写真から（${n}）`;
+  btn.classList.toggle('on', photoFilterOn());
+}
+
+/* 出典（📓ノート／🌐調べて／📷写真）のバッジ・出典行・タグ。どれでもないフレーズには何も出ない */
+function srcBadgeHtml(p) { return noteBadgeHtml(p) + webBadgeHtml(p) + photoBadgeHtml(p); }
+function srcLineHtml(p) { return noteSrcHtml(p) + webSrcHtml(p) + photoSrcHtml(p); }
 function tagsHtml(p) {
   return Array.isArray(p.tags) && p.tags.length
     ? `<div class="tag-row">${p.tags.map(t => `<span class="tag-chip">${escapeHtml(t)}</span>`).join('')}</div>` : '';
@@ -13699,7 +18186,7 @@ function renderWeeks() {
           const open = weekRevealSet.has(p.id);
           return `<div class="mini-row">
             <div class="mini-head">
-              <div class="mini-ja">${escapeHtml(p.ja)}${isNotePhrase(p) ? `<span class="mini-note" title="ノートから">📓 ノート</span>` : ''}${isWebPhrase(p) ? `<span class="mini-web" title="調べて">🌐 調べて</span>` : ''}</div>
+              <div class="mini-ja">${escapeHtml(p.ja)}${isNotePhrase(p) ? `<span class="mini-note" title="ノートから">📓 ノート</span>` : ''}${isWebPhrase(p) ? `<span class="mini-web" title="調べて">🌐 調べて</span>` : ''}${isPhotoPhrase(p) ? `<span class="mini-photo" title="写真から">${isAppPhoto(p) ? '📱 ' + escapeHtml(p.srcFrom) : '📷 写真'}</span>` : ''}</div>
               ${favBtnHtml(p.id, 'small')}
             </div>
             ${open ? `
@@ -15073,7 +19560,8 @@ function renderTestSetup() {
     + `<option value="__all__">全期間（${PHRASES.length}件）</option>`
     + `<option value="__fav__">⭐ お気に入り（${favPhrases().length}件）</option>`
     + (notePhrases().length ? `<option value="__note__">📓 ノートから（${notePhrases().length}件）</option>` : '')
-    + (webPhrases().length ? `<option value="__web__">🌐 調べて（${webPhrases().length}件）</option>` : '');
+    + (webPhrases().length ? `<option value="__web__">🌐 調べて（${webPhrases().length}件）</option>` : '')
+    + (photoPhrases().length ? `<option value="__photo__">📷 写真から（${photoPhrases().length}件）</option>` : '');
   if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
   else if (weeks.length) sel.value = (weeks.find(w => w.key === LAST_WEEK_KEY) || weeks[0]).key;
 
@@ -15090,10 +19578,11 @@ function testTargetLabel(key) {
   if (key === '__fav__') return '⭐ お気に入り';
   if (key === '__note__') return '📓 ノートから';
   if (key === '__web__') return '🌐 調べて';
+  if (key === '__photo__') return '📷 写真から';
   return weekRangeLabel(key);
 }
 /* 週ごとのスコア記録の対象外（週に属さない出題範囲） */
-function isSpecialKey(key) { return key === '__all__' || key === '__fav__' || key === '__due__' || key === '__note__' || key === '__web__'; }
+function isSpecialKey(key) { return key === '__all__' || key === '__fav__' || key === '__due__' || key === '__note__' || key === '__web__' || key === '__photo__'; }
 
 function poolFor(weekKey, scope) {
   let pool = weekKey === '__all__' ? PHRASES.slice()
@@ -15101,6 +19590,7 @@ function poolFor(weekKey, scope) {
     : weekKey === '__fav__' ? favPhrases()
     : weekKey === '__note__' ? notePhrases()
     : weekKey === '__web__' ? webPhrases()
+    : weekKey === '__photo__' ? photoPhrases()
     : PHRASES.filter(p => weekKeyOf(p.savedAt) === weekKey);
   if (scope === 'weak') pool = pool.filter(p => isWeak(p.id));
   if (scope === 'apply') {
@@ -15172,6 +19662,7 @@ function startTest(customQueue) {
       : weekKey === '__fav__' ? 'お気に入りがまだありません（☆をタップして登録）'
       : weekKey === '__note__' ? 'ノートから取り込んだフレーズはまだありません'
       : weekKey === '__web__' ? '調べて取り込んだフレーズはまだありません'
+      : weekKey === '__photo__' ? '写真から取り込んだフレーズはまだありません'
       : 'この週にはフレーズがありません');
     return;
   }
@@ -15542,6 +20033,7 @@ document.getElementById('polishedViewSeg').addEventListener('click', e => {
 document.getElementById('wkExpandBtn').addEventListener('click', toggleAllPolishedWeeks);
 document.getElementById('noteOnlyBtn').addEventListener('click', () => setNoteOnly(!noteFilterOn()));
 document.getElementById('webOnlyBtn').addEventListener('click', () => setWebOnly(!webFilterOn()));
+document.getElementById('photoOnlyBtn').addEventListener('click', () => setPhotoOnly(!photoFilterOn()));
 document.getElementById('copyBtn').addEventListener('click', copyPending);
 document.getElementById('clearBtn').addEventListener('click', clearAllPending);
 document.getElementById('searchBox').addEventListener('input', render);
