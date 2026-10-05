@@ -31,6 +31,8 @@
     --web-bg: #e6f4f1;
     --photo: #9d174d;
     --photo-bg: #fce7f3;
+    --biz: #1e5a8a;
+    --biz-bg: #e3effa;
   }
   * { box-sizing: border-box; }
   body {
@@ -232,6 +234,8 @@
   .badge-note { background: var(--note-bg); color: var(--note); }
   .badge-web { background: var(--web-bg); color: var(--web); }
   .badge-photo { background: var(--photo-bg); color: var(--photo); }
+  .badge-biz { background: var(--biz-bg); color: var(--biz); }
+  .card .src-line.biz { color: var(--biz); }
   .card .src-line { font-size: 0.72rem; color: var(--note); margin-top: 4px; }
   .card .src-line.web { color: var(--web); }
   .card .src-line.web a { color: inherit; text-decoration: underline; }
@@ -239,6 +243,12 @@
   .mini-note { font-size: 0.72rem; margin-left: 5px; color: var(--note); font-weight: 600; white-space: nowrap; }
   .mini-web { font-size: 0.72rem; margin-left: 5px; color: var(--web); font-weight: 600; white-space: nowrap; }
   .mini-photo { font-size: 0.72rem; margin-left: 5px; color: var(--photo); font-weight: 600; white-space: nowrap; }
+  .mini-biz { font-size: 0.72rem; margin-left: 5px; color: var(--biz); font-weight: 600; white-space: nowrap; }
+  /* ジャンル（💼 Bizmate／🌐 ネット／📱 Speak／💡 ひらめき）の切り替え */
+  .genre-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 10px; }
+  .genre-row .btn-mini { flex: 0 0 auto; }
+  .genre-row .btn-mini.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .due-genre { font-size: 0.8rem; font-weight: 600; margin-left: 6px; color: var(--sub); }
   /* 調べて取り込んだフレーズのタグ（カジュアル／フォーマル／会話 など） */
   .tag-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
   .tag-chip { font-size: 0.7rem; padding: 1px 8px; border-radius: 999px; background: #f1efe9; color: var(--sub); }
@@ -910,12 +920,10 @@
       <button class="seg-btn" data-pview="flat">🕘 新しい順</button>
     </div>
     <div class="toolbar-right">
-      <button class="btn-mini" id="noteOnlyBtn" hidden>📓 ノートから</button>
-      <button class="btn-mini" id="webOnlyBtn" hidden>🌐 調べて</button>
-      <button class="btn-mini" id="photoOnlyBtn" hidden>📷 写真から</button>
       <button class="btn-mini" id="wkExpandBtn">全て開く</button>
     </div>
   </div>
+  <div class="genre-row" id="listGenreRow"></div>
   <div id="polishedList"></div>
 
 </section>
@@ -996,10 +1004,12 @@
 <section id="view-test" hidden>
 
   <div id="testSetup">
+    <label class="field-label">ジャンル（今日の復習とテストの両方に効きます）</label>
+    <div class="genre-row" id="testGenreRow"></div>
     <div class="due-box" id="dueBox"></div>
     <div class="capture-box">
       <h2 class="panel-title">✍️ 復習テスト（日本語 → 英語）</h2>
-      <label class="field-label">出題する範囲（📅今日の復習 / 週 / 全期間 / ⭐お気に入り / 📓ノートから / 📷写真から）</label>
+      <label class="field-label">出題する範囲（📅今日の復習 / 週 / 全期間 / ⭐お気に入り）</label>
       <select id="testWeekSel" class="select"></select>
       <label class="field-label">解答のしかた</label>
       <div class="seg" id="testModeSeg">
@@ -17813,7 +17823,7 @@ function render() {
   const polishedEl = document.getElementById('polishedList');
   if (!polishedFiltered.length) {
     polishedEl.innerHTML = query
-      ? `<div class="empty">「${escapeHtml(query)}」に一致する${noteFilterOn() ? 'ノートからの' : webFilterOn() ? '調べて取り込んだ' : photoFilterOn() ? '写真から取り込んだ' : '保存済み'}フレーズはありません</div>`
+      ? `<div class="empty">「${escapeHtml(query)}」に一致する${listGenreOn() !== 'all' ? genreLabel(listGenreOn()) + 'の' : '保存済み'}フレーズはありません</div>`
       : `<div class="empty">保存済みフレーズはまだありません</div>`;
   } else if (polishedView === 'flat') {
     polishedEl.innerHTML = polishedFiltered.map(p => phraseCardHtml(p)).join('');
@@ -17821,9 +17831,7 @@ function render() {
     polishedEl.innerHTML = polishedWeeksHtml(polishedFiltered);
   }
   updateWkToolbar();
-  updateNoteOnlyBtn();
-  updateWebOnlyBtn();
-  updatePhotoOnlyBtn();
+  renderListGenreRow();
 
   updateFavCounts();
   updateDueBadge();
@@ -17836,38 +17844,20 @@ function render() {
    から取り込んだフレーズには src: "note" と srcRef（"ノート名/画像名"）が付く。
    カードのバッジと出典、一覧の絞り込み、テストの出題範囲で使う。
    ========================================================== */
-const NOTE_ONLY_KEY = 'phraseNote_noteOnly';
-let noteOnly = localStorage.getItem(NOTE_ONLY_KEY) === '1';
 
 function isNotePhrase(p) { return !!(p && p.src === 'note'); }
 function notePhrases() { return PHRASES.filter(isNotePhrase); }
-/* 絞り込みが効いているか（ノート由来が1件も無いときは押せないので効かない） */
-function noteFilterOn() { return noteOnly && notePhrases().length > 0; }
 /* 📚 保存済みフレーズの一覧に出す元の集合 */
 function polishedBase() {
-  if (noteFilterOn()) return notePhrases();
-  if (webFilterOn()) return webPhrases();
-  if (photoFilterOn()) return photoPhrases();
-  return PHRASES;
+  return genrePhrases(listGenreOn());
 }
 function noteSrcLabel(p) { return String(p.srcRef || '').split('/').filter(Boolean).join(' ・ '); }
-function noteBadgeHtml(p) { return isNotePhrase(p) ? `<span class="badge badge-note">📓 ノートから</span>` : ''; }
+function noteBadgeHtml(p) {
+  if (!isNotePhrase(p)) return '';
+  return isBizmate(p) ? `<span class="badge badge-biz">💼 Bizmateから</span>` : `<span class="badge badge-note">📓 ノートから</span>`;
+}
 function noteSrcHtml(p) {
-  return isNotePhrase(p) && p.srcRef ? `<div class="src-line">出典: ${escapeHtml(noteSrcLabel(p))}</div>` : '';
-}
-function setNoteOnly(on) {
-  noteOnly = !!on;
-  if (noteOnly) { webOnly = false; localStorage.setItem(WEB_ONLY_KEY, '0'); photoOnly = false; localStorage.setItem(PHOTO_ONLY_KEY, '0'); }
-  localStorage.setItem(NOTE_ONLY_KEY, noteOnly ? '1' : '0');
-  render();
-}
-function updateNoteOnlyBtn() {
-  const btn = document.getElementById('noteOnlyBtn');
-  if (!btn) return;
-  const n = notePhrases().length;
-  btn.hidden = !n;
-  btn.textContent = `📓 ノートから（${n}）`;
-  btn.classList.toggle('on', noteFilterOn());
+  return isNotePhrase(p) && p.srcRef ? `<div class="src-line${isBizmate(p) ? ' biz' : ''}">出典: ${escapeHtml(noteSrcLabel(p))}</div>` : '';
 }
 
 /* ==========================================================
@@ -17877,12 +17867,9 @@ function updateNoteOnlyBtn() {
    取り込んだフレーズには src: "web"、srcRef（テーマ名）、
    srcUrl（[{name, url}] ＝ 載っていたサイト）、tags（カジュアル／会話 など）が付く。
    ========================================================== */
-const WEB_ONLY_KEY = 'phraseNote_webOnly';
-let webOnly = localStorage.getItem(WEB_ONLY_KEY) === '1';
 
 function isWebPhrase(p) { return !!(p && p.src === 'web'); }
 function webPhrases() { return PHRASES.filter(isWebPhrase); }
-function webFilterOn() { return webOnly && webPhrases().length > 0; }
 function webBadgeHtml(p) { return isWebPhrase(p) ? `<span class="badge badge-web">🌐 調べて</span>` : ''; }
 function webSrcHtml(p) {
   if (!isWebPhrase(p)) return '';
@@ -17893,20 +17880,6 @@ function webSrcHtml(p) {
   if (!theme && !links) return '';
   return `<div class="src-line web">調べて: ${theme}${links ? `（${links}）` : ''}</div>`;
 }
-function setWebOnly(on) {
-  webOnly = !!on;
-  if (webOnly) { noteOnly = false; localStorage.setItem(NOTE_ONLY_KEY, '0'); photoOnly = false; localStorage.setItem(PHOTO_ONLY_KEY, '0'); }
-  localStorage.setItem(WEB_ONLY_KEY, webOnly ? '1' : '0');
-  render();
-}
-function updateWebOnlyBtn() {
-  const btn = document.getElementById('webOnlyBtn');
-  if (!btn) return;
-  const n = webPhrases().length;
-  btn.hidden = !n;
-  btn.textContent = `🌐 調べて（${n}）`;
-  btn.classList.toggle('on', webFilterOn());
-}
 
 /* ==========================================================
    📷 写真から
@@ -17915,12 +17888,9 @@ function updateWebOnlyBtn() {
    取り込んだフレーズには src: "photo"、srcRef（"フォルダ名/画像名"）、
    読めたときは srcFrom（"@投稿者" やアプリ名）が付く。
    ========================================================== */
-const PHOTO_ONLY_KEY = 'phraseNote_photoOnly';
-let photoOnly = localStorage.getItem(PHOTO_ONLY_KEY) === '1';
 
 function isPhotoPhrase(p) { return !!(p && p.src === 'photo'); }
 function photoPhrases() { return PHRASES.filter(isPhotoPhrase); }
-function photoFilterOn() { return photoOnly && photoPhrases().length > 0; }
 /* アプリ名が出典（srcFrom が「アプリ〜」）のものは「📱 アプリ〜から」と出す（例: speak_exploit の写真＝アプリspeak） */
 function isAppPhoto(p) { return isPhotoPhrase(p) && /^アプリ/.test(String(p.srcFrom || '')); }
 function photoBadgeHtml(p) { return isPhotoPhrase(p) ? `<span class="badge badge-photo">${isAppPhoto(p) ? '📱 ' + escapeHtml(p.srcFrom) + 'から' : '📷 写真から'}</span>` : ''; }
@@ -17932,27 +17902,78 @@ function photoSrcHtml(p) {
   const label = photoSrcLabel(p);
   return label ? `<div class="src-line photo">出典: ${escapeHtml(label)}</div>` : '';
 }
-function setPhotoOnly(on) {
-  photoOnly = !!on;
-  if (photoOnly) {
-    noteOnly = false; localStorage.setItem(NOTE_ONLY_KEY, '0');
-    webOnly = false; localStorage.setItem(WEB_ONLY_KEY, '0');
-  }
-  localStorage.setItem(PHOTO_ONLY_KEY, photoOnly ? '1' : '0');
-  render();
-}
-function updatePhotoOnlyBtn() {
-  const btn = document.getElementById('photoOnlyBtn');
-  if (!btn) return;
-  const n = photoPhrases().length;
-  btn.hidden = !n;
-  btn.textContent = `📷 写真から（${n}）`;
-  btn.classList.toggle('on', photoFilterOn());
-}
 
 /* 出典（📓ノート／🌐調べて／📷写真）のバッジ・出典行・タグ。どれでもないフレーズには何も出ない */
 function srcBadgeHtml(p) { return noteBadgeHtml(p) + webBadgeHtml(p) + photoBadgeHtml(p); }
 function srcLineHtml(p) { return noteSrcHtml(p) + webSrcHtml(p) + photoSrcHtml(p); }
+/* ==========================================================
+   ジャンル（2026-10-05 追加）
+   ---------------------------------------------------------
+   どこから来たフレーズかで4つに分ける。保存済みフレーズの絞り込み、
+   テストと今日の復習の「ジャンル」で使う。
+     biz   💼 Bizmate   … src:"note" で srcRef が「Bizmate 表現まとめ/…」
+     web   🌐 ネット     … src:"web"（/phrase-research で調べたもの）
+     speak 📱 Speak      … src:"photo" で出典がアプリspeak
+     idea  💡 ひらめき   … src なし（📝メモタブで自分で日本語を書いて清書したもの）
+   どれにも入らないもの（Bizmate 以外のノート・Speak 以外の写真）は「すべて」でだけ出る。
+   ========================================================== */
+const GENRES = [
+  { k: 'all',   nm: 'すべて' },
+  { k: 'biz',   nm: '💼 Bizmate' },
+  { k: 'web',   nm: '🌐 ネット' },
+  { k: 'speak', nm: '📱 Speak' },
+  { k: 'idea',  nm: '💡 ひらめき' }
+];
+const LIST_GENRE_KEY = 'phraseNote_listGenre';
+const TEST_GENRE_KEY = 'phraseNote_testGenre';
+function isBizmate(p) { return !!(p && p.src === 'note' && /^bizmate/i.test(String(p.srcRef || '').trim())); }
+function genreOf(p) {
+  if (!p) return null;
+  if (!p.src) return 'idea';
+  if (isBizmate(p)) return 'biz';
+  if (p.src === 'web') return 'web';
+  if (p.src === 'photo' && /speak/i.test(String(p.srcFrom || '') + ' ' + String(p.srcRef || ''))) return 'speak';
+  return null;
+}
+function isGenreKey(g) { return GENRES.some(x => x.k === g); }
+function genreLabel(g) { const x = GENRES.find(x => x.k === g); return x ? x.nm : 'すべて'; }
+function inGenre(p, g) { return !g || g === 'all' || genreOf(p) === g; }
+function genrePhrases(g) { return (!g || g === 'all') ? PHRASES : PHRASES.filter(p => genreOf(p) === g); }
+function loadGenre(key) { try { const v = localStorage.getItem(key); return isGenreKey(v) ? v : 'all'; } catch (e) { return 'all'; } }
+/* 1件も無いジャンルを選んだままにしない（空の一覧・空のテストにならない） */
+function effGenre(g) { return g !== 'all' && !genrePhrases(g).length ? 'all' : g; }
+let listGenre = loadGenre(LIST_GENRE_KEY);
+let testGenre = loadGenre(TEST_GENRE_KEY);
+function listGenreOn() { return effGenre(listGenre); }
+function testGenreOn() { return effGenre(testGenre); }
+function genreRowHtml(cur, fn) {
+  return GENRES.map(x => {
+    const n = genrePhrases(x.k).length;
+    if (x.k !== 'all' && !n) return '';
+    return `<button class="btn-mini${x.k === cur ? ' on' : ''}" onclick="${fn}('${x.k}')">${x.nm}（${n}）</button>`;
+  }).join('');
+}
+function setListGenre(g) {
+  listGenre = isGenreKey(g) ? g : 'all';
+  try { localStorage.setItem(LIST_GENRE_KEY, listGenre); } catch (e) {}
+  render();
+}
+function renderListGenreRow() {
+  const el = document.getElementById('listGenreRow');
+  if (el) el.innerHTML = genreRowHtml(listGenreOn(), 'setListGenre');
+}
+function setTestGenre(g) {
+  testGenre = isGenreKey(g) ? g : 'all';
+  try { localStorage.setItem(TEST_GENRE_KEY, testGenre); } catch (e) {}
+  renderTestSetup();
+}
+function renderTestGenreRow() {
+  const el = document.getElementById('testGenreRow');
+  if (el) el.innerHTML = genreRowHtml(testGenreOn(), 'setTestGenre');
+}
+/* 成績の保存キー。ジャンルで絞った回は「週キー@ジャンル」で別に記録する（すべての回の最高スコアに混ぜない） */
+function scoreKeyOf(weekKey, g) { return g && g !== 'all' ? weekKey + '@' + g : weekKey; }
+
 function tagsHtml(p) {
   return Array.isArray(p.tags) && p.tags.length
     ? `<div class="tag-row">${p.tags.map(t => `<span class="tag-chip">${escapeHtml(t)}</span>`).join('')}</div>` : '';
@@ -18186,7 +18207,7 @@ function renderWeeks() {
           const open = weekRevealSet.has(p.id);
           return `<div class="mini-row">
             <div class="mini-head">
-              <div class="mini-ja">${escapeHtml(p.ja)}${isNotePhrase(p) ? `<span class="mini-note" title="ノートから">📓 ノート</span>` : ''}${isWebPhrase(p) ? `<span class="mini-web" title="調べて">🌐 調べて</span>` : ''}${isPhotoPhrase(p) ? `<span class="mini-photo" title="写真から">${isAppPhoto(p) ? '📱 ' + escapeHtml(p.srcFrom) : '📷 写真'}</span>` : ''}</div>
+              <div class="mini-ja">${escapeHtml(p.ja)}${isNotePhrase(p) ? (isBizmate(p) ? `<span class="mini-biz" title="Bizmateから">💼 Bizmate</span>` : `<span class="mini-note" title="ノートから">📓 ノート</span>`) : ''}${isWebPhrase(p) ? `<span class="mini-web" title="調べて">🌐 調べて</span>` : ''}${isPhotoPhrase(p) ? `<span class="mini-photo" title="写真から">${isAppPhoto(p) ? '📱 ' + escapeHtml(p.srcFrom) : '📷 写真'}</span>` : ''}</div>
               ${favBtnHtml(p.id, 'small')}
             </div>
             ${open ? `
@@ -18562,7 +18583,7 @@ function saveRun() {
   if (!rows.length) return;
   st.lastAt = Date.now();
   localStorage.setItem(RUN_KEY, JSON.stringify({
-    v: 1, weekKey: st.weekKey, mode: st.mode, startedAt: st.startedAt, lastAt: st.lastAt, rows
+    v: 1, weekKey: st.weekKey, genre: st.genre, mode: st.mode, startedAt: st.startedAt, lastAt: st.lastAt, rows
   }));
 }
 function clearRun() { localStorage.removeItem(RUN_KEY); }
@@ -18586,7 +18607,7 @@ function commitRun(run, partial) {
     pct: Math.round((gc / graded.length) * 100), mode: run.mode
   };
   if (partial) rec.partial = true;
-  saveScore(run.weekKey, rec);
+  saveScore(scoreKeyOf(run.weekKey, run.genre), rec);
   return rec;
 }
 
@@ -18598,7 +18619,7 @@ function sealIfRunning(quiet) {
   st.sealed = true;
   testState = null;
   if (!rows.length) { clearRun(); return; }
-  commitRun({ weekKey: st.weekKey, mode: st.mode, startedAt: st.startedAt,
+  commitRun({ weekKey: st.weekKey, genre: st.genre, mode: st.mode, startedAt: st.startedAt,
     lastAt: st.lastAt || Date.now(), rows }, true);
   if (!quiet) showToast('ここまでの ' + rows.length + ' 問を記録しました');
 }
@@ -19295,15 +19316,15 @@ function dueMsOf(st) {
 function isLearned(p, s) { const st = (s || getStats())[p.id]; return !!(st && st.lastAt); }
 
 /* 期限が来た学習ずみフレーズ（期限が古い順） */
-function duePhrases() {
+function duePhrases(g) {
   const s = getStats(), now = Date.now();
-  return PHRASES.filter(p => dueMsOf(s[p.id]) <= now)
+  return genrePhrases(g).filter(p => dueMsOf(s[p.id]) <= now)
     .sort((a, b) => dueMsOf(s[a.id]) - dueMsOf(s[b.id]));
 }
 /* まだ一度もテストしていないフレーズ（追加が古い順＝放置されているものから） */
-function newPhrases() {
+function newPhrases(g) {
   const s = getStats();
-  return PHRASES.filter(p => !isLearned(p, s))
+  return genrePhrases(g).filter(p => !isLearned(p, s))
     .sort((a, b) => new Date(a.savedAt || 0) - new Date(b.savedAt || 0));
 }
 /* ---- 予定日のならし（2026-08-27 追加） ----
@@ -19377,18 +19398,20 @@ function riskRank(st) {
    途中でやめて開き直しても、その日の総量が仕切り直しにならないようにするため */
 function dueCapLeft() { return Math.max(0, reviewCap() - doneToday().due); }
 /* 今日ぶんの復習キュー＝期限切れを上限まで（忘れかけている順）＋ 余った枠に未着手。
-   { full: true } は「今日ぶんを使い切ったあとに、もう少しやる」ための追加ぶん */
+   { full: true } は「今日ぶんを使い切ったあとに、もう少しやる」ための追加ぶん。
+   { genre } を省くとテスト画面で選んでいるジャンル、'all' なら全部（今日つかう時間はジャンル共通） */
 function dueQueue(opts) {
+  const g = (opts && opts.genre) || testGenreOn();
   const s = getStats(), cap = (opts && opts.full) ? reviewCap() : dueCapLeft();
   if (cap <= 0) return [];
-  const due = duePhrases().slice().sort((a, b) => {
+  const due = duePhrases(g).slice().sort((a, b) => {
     const ra = riskRank(s[a.id]), rb = riskRank(s[b.id]);
     if (ra !== rb) return ra - rb;
     return dueMsOf(s[a.id]) - dueMsOf(s[b.id]);
   }).slice(0, cap);
   // 復習が上限まで埋まっている日は、新しい表現を足さない（足すと翌日さらに溢れる）
   const room = Math.max(0, cap - due.length);
-  return due.concat(newPhrases().slice(0, Math.min(NEW_PER_DAY, room)));
+  return due.concat(newPhrases(g).slice(0, Math.min(NEW_PER_DAY, room)));
 }
 /* この先7日ぶんの予定件数（1日あたりの山を見えるようにする） */
 function dueForecast() {
@@ -19409,7 +19432,7 @@ function reviewMinChipsHtml() {
 function updateDueBadge() {
   const el = document.getElementById('dueBadge');
   if (!el) return;
-  const n = dueQueue().length;
+  const n = dueQueue({ genre: 'all' }).length;
   el.textContent = n > 99 ? '99+' : n;
   el.hidden = n === 0;
 }
@@ -19418,10 +19441,11 @@ function renderDueBox() {
   const el = document.getElementById('dueBox');
   if (!el) return;
   const s = getStats();
-  const due = duePhrases().length;
-  const fresh = newPhrases().length;
-  const learned = PHRASES.length - fresh;
-  const mastered = PHRASES.filter(p => boxOf(s[p.id]) >= 4).length;
+  const g = testGenreOn(), gp = genrePhrases(g);
+  const due = duePhrases(g).length;
+  const fresh = newPhrases(g).length;
+  const learned = gp.length - fresh;
+  const mastered = gp.filter(p => boxOf(s[p.id]) >= 4).length;
   const q = dueQueue(), n = q.length;
   const cap = reviewCap();
   const done = doneToday();                                 // 今日ここまでに答え合わせした問数
@@ -19430,15 +19454,15 @@ function renderDueBox() {
   const shownDue = q.filter(p => isLearned(p, s)).length;   // 今日出す期限ぶん
   const shownNew = n - shownDue;                            // 今日出す未着手ぶん
   const rest = Math.max(0, due - shownDue);                 // 翌日以降に回るぶん
-  const over = duePhrases().filter(p => overdueDaysOf(s[p.id]) >= 1).length;
+  const over = duePhrases(g).filter(p => overdueDaysOf(s[p.id]) >= 1).length;
   const fc = dueForecast(), mx = Math.max(cap, ...fc, 1);
-  const pct = PHRASES.length ? Math.round((learned / PHRASES.length) * 100) : 0;
+  const pct = gp.length ? Math.round((learned / gp.length) * 100) : 0;
   /* 途中でやめた回も、答え合わせが済んだ問はここに入る（やった事実が消えない） */
   const doneLine = done.n ? `<div class="due-done">✓ 今日はここまで <b>${done.n}</b> 問おわりました`
     + (done.due ? `（うち今日の復習 ${done.due} 問）` : '')
     + `<br><span class="due-done-sub">途中でやめた回のぶんも入っています</span></div>` : '';
   el.innerHTML = `
-    <div class="due-title">📅 今日の復習</div>
+    <div class="due-title">📅 今日の復習${g !== 'all' ? `<span class="due-genre">${genreLabel(g)}</span>` : ''}</div>
     ${doneLine}
     <div class="due-sub">${n
       ? `期限が来たのは <b>${due}</b> 件${over ? `（うち繰越 ${over} 件）` : ''}。`
@@ -19552,16 +19576,15 @@ function renderTestSetup() {
   const weeks = groupByWeek();
   const sel = document.getElementById('testWeekSel');
   const prev = sel.value;
+  const g = testGenreOn();
+  renderTestGenreRow();
   sel.innerHTML = `<option value="__due__">📅 今日の復習（${dueQueue().length}件）</option>`
     + weeks.map(w => {
       const tag = w.key === THIS_WEEK_KEY ? '【今週】' : (w.key === LAST_WEEK_KEY ? '【先週】' : '');
-      return `<option value="${w.key}">${tag}${w.label}（${w.items.length}件）</option>`;
+      return `<option value="${w.key}">${tag}${w.label}（${w.items.filter(p => inGenre(p, g)).length}件）</option>`;
     }).join('')
-    + `<option value="__all__">全期間（${PHRASES.length}件）</option>`
-    + `<option value="__fav__">⭐ お気に入り（${favPhrases().length}件）</option>`
-    + (notePhrases().length ? `<option value="__note__">📓 ノートから（${notePhrases().length}件）</option>` : '')
-    + (webPhrases().length ? `<option value="__web__">🌐 調べて（${webPhrases().length}件）</option>` : '')
-    + (photoPhrases().length ? `<option value="__photo__">📷 写真から（${photoPhrases().length}件）</option>` : '');
+    + `<option value="__all__">全期間（${genrePhrases(g).length}件）</option>`
+    + `<option value="__fav__">⭐ お気に入り（${favPhrases().filter(p => inGenre(p, g)).length}件）</option>`;
   if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
   else if (weeks.length) sel.value = (weeks.find(w => w.key === LAST_WEEK_KEY) || weeks[0]).key;
 
@@ -19579,12 +19602,17 @@ function testTargetLabel(key) {
   if (key === '__note__') return '📓 ノートから';
   if (key === '__web__') return '🌐 調べて';
   if (key === '__photo__') return '📷 写真から';
+  if (String(key).includes('@')) {
+    const i = String(key).lastIndexOf('@');
+    return testTargetLabel(key.slice(0, i)) + '・' + genreLabel(key.slice(i + 1));
+  }
   return weekRangeLabel(key);
 }
 /* 週ごとのスコア記録の対象外（週に属さない出題範囲） */
 function isSpecialKey(key) { return key === '__all__' || key === '__fav__' || key === '__due__' || key === '__note__' || key === '__web__' || key === '__photo__'; }
 
-function poolFor(weekKey, scope) {
+function poolFor(weekKey, scope, genre) {
+  const g = genre || testGenreOn();
   let pool = weekKey === '__all__' ? PHRASES.slice()
     : weekKey === '__due__' ? dueQueue()
     : weekKey === '__fav__' ? favPhrases()
@@ -19592,6 +19620,7 @@ function poolFor(weekKey, scope) {
     : weekKey === '__web__' ? webPhrases()
     : weekKey === '__photo__' ? photoPhrases()
     : PHRASES.filter(p => weekKeyOf(p.savedAt) === weekKey);
+  if (weekKey !== '__due__') pool = pool.filter(p => inGenre(p, g));   // 今日の復習は dueQueue がジャンルで絞りずみ
   if (scope === 'weak') pool = pool.filter(p => isWeak(p.id));
   if (scope === 'apply') {
     const s = getStats();
@@ -19619,8 +19648,9 @@ function updateSetupInfo() {
         + '<br>途中でやめても、答え合わせが済んだ問はそこまで記録されます。'
         + '結果は週の成績には記録されません'
     : '';
+  const g = testGenreOn();
   document.getElementById('testSetupInfo').innerHTML =
-    `出題数: <b>${n}</b> 問<br>${modeText}${scopeText}`;
+    `出題数: <b>${n}</b> 問${g !== 'all' ? `（ジャンル: ${genreLabel(g)}）` : ''}<br>${modeText}${scopeText}`;
 }
 
 function renderTestHistory() {
@@ -19659,6 +19689,7 @@ function startTest(customQueue) {
       : weekKey === '__due__' ? (dueQueue({ full: true }).length
           ? '今日つかう時間ぶんは終わりました（上のカードの「＋ もう◯問やる」で続けられます）'
           : '今日ぶんの復習は終わりました 🎉')
+      : testGenreOn() !== 'all' ? genreLabel(testGenreOn()) + ' のフレーズはこの範囲にありません'
       : weekKey === '__fav__' ? 'お気に入りがまだありません（☆をタップして登録）'
       : weekKey === '__note__' ? 'ノートから取り込んだフレーズはまだありません'
       : weekKey === '__web__' ? '調べて取り込んだフレーズはまだありません'
@@ -19670,7 +19701,7 @@ function startTest(customQueue) {
   sealIfRunning(true);   // 前の回が締まっていなければ、そこまでで確定させてから始める
   const stale = loadJSON(RUN_KEY, null);
   if (stale && stale.rows && stale.rows.length) commitRun(stale, true);
-  testState = { weekKey, mode: testMode, queue, idx: 0, revealed: false, results: [],
+  testState = { weekKey, genre: testGenreOn(), mode: testMode, queue, idx: 0, revealed: false, results: [],
     startedAt: Date.now(), lastAt: 0, sealed: false };
   document.getElementById('testSetup').hidden = true;
   document.getElementById('testResult').hidden = true;
@@ -19912,7 +19943,7 @@ function finishTest(partial) {
      記録はすべて1回目の答えで確定している */
   const scored = st.results.filter(r => r && !r.phrase.again);
   /* 週の成績と「1問あたりの秒数」をここで確定させる（途中で締めた回も同じ道を通る） */
-  commitRun({ weekKey: st.weekKey, mode: st.mode, startedAt: st.startedAt,
+  commitRun({ weekKey: st.weekKey, genre: st.genre, mode: st.mode, startedAt: st.startedAt,
     lastAt: st.lastAt || Date.now(), rows: runRows(st) }, !!partial);
   const total = scored.length;
   const correct = scored.filter(r => r.level === 'correct').length;
@@ -20031,9 +20062,6 @@ document.getElementById('polishedViewSeg').addEventListener('click', e => {
   setPolishedView(b.dataset.pview);
 });
 document.getElementById('wkExpandBtn').addEventListener('click', toggleAllPolishedWeeks);
-document.getElementById('noteOnlyBtn').addEventListener('click', () => setNoteOnly(!noteFilterOn()));
-document.getElementById('webOnlyBtn').addEventListener('click', () => setWebOnly(!webFilterOn()));
-document.getElementById('photoOnlyBtn').addEventListener('click', () => setPhotoOnly(!photoFilterOn()));
 document.getElementById('copyBtn').addEventListener('click', copyPending);
 document.getElementById('clearBtn').addEventListener('click', clearAllPending);
 document.getElementById('searchBox').addEventListener('input', render);
