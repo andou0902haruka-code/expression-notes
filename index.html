@@ -564,6 +564,11 @@
   .self-btn.s-mid { background: var(--orange-bg); border-color: var(--orange); color: var(--orange); }
   .self-btn.s-ng { background: #fdecec; border-color: #c53030; color: #c53030; }
   .self-btn:active { filter: brightness(0.93); }
+  /* 削除したフレーズ（元に戻せる） */
+  .del-box { margin-top: 14px; }
+  .del-box summary { font-size: 0.85rem; color: var(--sub); cursor: pointer; padding: 6px 0; }
+  .del-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.86rem; }
+  .del-row .dj { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .verdict { font-size: 1rem; font-weight: 700; margin: 4px 0 8px; }
   .v-correct { color: var(--green); }
   .v-close { color: var(--orange); }
@@ -925,6 +930,7 @@
   </div>
   <div class="genre-row" id="listGenreRow"></div>
   <div id="polishedList"></div>
+  <div id="delBox"></div>
 
 </section>
 
@@ -21187,6 +21193,64 @@ function revealPhrase(id) {
 /* ==========================================================
    お気に入り（この端末のlocalStorageのみ・PHRASESのidで紐付け）
    ========================================================== */
+/* ==========================================================
+   削除（2026-10-06）
+   ---------------------------------------------------------
+   埋め込みデータ(PHRASES)は書き換えず、削除したidを phraseNote_deleted に {id: {t, on}} で
+   この端末に持って画面から外す。ALL_PHRASES が元の全件、PHRASES は削除を除いた残り
+   （同じ配列を詰め直すので、一覧・復習・テスト・週まとめはそのまま削除を反映する）。
+   「🗑 削除したフレーズ」から元に戻せる
+   ========================================================== */
+const DEL_KEY = 'phraseNote_deleted';
+const ALL_PHRASES = PHRASES.slice();
+function getDels() { try { const o = JSON.parse(localStorage.getItem(DEL_KEY) || '{}'); return (o && typeof o === 'object') ? o : {}; } catch (e) { return {}; } }
+function setDels(o) { try { localStorage.setItem(DEL_KEY, JSON.stringify(o)); } catch (e) {} }
+function isDel(id, d) { const x = (d || getDels())[String(id)]; return !!(x && x.on); }
+function applyDels() {
+  const d = getDels();
+  const keep = ALL_PHRASES.filter(p => !isDel(p.id, d));
+  PHRASES.length = 0;
+  keep.forEach(p => PHRASES.push(p));
+}
+applyDels();
+function delPhrases() {
+  const d = getDels();
+  return ALL_PHRASES.filter(p => isDel(p.id, d)).sort((a, b) => (d[String(b.id)].t || 0) - (d[String(a.id)].t || 0));
+}
+function refreshAfterDel() {
+  render();
+  if (!document.getElementById('view-favs').hidden) renderFavs();
+  if (!document.getElementById('view-weeks').hidden) renderWeeks();
+}
+function deletePhrase(id) {
+  const p = ALL_PHRASES.find(x => x.id === Number(id));
+  if (!p) return;
+  if (!confirm('「' + p.ja + '」を削除しますか？\n（一覧・復習・テストに出なくなります。一覧のいちばん下の「🗑 削除したフレーズ」から元に戻せます）')) return;
+  const d = getDels();
+  d[String(id)] = { t: Date.now(), on: true };
+  setDels(d);
+  applyDels();
+  refreshAfterDel();
+  showToast('🗑 削除しました');
+}
+function restorePhrase(id) {
+  const d = getDels();
+  d[String(id)] = { t: Date.now(), on: false };
+  setDels(d);
+  applyDels();
+  refreshAfterDel();
+  showToast('↩ 元に戻しました');
+}
+function renderDelBox() {
+  const el = document.getElementById('delBox');
+  if (!el) return;
+  const ds = delPhrases();
+  el.innerHTML = ds.length ? `<details class="del-box"><summary>🗑 削除したフレーズ（${ds.length}件）</summary>
+    ${ds.map(p => `<div class="del-row"><span class="dj">${escapeHtml(p.ja)} — ${escapeHtml(p.en)}</span>
+      <button class="btn-mini" onclick="restorePhrase(${p.id})">↩ 元に戻す</button></div>`).join('')}
+  </details>` : '';
+}
+
 const FAV_KEY = 'phraseNote_favorites';
 let favIds = (() => {
   const raw = loadJSON(FAV_KEY, []);
@@ -21590,6 +21654,7 @@ function render() {
   }
   updateWkToolbar();
   renderListGenreRow();
+  renderDelBox();
 
   updateFavCounts();
   updateDueBadge();
@@ -21772,7 +21837,7 @@ function phraseCardHtml(p, context) {
       </details>` : ''}
       <div class="card-foot">
         <button class="icon-btn" onclick="playAudio(this, 'audio/${p.id}.mp3')">🔊</button>
-        <span></span>
+        <button class="del-btn" onclick="deletePhrase(${p.id})">🗑 削除</button>
       </div>
       ` : `<button class="reveal-btn" onclick="revealPhrase(${p.id})">🙈 タップして英訳を表示</button>`}
     </div>`;
@@ -23498,9 +23563,9 @@ function renderQuestion() {
   let area;
   if (answered) {
     area = renderFeedback(st.results[st.idx]);
-  } else if (st.mode === 'type') {
+  } else if (st.mode === 'type' && !st.revealed) {
     area = `
-      <textarea class="test-input" id="testInput" placeholder="英語で入力" autocomplete="off"
+      <textarea class="test-input" id="testInput" placeholder="英語で入力（空欄のまま答え合わせ → 答えを見て自己採点）" autocomplete="off"
         autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="test-btn-row">
         <button class="btn-primary" onclick="submitAnswer()">✓ 答え合わせ</button>
@@ -23517,7 +23582,7 @@ function renderQuestion() {
       ${baseNoteHtml(p)}
       ${p.explanation ? `<div class="mini-exp">💡 ${escapeHtml(p.explanation)}</div>` : ''}
       ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
-      <div class="self-label">どれくらい言えた？（押すと次へ）</div>
+      <div class="self-label">${st.mode === 'type' ? '答えを見て、どれくらい書けそうだった？（押すと次へ）' : 'どれくらい言えた？（押すと次へ）'}</div>
       <div class="self-grid">${SELF_SCORES.map(v =>
         `<button class="self-btn s-${selfVerdict(v)}" onclick="selfGrade(${v})">${selfPct(v)}</button>`).join('')}</div>
       <div class="diff-legend">80%以上＝正解（次に出るまでの間隔が延びる）／40〜60%＝惜しい／20%以下＝不正解</div>` : `
@@ -23582,7 +23647,7 @@ function selfGrade(score) {
   const p = testState.queue[testState.idx];
   const before = p.again ? null : recordStat(p.id, level === 'correct');   // おかわりは記録に入れない
   if (!p.again) mvGain(level === 'correct' ? true : (level === 'close' ? 'half' : false));   // やる気の記録（連続日数・XP・バッジ）
-  if (!p.again) hsAdd({ q: p.ja, a: p.en, p: Math.round(score * 100), k: histKind(p, '言う（自己採点）') });   // 学習の履歴
+  if (!p.again) hsAdd({ q: p.ja, a: p.en, p: Math.round(score * 100), k: histKind(p, testState.mode === 'type' ? '書く（自己採点）' : '言う（自己採点）') });   // 学習の履歴
   testState.results[testState.idx] = { phrase: p, level, user: '', selfGraded: true, self: score, before };
   /* 途中でやめても消えないように、1問ごとに「今日の問数」と「この回の控え」を残す */
   if (!p.again) { bumpDayLog(testState.weekKey === '__due__'); saveRun(); }
@@ -23593,7 +23658,8 @@ function selfGrade(score) {
 function submitAnswer() {
   const input = document.getElementById('testInput');
   const val = input ? input.value : '';
-  if (!val.trim()) { showToast('英語を入力してください'); return; }
+  /* 空欄で答え合わせ → 答えを見せて、言うモードと同じ6段階の自己採点（2026-10-06） */
+  if (!val.trim()) { testState.revealed = true; renderQuestion(); return; }
   const p = testState.queue[testState.idx];
   const j = judgeAnswer(val, p);
   const before = p.again ? null : recordStat(p.id, j.level === 'correct');   // おかわりは記録に入れない
