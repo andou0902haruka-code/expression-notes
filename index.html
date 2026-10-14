@@ -534,7 +534,13 @@
   .seg-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
   /* 出題範囲は4つあるので、狭い画面では2×2に折り返す */
   #testScopeSeg .seg-btn { flex: 1 1 calc(50% - 3px); }
-  @media (min-width: 480px) { #testScopeSeg .seg-btn { flex: 1 1 auto; } }
+  @media (min-width: 480px) { #testScopeSeg .seg-btn { flex: 1 1 calc(33% - 4px); } }
+  /* 範囲内の「何回解いたか」の内訳（2026-10-14） */
+  .solved-break { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .solved-break span { font-size: 0.76rem; padding: 3px 9px; border-radius: 999px; background: var(--border); color: var(--sub); font-weight: 600; }
+  .solved-break span b { color: var(--text, inherit); }
+  .auto-speak { display: flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 0.85rem; color: var(--sub); font-weight: 600; }
+  .cnt-chip { font-size: 0.74rem; padding: 1px 7px; border-radius: 999px; background: var(--border); }
   .test-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
   .test-progress { font-size: 0.82rem; color: var(--sub); font-weight: 600; }
   .progress-bar { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 14px; }
@@ -1026,9 +1032,13 @@
       <div class="seg" id="testScopeSeg">
         <button class="seg-btn active" data-scope="all">すべて</button>
         <button class="seg-btn" data-scope="r10">ランダム10問</button>
+        <button class="seg-btn" data-scope="new">🆕 未解答だけ</button>
+        <button class="seg-btn" data-scope="few">🔢 回数が少ない順10問</button>
         <button class="seg-btn" data-scope="weak">苦手だけ</button>
         <button class="seg-btn" data-scope="apply">🚀 応用</button>
       </div>
+      <div class="solved-break" id="testSolvedBreak"></div>
+      <label class="auto-speak"><input type="checkbox" id="autoSpeakChk"> 🔊 答えを表示したら英語を自動で読む</label>
       <button class="btn-save" id="testStartBtn" style="margin-top:14px">▶ テスト開始</button>
       <div class="hint-line" id="testSetupInfo"></div>
     </div>
@@ -23346,7 +23356,7 @@ function renderDueBox() {
 function startDueTest(full) {
   const sel = document.getElementById('testWeekSel');
   if ([...sel.options].some(o => o.value === '__due__')) sel.value = '__due__';
-  if (testScope === 'weak' || testScope === 'apply') {   // 今日の復習は絞り込みなしで始める
+  if (testScope !== 'all' && testScope !== 'r10') {   // 今日の復習は絞り込みなしで始める
     testScope = 'all';
     document.querySelectorAll('#testScopeSeg .seg-btn').forEach(x => x.classList.toggle('active', x.dataset.scope === 'all'));
   }
@@ -23403,8 +23413,42 @@ function baseNoteHtml(p) {
 function srsChip(p) {
   const st = getStats()[p.id];
   const box = boxOf(st);
-  if (!box) return '　<span class="srs-chip">🆕 はじめて</span>';
-  return `　<span class="srs-chip">📦 ${box}/${BOX_DAYS.length}</span>`;
+  const n = solvedCount(p.id);
+  if (!box && !n) return '　<span class="srs-chip">🆕 はじめて</span>';
+  return `　<span class="srs-chip">📦 ${box}/${BOX_DAYS.length}</span> <span class="cnt-chip">🔢 ${n}回目→${n + 1}回目（⭕${(st && st.ok) | 0}）</span>`;
+}
+
+/* ==========================================================
+   何回解いたか・未解答だけ（2026-10-14 追加）
+   ---------------------------------------------------------
+   回数は成績（phraseNote_testStats）の ok + ng をそのまま使う。
+   答え合わせのたびに recordStat が1つ増やすので、新しい保存キーは持たない。
+   応用問題も本体と同じ id に記録されるので、回数に含まれる。
+   ========================================================== */
+function solvedCount(id, s) {
+  const st = (s || getStats())[id];
+  return st ? ((st.ok | 0) + (st.ng | 0)) : 0;
+}
+/* 範囲内の内訳：未解答 / 1回 / 2〜4回 / 5回以上 */
+function solvedBreakdown(list) {
+  const s = getStats(), b = { n0: 0, n1: 0, n2: 0, n5: 0 };
+  list.forEach(p => {
+    const n = solvedCount(p.id, s);
+    if (!n) b.n0++; else if (n === 1) b.n1++; else if (n < 5) b.n2++; else b.n5++;
+  });
+  return b;
+}
+
+/* ---- 答えを表示したら英語を自動で読む（2026-10-14 追加） ----
+   答え合わせ／答えを見るボタンを押した流れの中で鳴らす（iPhoneは操作の直後でないと鳴らないため、
+   setTimeout を挟まない）。⭕❌の付け替えで描き直したときは鳴らし直さない。端末ごとの好みなので同期しない */
+const AUTOSPEAK_KEY = 'phraseNote_autoSpeak';
+function autoSpeakOn() { try { return localStorage.getItem(AUTOSPEAK_KEY) !== '0'; } catch (e) { return true; } }
+function setAutoSpeak(on) { try { localStorage.setItem(AUTOSPEAK_KEY, on ? '1' : '0'); } catch (e) {} }
+function autoPlayAnswer() {
+  if (!autoSpeakOn()) return;
+  const b = document.getElementById('ansPlayBtn');
+  if (b && typeof b.click === 'function') b.click();
 }
 
 /* 本体に正解した直後に、その場で応用を1問差し込む */
@@ -23478,6 +23522,14 @@ function poolFor(weekKey, scope, genre) {
     : PHRASES.filter(p => weekKeyOf(p.savedAt) === weekKey);
   if (weekKey !== '__due__') pool = pool.filter(p => inGenre(p, g));   // 今日の復習は dueQueue がジャンルで絞りずみ
   if (scope === 'weak') pool = pool.filter(p => isWeak(p.id));
+  if (scope === 'new') { const s = getStats(); pool = pool.filter(p => !solvedCount(p.id, s)); }
+  if (scope === 'few') {
+    /* 解いた回数が少ない順に10問（同じ回数どうしはランダム） */
+    const s = getStats();
+    return pool.map(p => ({ p, n: solvedCount(p.id, s), r: Math.random() }))
+      .sort((a, b) => a.n - b.n || a.r - b.r).slice(0, 10).map(x => x.p)
+      .sort(() => Math.random() - 0.5);
+  }
   if (scope === 'apply') {
     const s = getStats();
     pool = pool.filter(p => applyReady(p, s)).map(p => applyQuestion(p, pickApplyIdx(p)));
@@ -23496,6 +23548,8 @@ function updateSetupInfo() {
   const scopeText = testScope === 'apply'
     ? '<br>🚀 <b>応用</b>：覚えた表現を、別の場面の日本語で英訳します（本体に一度正解したフレーズだけ出ます）'
     : testScope === 'weak' ? '<br>直近で間違えた・まだ解いていないフレーズだけを出します'
+    : testScope === 'new' ? '<br>🆕 <b>未解答だけ</b>：この範囲で、まだ一度も答え合わせをしていないフレーズだけを出します'
+    : testScope === 'few' ? '<br>🔢 <b>回数が少ない順</b>：この範囲で、解いた回数が少ないものから10問（未解答があれば先に出ます）'
     : key === '__due__' ? '<br>📅 忘れかけている順に、今日つかう時間（' + reviewMinutes()
         + '分＝約' + reviewCap() + '問）に収まるぶんだけ出します。溢れたぶんは翌日以降。'
         + (doneToday().due ? '<br>今日はすでに <b>' + doneToday().due + '</b> 問おわり（残りは約 '
@@ -23507,6 +23561,12 @@ function updateSetupInfo() {
   const g = testGenreOn();
   document.getElementById('testSetupInfo').innerHTML =
     `出題数: <b>${n}</b> 問${g !== 'all' ? `（ジャンル: ${genreLabel(g)}）` : ''}<br>${modeText}${scopeText}`;
+  /* この範囲で何回解いたかの内訳 */
+  const bk = solvedBreakdown(poolFor(key, 'all'));
+  document.getElementById('testSolvedBreak').innerHTML = `<span>この範囲：</span>`
+    + `<span>🆕 未解答 <b>${bk.n0}</b></span><span>1回 <b>${bk.n1}</b></span>`
+    + `<span>2〜4回 <b>${bk.n2}</b></span><span>5回以上 <b>${bk.n5}</b></span>`;
+  document.getElementById('autoSpeakChk').checked = autoSpeakOn();
 }
 
 function renderTestHistory() {
@@ -23541,6 +23601,7 @@ function startTest(customQueue) {
   const queue = customQueue || poolFor(weekKey, testScope);
   if (!queue.length) {
     showToast(testScope === 'apply' ? '応用問題はまだ出せません（まず本体のテストに正解してください）'
+      : testScope === 'new' ? 'この範囲に未解答のフレーズはありません 🎉（全部1回以上解いています）'
       : testScope === 'weak' ? '苦手フレーズはありません 🎉'
       : weekKey === '__due__' ? (dueQueue({ full: true }).length
           ? '今日つかう時間ぶんは終わりました（上のカードの「＋ もう◯問やる」で続けられます）'
@@ -23610,7 +23671,7 @@ function renderQuestion() {
       <div class="ans-block">
         <div class="ans-label">正解</div>
         <div class="ans-en">${escapeHtml(p.en)}</div>
-        <div class="mini-foot"><button class="icon-btn small" onclick="playAudio(this, '${audioSrc(p)}')">🔊</button></div>
+        <div class="mini-foot"><button class="icon-btn small" id="ansPlayBtn" onclick="playAudio(this, '${audioSrc(p)}')">🔊</button></div>
       </div>
       ${baseNoteHtml(p)}
       ${p.explanation ? `<div class="mini-exp">💡 ${escapeHtml(p.explanation)}</div>` : ''}
@@ -23662,7 +23723,7 @@ function showHint() {
     <div class="diff-legend">語数と頭文字だけのヒントです（ヒントを見ても採点は変わりません）</div>`;
 }
 
-function revealOral() { testState.revealed = true; renderQuestion(); }
+function revealOral() { testState.revealed = true; renderQuestion(); autoPlayAnswer(); }
 
 /* ---- 言うモードの自己採点（2026-09-14 ⭕❌ → 100〜0%の6段階） ----
    区切りは「書く」の ⭕/🔺/❌ と speaking-compose の自己採点に揃える:
@@ -23692,7 +23753,7 @@ function submitAnswer() {
   const input = document.getElementById('testInput');
   const val = input ? input.value : '';
   /* 空欄で答え合わせ → 答えを見せて、言うモードと同じ6段階の自己採点（2026-10-06） */
-  if (!val.trim()) { testState.revealed = true; renderQuestion(); return; }
+  if (!val.trim()) { testState.revealed = true; renderQuestion(); autoPlayAnswer(); return; }
   const p = testState.queue[testState.idx];
   const j = judgeAnswer(val, p);
   const before = p.again ? null : recordStat(p.id, j.level === 'correct');   // おかわりは記録に入れない
@@ -23702,6 +23763,7 @@ function submitAnswer() {
   /* 途中でやめても消えないように、1問ごとに「今日の問数」と「この回の控え」を残す */
   if (!p.again) { bumpDayLog(testState.weekKey === '__due__'); saveRun(); }
   renderQuestion();
+  autoPlayAnswer();
 }
 
 function renderFeedback(r) {
@@ -23733,7 +23795,7 @@ function renderFeedback(r) {
     <div class="ans-block">
       <div class="ans-label">模範解答</div>
       <div class="ans-en">${escapeHtml(p.en)}</div>
-      <div class="mini-foot"><button class="icon-btn small" onclick="playAudio(this, '${audioSrc(p)}')">🔊</button></div>
+      <div class="mini-foot"><button class="icon-btn small" id="ansPlayBtn" onclick="playAudio(this, '${audioSrc(p)}')">🔊</button></div>
     </div>
     ${diffHtml}
     ${baseNoteHtml(p)}
@@ -23780,6 +23842,9 @@ function queueAgain() {
   st.queue.push(Object.assign({}, r.phrase, { again: true }));
 }
 function nextQuestion() {
+  /* 自動で読んでいた答えの音声が次の問題に重ならないように止める */
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (currentBtn) { resetPlayBtn(currentBtn); currentBtn = null; }
   queueAgain();
   if (testState.idx + 1 < testState.queue.length) {
     testState.idx++;
@@ -23889,6 +23954,7 @@ document.getElementById('testScopeSeg').addEventListener('click', e => {
   updateSetupInfo();
 });
 document.getElementById('testStartBtn').addEventListener('click', () => startTest());
+document.getElementById('autoSpeakChk').addEventListener('change', e => setAutoSpeak(e.target.checked));
 
 document.getElementById('saveBtn').addEventListener('click', () => saveEntry());
 document.getElementById('captureModeSeg').addEventListener('click', e => {
