@@ -1033,9 +1033,20 @@
         <button class="seg-btn active" data-scope="all">すべて</button>
         <button class="seg-btn" data-scope="r10">ランダム10問</button>
         <button class="seg-btn" data-scope="new">🆕 未解答だけ</button>
-        <button class="seg-btn" data-scope="few">🔢 回数が少ない順10問</button>
+        <button class="seg-btn" data-scope="few">🔢 回数が少ない順</button>
         <button class="seg-btn" data-scope="weak">苦手だけ</button>
         <button class="seg-btn" data-scope="apply">🚀 応用</button>
+      </div>
+      <div id="newCountRow" hidden>
+        <label class="field-label">何問出す？（🆕 未解答だけ・🔢 回数が少ない順）</label>
+        <div class="seg" id="newCountSeg" style="flex-wrap:wrap">
+          <button class="seg-btn" data-n="5">5問</button>
+          <button class="seg-btn" data-n="10">10問</button>
+          <button class="seg-btn" data-n="20">20問</button>
+          <button class="seg-btn" data-n="30">30問</button>
+          <button class="seg-btn" data-n="50">50問</button>
+          <button class="seg-btn" data-n="0">ぜんぶ</button>
+        </div>
       </div>
       <div class="solved-break" id="testSolvedBreak"></div>
       <label class="auto-speak"><input type="checkbox" id="autoSpeakChk"> 🔊 答えを表示したら英語を自動で読む</label>
@@ -24073,12 +24084,17 @@ function poolFor(weekKey, scope, genre) {
     : PHRASES.filter(p => weekKeyOf(p.savedAt) === weekKey);
   if (weekKey !== '__due__') pool = pool.filter(p => inGenre(p, g));   // 今日の復習は dueQueue がジャンルで絞りずみ
   if (scope === 'weak') pool = pool.filter(p => isWeak(p.id));
-  if (scope === 'new') { const s = getStats(); pool = pool.filter(p => !solvedCount(p.id, s)); }
+  if (scope === 'new') {
+    /* 未解答からランダムに、選んだ問題数だけ（0＝ぜんぶ） */
+    const s = getStats();
+    pool = pool.filter(p => !solvedCount(p.id, s)).sort(() => Math.random() - 0.5);
+    return newCount() ? pool.slice(0, newCount()) : pool;
+  }
   if (scope === 'few') {
-    /* 解いた回数が少ない順に10問（同じ回数どうしはランダム） */
+    /* 解いた回数が少ない順に、選んだ問題数だけ（同じ回数どうしはランダム） */
     const s = getStats();
     return pool.map(p => ({ p, n: solvedCount(p.id, s), r: Math.random() }))
-      .sort((a, b) => a.n - b.n || a.r - b.r).slice(0, 10).map(x => x.p)
+      .sort((a, b) => a.n - b.n || a.r - b.r).slice(0, newCount() || pool.length).map(x => x.p)
       .sort(() => Math.random() - 0.5);
   }
   if (scope === 'apply') {
@@ -24090,6 +24106,19 @@ function poolFor(weekKey, scope, genre) {
   return pool;
 }
 
+/* ---- 未解答だけ・回数が少ない順の問題数（2026-10-21）。0＝ぜんぶ。端末ごとの好みなので同期しない ---- */
+const NEWCOUNT_KEY = 'phraseNote_newCount';
+function newCount() {
+  try { const v = localStorage.getItem(NEWCOUNT_KEY); return v == null ? 10 : (Number(v) | 0); } catch (e) { return 10; }
+}
+function setNewCount(n) { try { localStorage.setItem(NEWCOUNT_KEY, String(n)); } catch (e) {} }
+function newCountLabel() { const n = newCount(); return n ? n + '問' : 'ぜんぶ'; }
+function renderNewCount() {
+  document.getElementById('newCountRow').hidden = !(testScope === 'new' || testScope === 'few');
+  const n = String(newCount());
+  document.querySelectorAll('#newCountSeg .seg-btn').forEach(b => b.classList.toggle('active', b.dataset.n === n));
+}
+
 function updateSetupInfo() {
   const key = document.getElementById('testWeekSel').value;
   const n = poolFor(key, testScope).length;
@@ -24099,8 +24128,8 @@ function updateSetupInfo() {
   const scopeText = testScope === 'apply'
     ? '<br>🚀 <b>応用</b>：覚えた表現を、別の場面の日本語で英訳します（本体に一度正解したフレーズだけ出ます）'
     : testScope === 'weak' ? '<br>直近で間違えた・まだ解いていないフレーズだけを出します'
-    : testScope === 'new' ? '<br>🆕 <b>未解答だけ</b>：この範囲で、まだ一度も答え合わせをしていないフレーズだけを出します'
-    : testScope === 'few' ? '<br>🔢 <b>回数が少ない順</b>：この範囲で、解いた回数が少ないものから10問（未解答があれば先に出ます）'
+    : testScope === 'new' ? '<br>🆕 <b>未解答だけ</b>：この範囲で、まだ一度も答え合わせをしていないフレーズから' + newCountLabel() + '（ランダム）'
+    : testScope === 'few' ? '<br>🔢 <b>回数が少ない順</b>：この範囲で、解いた回数が少ないものから' + newCountLabel() + '（未解答があれば先に出ます）'
     : key === '__due__' ? '<br>📅 忘れかけている順に、今日つかう時間（' + reviewMinutes()
         + '分＝約' + reviewCap() + '問）に収まるぶんだけ出します。溢れたぶんは翌日以降。'
         + (doneToday().due ? '<br>今日はすでに <b>' + doneToday().due + '</b> 問おわり（残りは約 '
@@ -24118,6 +24147,7 @@ function updateSetupInfo() {
     + `<span>🆕 未解答 <b>${bk.n0}</b></span><span>1回 <b>${bk.n1}</b></span>`
     + `<span>2〜4回 <b>${bk.n2}</b></span><span>5回以上 <b>${bk.n5}</b></span>`;
   document.getElementById('autoSpeakChk').checked = autoSpeakOn();
+  renderNewCount();
 }
 
 function renderTestHistory() {
@@ -24502,6 +24532,11 @@ document.getElementById('testScopeSeg').addEventListener('click', e => {
   const b = e.target.closest('.seg-btn'); if (!b) return;
   testScope = b.dataset.scope;
   document.querySelectorAll('#testScopeSeg .seg-btn').forEach(x => x.classList.toggle('active', x === b));
+  updateSetupInfo();
+});
+document.getElementById('newCountSeg').addEventListener('click', e => {
+  const b = e.target.closest('.seg-btn'); if (!b) return;
+  setNewCount(Number(b.dataset.n));
   updateSetupInfo();
 });
 document.getElementById('testStartBtn').addEventListener('click', () => startTest());
