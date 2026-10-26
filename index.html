@@ -23452,6 +23452,7 @@ function recordStat(id, ok, pct, opt) {
     s[id] = cur;
     localStorage.setItem(STATS_KEY, JSON.stringify(s));
   }
+  if (opt && opt.manual) return { before, eid: null, rv: null };   // 再挑戦は今日の30問にも数えない
   const r = rvAnswer(id, pct, opt);
   return { before, eid: r.eid, rv: r };
 }
@@ -25084,7 +25085,7 @@ RV_DEFAULTS.capAll = true;
    ・休止中は出さない ・同じ表現は1日1回（基本と応用を同じ日に両方出さない）・今日の30問の枠の中だけ */
 function pnServeOk(q) {
   if (!q) return false;
-  if (q.again) return rvServeOk(q.id, true);
+  if (q.again) return q.manual || rvServeOk(q.id, true);
   if (rvPaused(q.id) || rvAnsweredToday(q.id)) return false;
   return rvServeOk(q.id, false);
 }
@@ -25357,37 +25358,36 @@ function syncModeSegs() {
 /* ==========================================================
    🗣 今日の発話練習（2026-10-26）
    ---------------------------------------------------------
-   テストタブの一番上の入口。今日の復習（期限が来た表現）から5問ずつ。
+   テストタブの一番上の入口。今日の復習（期限が来た表現）を今日の残り枠のぶんまとめて出す。
    ・数は rv.js の今日の枠（1日30問・時間の上限の小さいほう）をそのまま使う＝入口を変えても増えない
    ・期限が来た表現が少ない日は、そのぶんだけ。30問を埋めるための出題はしない
-   ・5問ごとに区切り、残り枠と期限の来た表現があるときだけ「次の5問」を出す
+   ・2026-10-26 5問ごとの区切りはやめた（途中でやめても、そこまでは学習ずみ）
    ========================================================== */
-const CHUNK_N = 5;
-function speakQueue() { return dueQueue().slice(0, CHUNK_N); }
+function speakQueue() { return dueQueue().slice(0, Math.max(0, rvLeft())); }
 function renderSpeakStart() {
   const el = document.getElementById('speakStart');
   if (!el) return;
   const done = rvDone(), lim = rvLimit(), left = rvLeft(), g = testGenreOn();
-  const due = dueQueue().length, n = Math.min(CHUNK_N, due);
+  const due = dueQueue().length, n = Math.min(due, Math.max(0, left));
   const hold = rvHold();
   const fresh = left > 0 && !due ? poolFor('__all__', 'new', g).length : 0;
   const pct = Math.min(100, Math.round(done / Math.max(1, lim) * 100));
   const modeName = testMode === 'oral' ? '🗣 言う' : '⌨️ 書く';
   el.innerHTML = `
     <div class="ss-title">🗣 今日の発話練習</div>
-    <div class="ss-count">今日 <b>${done}</b>／${lim}問${due ? `　・　次の${n}問を用意しています` : ''}${g !== 'all' ? `<br>出典：${genreLabel(g)} だけ（変えるときは下の詳細設定）` : ''}</div>
+    <div class="ss-count">今日 <b>${done}</b>／${lim}問${due ? `　・　${n}問を用意しています` : ''}${g !== 'all' ? `<br>出典：${genreLabel(g)} だけ（変えるときは下の詳細設定）` : ''}</div>
     <div class="ss-meter"><i style="width:${pct}%"></i></div>
     <button class="ss-go" id="speakGoBtn" onclick="startSpeak()" ${n ? '' : 'disabled'}>${
-      n ? `▶ 次の${n}問をはじめる（${modeName}）`
+      n ? `▶ ${n}問をはじめる（${modeName}）`
       : left <= 0 ? '今日はここまで。おつかれさまでした' : '✓ 今日の復習は完了'}</button>
     ${hold ? `<button class="ss-sub-btn" onclick="resumeHold()">↩️ 途中でやめた回の続き（${hold.ids.length}問）</button>` : ''}
-    ${!n && fresh ? `<button class="ss-sub-btn" onclick="startFreshChunk()">🆕 まだ解いていない表現を${Math.min(CHUNK_N, fresh, left)}問（任意）</button>` : ''}
+    ${!n && fresh ? `<button class="ss-sub-btn" onclick="startFreshChunk()">🆕 まだ解いていない表現を${Math.min(fresh, left)}問（任意）</button>` : ''}
     <div class="ss-mode">
       <button class="${testMode === 'oral' ? 'on' : ''}" onclick="setTestMode('oral')">🗣 言う</button>
       <button class="${testMode === 'type' ? 'on' : ''}" onclick="setTestMode('type')">⌨️ 書く</button>
     </div>
     <div class="ss-note">${n
-      ? '日本語を見て、英文を見ずに声に出す → 答えを見る → 自分で採点。5問ごとに区切るので、そこでやめても大丈夫です。'
+      ? '日本語を見て、英文を見ずに声に出す → 答えを見る → 自分で採点。途中でやめても、答えたところまでは記録されます。'
       : left <= 0 ? '一覧・解説・音声・週まとめの通し再生はこのまま使えます。'
       : '期限が来ている表現がない日は、無理に増やさなくて大丈夫です。'}</div>`;
 }
@@ -25398,7 +25398,7 @@ function startSpeak() {
 }
 /* 期限が来た表現がない日だけ出す任意の入口。新しく覚える表現も同じ1日30問に数える */
 function startFreshChunk() {
-  const q = poolFor('__all__', 'new', testGenreOn()).slice(0, Math.min(CHUNK_N, rvLeft()));
+  const q = poolFor('__all__', 'new', testGenreOn()).slice(0, Math.max(0, rvLeft()));
   if (!q.length) { showToast('いまは出せる表現がありません'); return; }
   startTest(q, { weekKey: '__all__', chunk: true, fresh: true });
 }
@@ -25610,7 +25610,7 @@ function startTest(customQueue, opts) {
   let room = rvLeft() - gate.ids.filter(id => rvEnrolled(id) || capAll).length;
   const seen = new Set();
   const queue = raw.filter(p => {
-    if (p.again) return rvCanRetry(p.id);
+    if (p.again) return p.manual || rvCanRetry(p.id);
     const id = String(p.id);
     if (seen.has(id)) return false;
     const ok = p.isApply ? (pnServeOk(p) && (!(rvEnrolled(p.id) || capAll) || room-- > 0)) : keep.has(id);
@@ -25644,7 +25644,7 @@ function startTest(customQueue, opts) {
   const inRun = new Set(queue.map(q => String(q.id)));
   const holdPrev = customQueue && customQueue._hold ? [] : (((rvHold() || {}).items) || []).filter(x => !inRun.has(String(x.id)));
   testState = { weekKey, genre: testGenreOn(), mode: testMode, queue, idx: 0, revealed: false, results: [],
-    startedAt: Date.now(), lastAt: 0, sealed: false, holdPrev, cut: 0, chunk: !!opts.chunk, fresh: !!opts.fresh };
+    startedAt: Date.now(), lastAt: 0, sealed: false, holdPrev, cut: 0, chunk: !!opts.chunk, fresh: !!opts.fresh, retryRun: !!opts.retryRun };
   skipUnservable();
   if (testState.idx >= queue.length) { testState = null; showToast('このアプリの今日の復習はここまでです'); return; }
   saveHold();
@@ -25757,7 +25757,7 @@ function renderQuestion() {
   document.getElementById('testRun').innerHTML = `
     <div class="test-topbar">
       <button class="btn-mini" onclick="quitTest()">✕ やめる</button>
-      <div class="test-progress">${p.again ? '🔁 解き直し（箱は動かしません）'
+      <div class="test-progress">${p.manual ? `🔁 再挑戦 ${st.idx + 1} / ${st.queue.length}（記録には入れません）` : p.again ? '🔁 解き直し（箱は動かしません）'
         : `${st.idx + 1} / ${qN}`}　${st.mode === 'type' ? '⌨️ 書く' : '🗣 言う'}${p.again ? '' : srsChip(p)}</div>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
@@ -25878,7 +25878,7 @@ function levelOfPct(pct) { const g = rvGradeOf(pct); return g === 1 ? 'correct' 
 /* 1問ぶんを確定させる（自己採点・自動一致のどちらもここを通る）。押した瞬間が答え合わせ */
 function commitAnswer(p, pct, extra) {
   const st = testState, level = levelOfPct(pct);
-  const rec = recordStat(p.id, level === 'correct', pct, { fmt: p.isApply ? 'apply' : 'main', retry: !!p.again });
+  const rec = recordStat(p.id, level === 'correct', pct, { fmt: p.isApply ? 'apply' : 'main', retry: !!p.again, manual: !!p.manual });
   if (!p.again) mvGain(level === 'correct' ? true : (level === 'close' ? 'half' : false));   // やる気の記録（連続日数・XP・バッジ）
   if (!p.again) hsAdd({ q: p.ja, a: p.en, p: pct, k: histKind(p, extra.kind) });   // 学習の履歴
   /* 言う／書く・基本／応用ごとの直近の記録（解き直しは入れない） */
@@ -25906,10 +25906,10 @@ function selfGrade(score, fl) {
 /* 直前の問題の採点を直す（言う・空欄の自己採点は押すと次へ進むため） */
 function fixPrevPct(v) {
   const st = testState, i = st.idx - 1, r = st.results[i];
-  if (!r || !r.eid) return;
+  if (!r || (!r.eid && !r.phrase.manual)) return;
   const prevOk = r.level === 'correct';
   r.level = levelOfPct(v); r.pct = v; r.self = v / 100; r.overridden = true;
-  r.rv = rvRegrade(r.eid, v) || r.rv;
+  if (r.eid) r.rv = rvRegrade(r.eid, v) || r.rv;
   if (!r.phrase.again) statFix(r.phrase.id, prevOk, r.level === 'correct');
   fixMode(r.phrase.id, r.mk, v);
   saveRun();
@@ -25918,7 +25918,7 @@ function fixPrevPct(v) {
 }
 function prevFixHtml() {
   const st = testState, r = st && st.results[st.idx - 1];
-  if (!r || !r.eid || !r.selfGraded || st.results[st.idx]) return '';
+  if (!r || (!r.eid && !r.phrase.manual) || !r.selfGraded || st.results[st.idx]) return '';
   return `<details class="rv-panel"><summary>直前の採点を直す（いま: ${pnGradeLabel(rvGradeOf(r.pct))}）</summary>
     ${pnGradeHtml('fixPrevPct', { sel: r.pct, fix: true, q: '「' + r.phrase.ja + '」の採点' })}</details>`;
 }
@@ -26068,7 +26068,7 @@ function finishTest(partial) {
   else rvHoldSave((st.holdPrev || []).length ? { ids: st.holdPrev.map(x => x.id), items: st.holdPrev, at: Date.now() } : null);
   /* おかわり（もう一度）は点数にも復習リストにも入れない。1回は正解して終えるための練習で、
      記録はすべて1回目の答えで確定している */
-  const scored = st.results.filter(r => r && !r.phrase.again);
+  const scored = st.results.filter(r => r && (st.retryRun || !r.phrase.again));
   /* 週の成績と「1問あたりの秒数」をここで確定させる（途中で締めた回も同じ道を通る） */
   commitRun({ weekKey: st.weekKey, genre: st.genre, mode: st.mode, startedAt: st.startedAt,
     lastAt: st.lastAt || Date.now(), rows: runRows(st) }, !!partial);
@@ -26091,11 +26091,9 @@ function finishTest(partial) {
   const comment = pct === 100 ? '完璧です！🎉' : pct >= 80 ? 'いい調子です。落とした表現だけ復習しましょう。'
     : pct >= 50 ? 'あと一息。間違えたものをもう一度回しましょう。' : 'まずは間違えた表現を音声付きで読み直しましょう。';
 
-  /* 今日の発話練習（5問ずつ）の区切り。続けるのは、残り枠と期限の来た表現があるときだけ */
-  const chunkNext = st.chunk && rvLeft() > 0
-    ? Math.min(CHUNK_N, rvLeft(), st.fresh ? poolFor('__all__', 'new', st.genre).length : dueQueue().length) : 0;
+  /* 今日の発話練習から入った回は、今日の進み具合を添える */
   const chunkHtml = st.chunk ? `<div class="hint-line">今日 <b>${rvDone()}</b>／${rvLimit()}問。${
-    chunkNext ? 'まだ続けられます（ここでやめても大丈夫です）。' : rvLeft() <= 0 ? '今日はここまでです。' : '今日の復習は完了です。'}</div>` : '';
+    rvLeft() <= 0 ? '今日はここまでです。' : '今日の復習は完了です。'}</div>` : '';
   document.getElementById('testRun').hidden = true;
   const el = document.getElementById('testResult');
   el.hidden = false;
@@ -26117,9 +26115,8 @@ function finishTest(partial) {
       <div class="hint-line">まちがえた表現は<b>明日</b>の復習に出ます（当日中にはくり返し出しません）。</div>
       ${chunkHtml}
       <div class="test-btn-row">
-        ${chunkNext && !restList.length ? `<button class="btn-primary" onclick="${st.fresh ? 'startFreshChunk()' : 'startSpeak()'}">▶ 次の${chunkNext}問</button>` : ''}
         ${restList.length ? `<button class="btn-primary" onclick="resumeRest()">▶ 残り${restList.length}問を続ける</button>` : ''}
-        ${missed.length && rvCfg().retry ? `<button class="${restList.length ? 'btn-outline' : 'btn-primary'}" onclick="retryMissed()">🔁 間違えた表現を解き直す（今日あと${Math.max(0, rvCfg().retryMax - rvRetryDone())}問まで）</button>` : ''}
+        ${missed.length ? `<button class="${restList.length ? 'btn-outline' : 'btn-primary'}" onclick="retryMissed()">🔁 間違えた${missed.length}問だけ再挑戦</button>` : ''}
         <button class="btn-outline" onclick="renderTestSetup()">${st.chunk ? 'ここで終わる' : '設定に戻る'}</button>
       </div>
     </div>
@@ -26140,11 +26137,14 @@ function finishTest(partial) {
   updateDueBadge();
 }
 
-/* 当日の解き直し（設定でオンのときだけ・1日3問まで・30問の内数・箱は動かさない） */
+/* 間違えた問題だけ再挑戦（結果画面のボタン・2026-10-26 復元）。
+   何度でも・何問でも解き直せる。練習なので 箱・回数・週の成績・履歴・今日の30問 には入れない
+   （manual: true。設定の「当日の解き直し」＝回の最後に自動で足す1日3問とは別もの） */
 function retryMissed() {
-  const ids = rvRetryPick((testState.missed || []).map(p => p.id));
-  if (!ids.length) { showToast(rvCfg().retry ? '今日の解き直しはここまでです' : '当日の解き直しはオフです（今日の復習の「くわしい状況・設定」で変えられます）'); return; }
-  startTest((testState.missed || []).filter(p => ids.indexOf(String(p.id)) >= 0).map(p => Object.assign({}, p, { again: true })));
+  const missed = (testState && testState.missed) || [];
+  if (!missed.length) return;
+  startTest(missed.slice().sort(() => Math.random() - 0.5)
+    .map(p => Object.assign({}, p, { again: true, manual: true })), { weekKey: testState.weekKey, retryRun: true });
 }
 
 /* 途中でやめた回の続き。答えた問はもう出さず、残りだけを出し直す */
