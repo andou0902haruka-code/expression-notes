@@ -350,6 +350,7 @@
     vertical-align: middle;
   }
   .tab.active .tab-badge { background: #e53e3e; color: #fff; }
+  .tab-badge[hidden] { display: none; }   /* 0件のときは出さない（inline-block が hidden を打ち消していた） */
 
   /* ---- 今日の復習: つかう時間チップ・この先7日の予定 ---- */
   .rev-min-row { display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-top:10px;
@@ -535,6 +536,89 @@
   /* 出題範囲は4つあるので、狭い画面では2×2に折り返す */
   #testScopeSeg .seg-btn { flex: 1 1 calc(50% - 3px); }
   @media (min-width: 480px) { #testScopeSeg .seg-btn { flex: 1 1 calc(33% - 4px); } }
+  .seg-btn[disabled] { opacity: 0.38; }
+
+  /* ---- 今日の発話練習（2026-10-26）。テストタブの一番上の入口 ---- */
+  .speak-start {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: #fff; border-radius: 14px; padding: 15px; margin-bottom: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
+  .ss-title { font-size: 1.05rem; font-weight: 700; }
+  .ss-count { font-size: 0.82rem; margin-top: 4px; opacity: 0.95; line-height: 1.6; }
+  .ss-count b { font-size: 1.05rem; }
+  .ss-meter { height: 5px; background: rgba(255,255,255,0.25); border-radius: 999px; overflow: hidden; margin-top: 8px; }
+  .ss-meter > i { display: block; height: 100%; background: #fff; }
+  .ss-go {
+    width: 100%; margin-top: 12px; padding: 15px 12px; min-height: 54px;
+    background: #fff; color: var(--blue-dark); border: none; border-radius: 12px;
+    font-size: 1.05rem; font-weight: 700; font-family: inherit;
+  }
+  .ss-go[disabled] { opacity: 0.55; }
+  .ss-sub-btn {
+    width: 100%; margin-top: 8px; padding: 11px; background: rgba(255,255,255,0.16);
+    color: #fff; border: 1px solid rgba(255,255,255,0.45); border-radius: 10px;
+    font-size: 0.86rem; font-weight: 600; font-family: inherit;
+  }
+  .ss-mode { display: flex; gap: 6px; margin-top: 10px; }
+  .ss-mode button {
+    flex: 1; padding: 9px 4px; border-radius: 9px; font: inherit; font-size: 0.8rem; font-weight: 600;
+    background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.4);
+  }
+  .ss-mode button.on { background: #fff; color: var(--blue-dark); border-color: #fff; }
+  .ss-note { font-size: 0.72rem; opacity: 0.88; margin-top: 8px; line-height: 1.55; }
+  .due-details, .adv-box { margin-bottom: 12px; }
+  .due-details > summary, .adv-sum {
+    font-size: 0.86rem; font-weight: 700; color: var(--blue-dark); cursor: pointer;
+    padding: 10px 2px; list-style-position: inside;
+  }
+  .due-details[open] > summary { margin-bottom: 6px; }
+  .adv-box[open] .adv-sum { margin-bottom: 4px; }
+  .setup-summary {
+    margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: var(--bg);
+    border: 1px solid var(--border); font-size: 0.84rem; line-height: 1.6;
+  }
+  .setup-summary b { color: var(--blue-dark); }
+  #testConflict { color: var(--orange); }
+  /* 出題中：場面・段階式ヒント・言い直し */
+  .test-scene { font-size: 0.78rem; color: var(--sub); margin: -2px 0 8px; }
+  .hint-menu { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .hint-menu button {
+    flex: 1 1 calc(33% - 6px); min-height: 40px; padding: 8px 6px; border-radius: 9px; font: inherit;
+    font-size: 0.78rem; font-weight: 600; background: var(--orange-bg); color: var(--orange); border: 1px solid #f6c89f;
+  }
+  .hint-menu button.used { background: #fff; opacity: 0.7; }
+  .hint-item { margin-top: 8px; font-size: 0.86rem; line-height: 1.55; }
+  .hint-item b { color: var(--orange); font-size: 0.74rem; display: block; }
+  .resay-btn {
+    width: 100%; margin-top: 8px; padding: 10px; border-radius: 10px; font: inherit; font-size: 0.84rem; font-weight: 600;
+    background: var(--bg); color: var(--blue-dark); border: 1px dashed var(--blue);
+  }
+  .ans-wrap.resay .ans-hide { visibility: hidden; }
+  .ans-wrap.resay .ans-hide-note { display: block; }
+  .ans-hide-note { display: none; font-size: 0.76rem; color: var(--sub); margin-top: 4px; }
+  .check-pts { margin-top: 8px; padding: 8px 10px; border-radius: 9px; background: var(--gold-bg); font-size: 0.8rem; line-height: 1.6; }
+  .check-pts b { color: var(--gold); }
+  .pn-g1row { display: flex; gap: 6px; }
+  .pn-g1row .rv-g { flex: 1; }
+  .self-note { font-size: 0.72rem; color: var(--sub); margin-top: 6px; line-height: 1.5; }
+  /* カード：くわしく・方式別の記録・修正メモ */
+  .more-details { margin-top: 8px; }
+  .more-details > summary { font-size: 0.78rem; color: var(--sub); font-weight: 600; }
+  .more-details .mx { font-size: 0.82rem; line-height: 1.6; margin-top: 6px; }
+  .core-line { font-size: 0.84rem; margin-top: 6px; color: var(--blue-dark); }
+  .core-line b { font-size: 0.72rem; color: var(--sub); margin-right: 4px; }
+  .rel-note { color: var(--sub); font-size: 0.76rem; }
+  .mode-rec { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .mode-rec span { font-size: 0.72rem; padding: 3px 8px; border-radius: 999px; background: var(--bg); border: 1px solid var(--border); color: var(--sub); }
+  .mode-rec span.sp { border-color: #9ec5ea; color: var(--blue-dark); }
+  .fix-note { margin-top: 8px; padding: 7px 9px; border-radius: 9px; background: var(--mine-bg); color: var(--mine); font-size: 0.78rem; line-height: 1.5; }
+  .scene-opt { margin-top: 6px; }
+  .scene-opt summary { font-size: 0.78rem; color: var(--sub); font-weight: 600; }
+  .scene-input { width: 100%; margin-top: 6px; padding: 10px; border: 1px solid var(--border); border-radius: 9px; font: inherit; font-size: 16px; }
+  .scene-line { font-size: 0.76rem; color: var(--sub); margin-top: 4px; }
+  .rough-tag { display: inline-block; font-size: 0.66rem; padding: 1px 6px; margin-right: 6px; border-radius: 999px; background: var(--orange-bg); color: var(--orange); font-weight: 700; vertical-align: 1px; }
+  .pl-note { font-size: 0.7rem; color: var(--sub); margin-top: 6px; line-height: 1.5; }
   /* 範囲内の「何回解いたか」の内訳（2026-10-14） */
   .solved-break { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
   .solved-break span { font-size: 0.76rem; padding: 3px 9px; border-radius: 999px; background: var(--border); color: var(--sub); font-weight: 600; }
@@ -947,6 +1031,10 @@
     </div>
     <textarea id="jaInput" placeholder="日本語で入力（単語でも文でもOK）" autocomplete="off"></textarea>
     <textarea id="enInput" placeholder="英語で入力（自分の英訳）" autocomplete="off" autocapitalize="off" hidden></textarea>
+    <details class="scene-opt" id="sceneOpt">
+      <summary>＋ 使いたい場面（任意）</summary>
+      <input type="text" id="sceneInput" class="scene-input" placeholder="例：授業のあと先生に / 友だちとの雑談で" autocomplete="off">
+    </details>
     <div class="capture-row">
       <button class="btn-save" id="saveBtn">＋ 保存する</button>
     </div>
@@ -957,19 +1045,18 @@
   <details class="howto">
     <summary>使い方</summary>
     <ol>
-      <li><b>📝 日本語だけ</b>… 思いついた日本語を書いて「保存する」。その場で簡易英訳（機械翻訳）が表示され、あとでClaudeが英訳ごと清書する</li>
+      <li><b>📝 日本語だけ</b>… 思いついた日本語を書いて「保存する」。その場で<b>機械翻訳（未確認）</b>の簡易英訳が出る。あとでClaudeが英訳ごと清書する。自分で先に考えたいときは、未清書メモの「🙈 訳を隠す」で隠せる</li>
       <li><b>✍️ 日本語＋英語</b>… 自分で英訳まで書いて保存する。<b>書いた英語はそのまま残り</b>、あとから解説・言い換え・応用問題・音声だけが付く（スペルミスと明らかな文法の誤りだけ直す。直したときはカードに「書いた英語」として元の文も残る）</li>
-      <li>未清書メモが溜まったら「📋 コピー」でJSONをコピー</li>
-      <li>Claude Codeに貼り付けて <code>/phrase-note-add</code> と伝える → 自然な英訳＋解説＋音声付きで「保存済みフレーズ」に清書される</li>
+      <li><b>＋ 使いたい場面（任意）</b>… 「授業のあと先生に」など、どこで使いたいかを短く残せる。書かなくても保存できる。清書のとき場面に合った英語にする手がかりになる</li>
+      <li>未清書メモは合言葉を入れた端末から受け箱へ自動で送られる。月曜などに Claude Code で「清書して」と頼むと、自然な英訳＋解説＋音声付きの「保存済みフレーズ」になる（「📋 コピー」でJSONを貼ってもよい）</li>
       <li>サイトが更新されたら、清書済みと同じ内容の未清書メモは自動で一覧から消える</li>
       <li>すでに追加した表現をもう一度保存しようとすると、<b>「この表現はすでにメモに追加されています（追加日）」</b>と表示される（前の英訳もその場で確認できる。あえて重複させたいときは「＋ それでも保存する」）</li>
-      <li><b>📚 保存済みフレーズ</b>は<b>週ごとのトグル</b>でまとまる（初期表示は今週だけ開く）。見出しをタップで開閉、「全て開く」で一括展開。<b>🕘 新しい順</b>に切り替えれば従来どおりの通し一覧になる</li>
-      <li>フレーズの <b>☆</b> をタップすると<b>⭐ お気に入り</b>タブに集まる（この端末のみ保存）。覚えにくい表現・よく使う表現をここに貯めて、まとめてテストできる</li>
-      <li><b>📅 週まとめ</b>タブ … 月曜〜日曜の週ごとに、その週覚えた表現が日付順にまとまる。<b>🎧 通し再生</b>でその週の全フレーズを「日本語 →（間）→ 英語」の順に自動再生できる（英語だけ速度変更可）</li>
-      <li><b>✍️ テスト</b>タブ … 週（または全期間・⭐お気に入り）を選んで日本語→英語の産出テスト。「書く」は自動採点＋差分表示、「言う」は口頭で答えて100〜0%の6段階で自己採点。スコアは週ごとに記録される</li>
-      <li><b>📓 ノートから</b> … 手書きノートの写真から <code>/note-phrase-add</code> で取り込んだフレーズ。カードに「📓 ノートから」と出典（ノート名・画像名）が付く。一覧の「📓 ノートから」ボタンで絞り込めて、テストの出題範囲でも選べる</li>
-      <li><b>🌐 調べて</b> … テーマを決めて複数のサイトを調べ、<code>/phrase-research</code> で取り込んだフレーズ。カードにテーマと調べたサイトのリンク、タグ（カジュアル／フォーマル／会話 など）が付く。こちらも一覧のボタンで絞り込めて、テストの出題範囲で選べる</li>
-      <li><b>📷 写真から</b> … SNS・アプリのスクショなど、英語と日本語訳が載った写真から <code>/photo-phrase-add</code> で取り込んだフレーズ。カードに「📷 写真から」と出典（投稿者・フォルダ名・画像名）が付く。こちらも一覧のボタンで絞り込めて、テストの出題範囲で選べる</li>
+      <li><b>📚 保存済みフレーズ</b>は<b>週ごとのトグル</b>でまとまる（初期表示は今週だけ開く）。<b>🕘 新しい順</b>にも切り替えられる。上のボタンで<b>💼 Bizmate／🌐 ネット／📱 Speak／💡 ひらめき</b>の出典ごとに絞り込める</li>
+      <li>カードの「くわしく」を開くと、言い換え・場面・注意点・応用例・<b>🗣 言う／⌨️ 書く の記録</b>が見られる。内容を直してほしいときは <b>✏️ 修正メモ</b> を残すと、次の清書で確認される（この端末に残り、更新で消えない）</li>
+      <li>フレーズの <b>☆</b> をタップすると<b>⭐ お気に入り</b>タブに集まる（この端末のみ保存）。お気に入りに入れただけでは復習の対象は増えない</li>
+      <li><b>📅 週まとめ</b>タブ … 週ごとの表現を日付順に。<b>🎧 通し再生</b>で「日本語 →（考える間）→ 英語」の順に自動再生できる。考える間は最大15秒、英訳は英語の音声まで隠しておける</li>
+      <li><b>✍️ テスト</b>タブ … いちばん上の<b>🗣 今日の発話練習</b>を押すと、今日の復習から5問ずつ出る。日本語を見て声に出す → 答えを見る →（言い直しは任意）→ ①自力で言えた／②助けがあれば言えた／③まだ言えなかった を自分で付ける。範囲や選び方を変えたいときは「⚙️ 範囲を選んで練習する」から</li>
+      <li>1日に答えるのは<b>このアプリ全体で30問まで</b>（「今日つかう時間」が先に来たらそちら）。どの入口から解いても同じ枠で数える。30問やらなくても大丈夫</li>
     </ol>
   </details>
 
@@ -978,6 +1065,7 @@
   <div class="section-title">
     <h2>🕓 未清書メモ（この端末のみ・<span id="pendingCount">0</span>件）</h2>
     <div class="section-actions">
+      <button class="btn-mini" id="hideRoughBtn">🙈 訳を隠す</button>
       <button class="btn-mini" id="copyBtn">📋 コピー</button>
       <button class="btn-mini" id="clearBtn">🗑 全消去</button>
     </div>
@@ -1069,6 +1157,8 @@
       <option value="2000" selected>2秒</option>
       <option value="3000">3秒</option>
       <option value="5000">5秒</option>
+      <option value="10000">10秒</option>
+      <option value="15000">15秒</option>
     </select>
   </div>
   <div class="pl-opts">
@@ -1076,31 +1166,42 @@
     <label><input type="checkbox" id="plLoop"> くり返す</label>
     <label><input type="checkbox" id="plShowEn"> 英訳を先に表示</label>
   </div>
+  <div class="pl-note" id="plNote">英訳を先に表示しないときは、考える間は英文を隠します。その間に声に出してから、英語の音声で確かめられます。</div>
 </div>
 
 <section id="view-test" hidden>
 
   <div id="testSetup">
-    <label class="field-label">ジャンル（今日の復習とテストの両方に効きます）</label>
-    <div class="genre-row" id="testGenreRow"></div>
-    <div class="due-box" id="dueBox"></div>
-    <div class="capture-box">
-      <h2 class="panel-title">✍️ 復習テスト（日本語 → 英語）</h2>
-      <label class="field-label">出題する範囲（📅今日の復習 / 週 / 全期間 / ⭐お気に入り）</label>
+    <!-- 今日の発話練習（2026-10-26）。迷わず始められる入口。中身は renderSpeakStart() が描く -->
+    <div class="speak-start" id="speakStart"></div>
+    <details class="due-details" id="dueDetails">
+      <summary>📅 今日の復習のくわしい状況（予定・時間・休止・設定）</summary>
+      <div class="due-box" id="dueBox"></div>
+    </details>
+    <details class="capture-box adv-box" id="testAdvanced">
+      <summary class="adv-sum">⚙️ 範囲を選んで練習する（詳細設定）</summary>
+      <label class="field-label">① 対象（期間・リスト）</label>
       <select id="testWeekSel" class="select"></select>
-      <label class="field-label">解答のしかた</label>
-      <div class="seg" id="testModeSeg">
-        <button class="seg-btn active" data-mode="type">⌨️ 書く（自動採点）</button>
-        <button class="seg-btn" data-mode="oral">🗣 言う（自己採点）</button>
-      </div>
-      <label class="field-label">出題範囲</label>
+      <label class="field-label">② 出典（今日の発話練習・今日の復習にも効きます）</label>
+      <div class="genre-row" id="testGenreRow"></div>
+      <label class="field-label">③ 選び方</label>
       <div class="seg" id="testScopeSeg">
         <button class="seg-btn active" data-scope="all">すべて</button>
         <button class="seg-btn" data-scope="r10">ランダム10問</button>
         <button class="seg-btn" data-scope="new">🆕 未解答だけ</button>
         <button class="seg-btn" data-scope="few">🔢 回数が少ない順</button>
         <button class="seg-btn" data-scope="weak">苦手だけ</button>
-        <button class="seg-btn" data-scope="apply">🚀 応用</button>
+      </div>
+      <label class="field-label">④ 練習内容</label>
+      <div class="seg" id="testKindSeg">
+        <button class="seg-btn active" data-kind="base">基本（登録した日本語）</button>
+        <button class="seg-btn" data-kind="apply">🚀 応用（別の場面で使う）</button>
+      </div>
+      <div class="hint-line" id="testConflict" hidden></div>
+      <label class="field-label">⑤ 答え方</label>
+      <div class="seg" id="testModeSeg">
+        <button class="seg-btn" data-mode="oral">🗣 言う（自己採点）</button>
+        <button class="seg-btn" data-mode="type">⌨️ 書く（一致で自動①）</button>
       </div>
       <div id="newCountRow" hidden>
         <label class="field-label">何問出す？（🆕 未解答だけ・🔢 回数が少ない順）</label>
@@ -1115,9 +1216,10 @@
       </div>
       <div class="solved-break" id="testSolvedBreak"></div>
       <label class="auto-speak"><input type="checkbox" id="autoSpeakChk"> 🔊 答えを表示したら英語を自動で読む</label>
-      <button class="btn-save" id="testStartBtn" style="margin-top:14px">▶ テスト開始</button>
+      <div class="setup-summary" id="testSummary"></div>
+      <button class="btn-save" id="testStartBtn" style="margin-top:10px">▶ この設定で始める</button>
       <div class="hint-line" id="testSetupInfo"></div>
-    </div>
+    </details>
     <div class="section-title"><h2>📊 テスト履歴</h2></div>
     <div id="testHistory"></div>
   </div>
@@ -22162,6 +22264,23 @@ function renderFavs() {
 
 /* ---- 未清書メモ（localStorage） ---- */
 const STORAGE_KEY = 'phraseNote_pending';
+/* 簡易訳（機械翻訳）を最初は隠す（2026-10-26・端末ごとの好み。同期しない）。
+   先に自分で英語を考えてから見たい人向け。隠していても受け箱・清書には今までどおり送る */
+const HIDE_ROUGH_KEY = 'phraseNote_hideRough';
+let hideRough = (() => { try { return localStorage.getItem(HIDE_ROUGH_KEY) === '1'; } catch (e) { return false; } })();
+const roughShown = new Set();
+function showRough(id) { roughShown.add(id); render(); }
+function toggleHideRough() {
+  hideRough = !hideRough;
+  try { localStorage.setItem(HIDE_ROUGH_KEY, hideRough ? '1' : '0'); } catch (e) {}
+  roughShown.clear();
+  updateHideRoughBtn();
+  render();
+}
+function updateHideRoughBtn() {
+  const b = document.getElementById('hideRoughBtn');
+  if (b) b.textContent = hideRough ? '👁 訳を出す' : '🙈 訳を隠す';
+}
 
 function getPending() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
@@ -22346,10 +22465,15 @@ async function saveEntry(force) {
   hideDupNotice();
   input.value = '';
   if (pair) enBox.value = '';
+  /* 使いたい場面（任意・2026-10-26）。空なら持たせない＝今までどおりの形のまま */
+  const sceneBox = document.getElementById('sceneInput');
+  const scene = sceneBox ? String(sceneBox.value || '').trim().slice(0, 80) : '';
+  if (sceneBox) sceneBox.value = '';
 
   const entry = pair
     ? { id: Date.now(), ja: text, en_mine: enText, mode: 'pair', en_rough: null, savedAt: new Date().toISOString() }
     : { id: Date.now(), ja: text, en_rough: null, savedAt: new Date().toISOString() };
+  if (scene) entry.scene = scene;
   const list = getPending();
   list.unshift(entry);
   setPending(list);
@@ -22437,12 +22561,12 @@ function render() {
   if (pending.length !== getPending().length) setPending(pending);
 
   const pendingFiltered = query
-    ? pending.filter(e => [e.ja, e.en_rough, e.en_mine].some(t => (t || '').toLowerCase().includes(query)))
+    ? pending.filter(e => [e.ja, e.en_rough, e.en_mine, e.scene].some(t => (t || '').toLowerCase().includes(query)))
     : pending;
 
   const base = polishedBase();
   const polishedFiltered = (query
-    ? base.filter(p => [p.ja, p.en, p.explanation, p.srcRef, p.srcFrom].some(s => (s || '').toLowerCase().includes(query)))
+    ? base.filter(p => [p.ja, p.en, p.explanation, p.srcRef, p.srcFrom, p.scene, p.core].some(s => (s || '').toLowerCase().includes(query)))
     : base
   ).slice().sort((a, b) => new Date(b.savedAt || 0) - new Date(a.savedAt || 0));
 
@@ -22461,9 +22585,12 @@ function render() {
         <button class="del-btn" onclick="deletePending(${e.id})">✕ 削除</button>
       </div>
       <div class="ja">${escapeHtml(e.ja)}</div>
+      ${e.scene ? `<div class="scene-line">🎬 場面：${escapeHtml(e.scene)}</div>` : ''}
       ${e.en_mine
         ? `<div class="en-mine">${escapeHtml(e.en_mine)}</div>`
-        : `<div class="en-rough">${e.en_rough ? escapeHtml(e.en_rough) : '翻訳中...'}</div>`}
+        : (hideRough && !roughShown.has(e.id) && e.en_rough
+          ? `<button class="reveal-btn" onclick="showRough(${e.id})">🙈 簡易訳を見る（まず自分で考えてから）</button>`
+          : `<div class="en-rough"><span class="rough-tag">機械翻訳・未確認</span>${e.en_rough ? escapeHtml(e.en_rough) : '翻訳中...'}</div>`)}
     </div>
   `).join('') : `<div class="empty">未清書メモはありません</div>`;
 
@@ -22657,22 +22784,128 @@ function phraseCardHtml(p, context) {
       ${isRevealed ? `
       <div class="en">${escapeHtml(p.en)}</div>
       ${p.en_orig && p.en_orig !== p.en ? `<div class="en-orig"><b>書いた英語:</b> ${escapeHtml(p.en_orig)}</div>` : ''}
+      ${p.core ? `<div class="core-line"><b>中心の表現</b>${escapeHtml(p.core)}${p.coreJa ? `（${escapeHtml(p.coreJa)}）` : ''}</div>` : ''}
       ${p.explanation ? `<div class="explanation">💡 ${escapeHtml(p.explanation)}</div>` : ''}
-      ${p.related && p.related.length ? `<div class="related"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
-      ${hasApply(p) ? `<details class="apply-details">
-        <summary>🚀 応用例（${p.apply.length}）</summary>
-        ${p.apply.map((a, i) => `<div class="apply-item">
-          <div class="a-ja">${escapeHtml(a.ja)}</div>
-          <div class="a-en">${escapeHtml(a.en)}</div>
-          <div class="mini-foot"><button class="icon-btn small" onclick="playAudio(this, 'audio_apply/${p.id}_${i + 1}.mp3')">🔊</button></div>
-        </div>`).join('')}
-      </details>` : ''}
+      <details class="more-details">
+        <summary>くわしく（言い換え・場面・応用・🗣言う／⌨️書くの記録）</summary>
+        ${moreInfoHtml(p)}
+        ${hasApply(p) ? `<div class="apply-details">
+          <div class="mx"><b>🚀 応用例（同じ表現を別の場面で）</b></div>
+          ${p.apply.map((a, i) => `<div class="apply-item">
+            <div class="a-ja">${escapeHtml(a.ja)}</div>
+            <div class="a-en">${escapeHtml(a.en)}</div>
+            <div class="mini-foot"><button class="icon-btn small" onclick="playAudio(this, 'audio_apply/${p.id}_${i + 1}.mp3')">🔊</button></div>
+          </div>`).join('')}
+        </div>` : ''}
+        ${modeRecHtml(p.id)}
+      </details>
+      ${fixNoteHtml(p)}
       <div class="card-foot">
         <button class="icon-btn" onclick="playAudio(this, 'audio/${p.id}.mp3')">🔊</button>
-        <button class="del-btn" onclick="deletePhrase(${p.id})">🗑 削除</button>
+        <span>
+          <button class="btn-mini" onclick="editFixNote(${p.id})">✏️ 修正メモ</button>
+          <button class="del-btn" onclick="deletePhrase(${p.id})">🗑 削除</button>
+        </span>
       </div>
       ` : `<button class="reveal-btn" onclick="revealPhrase(${p.id})">🙈 タップして英訳を表示</button>`}
     </div>`;
+}
+
+/* ---- カードの「くわしく」（2026-10-26）----
+   清書で付けられる任意の項目。無いカード（既存の1,566件の大半）は、あるものだけ並ぶ。
+   core/coreJa＝中心の構文と意味、scene＝使う場面、register＝丁寧さ、caution＝意味が変わりやすい注意、
+   short＝短く言いやすい別案。related は文字列か {en, note, same} */
+function moreInfoHtml(p) {
+  const row = (lab, v) => v ? `<div class="mx"><b>${lab}</b> ${v}</div>` : '';
+  return row('言い換え:', p.related && p.related.length ? relHtml(p.related) : '')
+    + row('🎬 使う場面:', p.scene ? escapeHtml(p.scene) : '')
+    + row('🎚 丁寧さ:', p.register ? escapeHtml(p.register) : '')
+    + row('⚠️ 注意:', p.caution ? escapeHtml(p.caution) : '')
+    + row('✂️ 短く言うなら:', p.short ? escapeHtml(p.short) : '');
+}
+
+/* ---- 「言える」と「書ける」を分けた記録（2026-10-26）----
+   箱（rv.js）は1つのまま。ここは答え方ごと・基本／応用ごとの直近の記録だけを持つ（この端末のみ）。
+   { id: { s: 言う・基本, w: 書く・基本, sa: 言う・応用, wa: 書く・応用 } } 各 { t: 時刻, p: 点, h: ヒント, f: 'q'すぐ/'s'考えてから, n: 回数 }
+   これより前の答えは、どの答え方だったか区別できないので「未記録」とし、推測では埋めない */
+const MODE_REC_KEY = 'phraseNote_modeRec';
+/* 一覧は1,500件以上のカードを一度に描くので、読み込みは1回にまとめる（書いたら読み直す） */
+let modeRecMemo = null, fixNotesMemo = null;
+function modeRecAll() {
+  if (!modeRecMemo) { const o = loadJSON(MODE_REC_KEY, {}); modeRecMemo = (o && typeof o === 'object') ? o : {}; }
+  return modeRecMemo;
+}
+function saveModeRec(all) { modeRecMemo = null; try { localStorage.setItem(MODE_REC_KEY, JSON.stringify(all)); } catch (e) {} }
+function modeKeyOf(mode, isApply) { return (mode === 'oral' ? 's' : 'w') + (isApply ? 'a' : ''); }
+function recordMode(p, mode, pct, opt) {
+  const all = modeRecAll(), id = String(p.id), k = modeKeyOf(mode, p.isApply), t = Date.now();
+  const cur = (all[id] = all[id] || {}), prev = cur[k] || {};
+  cur[k] = { t, p: pct, h: opt && opt.hint ? 1 : 0, n: (prev.n | 0) + 1 };
+  if (opt && opt.fl) cur[k].f = opt.fl;
+  saveModeRec(all);
+  return { k, t };
+}
+/* 採点の付け直し。同じ答えの修正なので回数は増やさない */
+function fixMode(id, mk, pct) {
+  if (!mk) return;
+  const all = modeRecAll(), r = all[String(id)] && all[String(id)][mk.k];
+  if (!r || r.t !== mk.t) return;
+  r.p = pct;
+  if (pct < 100) delete r.f;
+  saveModeRec(all);
+}
+function modeRecOf(id) { return modeRecAll()[String(id)] || {}; }
+function modeRecHtml(id) {
+  const m = modeRecOf(id);
+  const one = (k, lab, cls) => {
+    const r = m[k];
+    if (!r) return `<span>${lab}：未記録</span>`;
+    const g = rvGradeOf(r.p), d = new Date(r.t);
+    return `<span class="${cls}">${lab}：${d.getMonth() + 1}/${d.getDate()} ${'①②③'[g - 1]}${r.h ? '・ヒントあり' : ''}${g === 1 && r.f ? (r.f === 'q' ? '・すぐ' : '・考えてから') : ''}（${r.n}回）</span>`;
+  };
+  return `<div class="mode-rec">${one('s', '🗣 言う', 'sp')}${one('w', '⌨️ 書く', '')}${m.sa ? one('sa', '🗣 応用', 'sp') : ''}${m.wa ? one('wa', '⌨️ 応用', '') : ''}</div>`
+    + `<div class="self-note">言う／書くの記録は2026-10-26からです。それより前の答えは区別できないので「未記録」と出ます。</div>`;
+}
+
+/* ---- 修正メモ（2026-10-26）----
+   カードの中身はページ上では直せないので、「ここを直してほしい」をIDと一緒にこの端末に残す。
+   HTMLを更新しても localStorage なので消えない。合言葉があれば受け箱 phrase_fix へ送り、次の清書で確認する。
+   清書でそのフレーズに revisedAt（メモより新しい時刻）が付いたら「対応ずみ」として片付ける */
+const FIX_KEY = 'phraseNote_fixNotes';
+function fixNotesAll() {
+  if (!fixNotesMemo) { const o = loadJSON(FIX_KEY, {}); fixNotesMemo = (o && typeof o === 'object') ? o : {}; }
+  return fixNotesMemo;
+}
+function saveFixNotes(all) { fixNotesMemo = null; try { localStorage.setItem(FIX_KEY, JSON.stringify(all)); } catch (e) {} }
+function fixResolved(p, n) { return !!(p && n && p.revisedAt && new Date(p.revisedAt).getTime() > n.t); }
+function pushFixNotes() {
+  const all = fixNotesAll();
+  let changed = false;
+  Object.keys(all).forEach(id => { if (fixResolved(phraseOf(id) || ALL_PHRASES.find(p => String(p.id) === id), all[id])) { delete all[id]; changed = true; } });
+  if (changed) saveFixNotes(all);
+  const list = Object.keys(all).map(id => {
+    const p = ALL_PHRASES.find(x => String(x.id) === id) || {};
+    return { id: Number(id), ja: p.ja || '', en: p.en || '', note: all[id].text, savedAt: new Date(all[id].t).toISOString() };
+  });
+  if (typeof window !== 'undefined' && window.PendingInbox) window.PendingInbox.push('phrase_fix', list);
+  return list;
+}
+function editFixNote(id) {
+  const all = fixNotesAll(), cur = all[String(id)];
+  const v = typeof prompt === 'function' ? prompt('このフレーズの直してほしい点（例：場面に合わない／もっと短い言い方も知りたい）\n空にすると取り消します', cur ? cur.text : '') : null;
+  if (v === null) return;
+  const text = String(v).trim().slice(0, 300);
+  if (text) all[String(id)] = { t: Date.now(), text };
+  else delete all[String(id)];
+  saveFixNotes(all);
+  pushFixNotes();
+  showToast(text ? '修正メモを残しました（次の清書で確認されます）' : '修正メモを取り消しました');
+  render(); if (typeof renderFavs === 'function') renderFavs();
+}
+function fixNoteHtml(p) {
+  const n = fixNotesAll()[String(p.id)];
+  if (!n || fixResolved(p, n)) return '';
+  return `<div class="fix-note">✏️ 修正メモ：${escapeHtml(n.text)}<br><small>次の清書で確認されます（この端末に保存）</small></div>`;
 }
 
 /* ==========================================================
@@ -22870,7 +23103,7 @@ function renderWeeks() {
             ${open ? `
               <div class="mini-en">${escapeHtml(p.en)}</div>
               ${p.explanation ? `<div class="mini-exp">💡 ${escapeHtml(p.explanation)}</div>` : ''}
-              ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
+              ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${relHtml(p.related)}</div>` : ''}
               <div class="mini-foot">
                 <button class="icon-btn small" onclick="playAudio(this, 'audio/${p.id}.mp3')">🔊</button>
                 <button class="del-btn" onclick="revealMini(${p.id})">閉じる</button>
@@ -23142,9 +23375,18 @@ function similarity(a, b) {
   const eq = ops.filter(o => o.t === 'eq').length;
   return (2 * eq) / (a.length + b.length);
 }
+/* ---- 言い換え（2026-10-26）----
+   related の要素は文字列（従来）か { en, note, same } 。note＝元の文との意味・強さの違い。
+   same:false は「意味が少しちがう表現」なので、書くモードの自動一致（①）には使わない */
+function relEn(r) { return typeof r === 'string' ? r : String((r && r.en) || ''); }
+function relSame(r) { return typeof r === 'string' || !r || r.same !== false; }
+function relHtml(list) {
+  return (list || []).filter(r => relEn(r)).map(r => escapeHtml(relEn(r))
+    + (r && typeof r === 'object' && r.note ? `<span class="rel-note">（${escapeHtml(r.note)}）</span>` : '')).join(' / ');
+}
 function judgeAnswer(userAns, phrase) {
   const ub = wordsOf(userAns);
-  const candidates = [phrase.en].concat(phrase.related || []);
+  const candidates = [phrase.en].concat((phrase.related || []).filter(relSame).map(relEn).filter(Boolean));
   let best = { sim: -1, target: phrase.en, isRelated: false };
   candidates.forEach((c, i) => {
     const s = similarity(wordsOf(c), ub);
@@ -23155,6 +23397,33 @@ function judgeAnswer(userAns, phrase) {
 }
 function hintOf(en) {
   return String(en).replace(/[A-Za-z][A-Za-z']*/g, w => w[0] + '_'.repeat(Math.max(0, w.length - 1)));
+}
+/* ---- 段階式ヒント（2026-10-26）----
+   意味のヒント＝coreJa（清書で付けたもの）か、解説の最初の「…」（英字を含まないものだけ）。
+   構文のヒント＝core（清書で付けたもの）か、本体と応用の英文に共通する一続きの語（2語以上・文全体ではない）。
+   どちらも無いカードは、そのヒントのボタンを出さない（従来の語数・頭文字は必ず出せる） */
+function meaningHintOf(p) {
+  const b = p.isApply && p.base ? p.base : p;
+  if (b.coreJa) return String(b.coreJa);
+  const m = String(b.explanation || '').match(/「([^」]{1,24})」/);
+  if (m && !/[A-Za-z]/.test(m[1])) return m[1];
+  return '';
+}
+function autoCoreOf(p) {
+  if (!hasApply(p)) return '';
+  const split = s => String(s).replace(/[^A-Za-z0-9'\s-]/g, ' ').split(/\s+/).filter(Boolean);
+  const A = split(p.en), B = split(p.apply[0].en), la = A.map(x => x.toLowerCase()), lb = B.map(x => x.toLowerCase());
+  let best = 0, at = 0;
+  for (let i = 0; i < la.length; i++) for (let j = 0; j < lb.length; j++) {
+    let k = 0;
+    while (i + k < la.length && j + k < lb.length && la[i + k] === lb[j + k]) k++;
+    if (k > best) { best = k; at = i; }
+  }
+  return best >= 2 && best < A.length ? A.slice(at, at + best).join(' ') + ' …' : '';
+}
+function coreHintOf(p) {
+  const b = p.isApply && p.base ? p.base : p;
+  return b.core ? String(b.core) : autoCoreOf(b);
 }
 
 /* ==========================================================
@@ -24020,10 +24289,10 @@ const RV_ENV = {
     if (!p) return '';
     return `<div class="ja">${escapeHtml(p.ja)}</div><div class="en">${escapeHtml(p.en)}</div>`
       + (p.explanation ? `<div class="explanation">💡 ${escapeHtml(p.explanation)}</div>` : '')
-      + (p.related && p.related.length ? `<div class="mini-exp"><b>言い換え・比べたい表現:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : '')
+      + (p.related && p.related.length ? `<div class="mini-exp"><b>言い換え・比べたい表現:</b> ${relHtml(p.related)}</div>` : '')
       + (hasApply(p) ? `<div class="mini-exp"><b>別の場面で:</b><br>${p.apply.map(a => escapeHtml(a.ja) + '<br>→ ' + escapeHtml(a.en)).join('<br>')}</div>` : '');
   },
-  onChange() { if (!testState) { renderDueBox(); updateDueBadge(); updateSetupInfo(); } }
+  onChange() { if (!testState) { renderDueBox(); updateDueBadge(); updateSetupInfo(); renderSpeakStart(); } }
 };
 function phraseOf(id) { return PHRASES.find(p => String(p.id) === String(id)) || null; }
 /* RV:JS:BEGIN */
@@ -24807,6 +25076,18 @@ function rvShowDetail(id) {
 }
 function rvCloseDetail() { var m = document.getElementById('rv-modal'); if (m && m.parentNode) m.parentNode.removeChild(m); }
 /* RV:JS:END */
+/* 表現メモだけの既定（2026-10-26）：新しく覚える表現（🆕 未解答だけ など）も含めて、
+   このアプリで答えるのは1日30問まで（「今日つかう時間」が先ならそちら）。
+   rv.js の共通の既定（姉妹アプリ）は変えない。「復習のくわしい状況・設定」のチェックで外せる */
+RV_DEFAULTS.capAll = true;
+/* 出題してよいか（基本・応用の共通）。どの入口でも、
+   ・休止中は出さない ・同じ表現は1日1回（基本と応用を同じ日に両方出さない）・今日の30問の枠の中だけ */
+function pnServeOk(q) {
+  if (!q) return false;
+  if (q.again) return rvServeOk(q.id, true);
+  if (rvPaused(q.id) || rvAnsweredToday(q.id)) return false;
+  return rvServeOk(q.id, false);
+}
 
 /* まだ一度もテストしていないフレーズ（追加が古い順＝放置されているものから） */
 function newPhrases(g) {
@@ -25046,22 +25327,116 @@ function autoPlayAnswer() {
   if (b && typeof b.click === 'function') b.click();
 }
 
-/* 本体に正解した直後に、その場で応用を1問差し込む */
+/* 本体に正解した直後に、その場で応用を1問差し込む…のは 2026-10-26 にやめた
+   （同じ表現の基本と応用を同じ日に両方出さない・応用を「おまけ」として足さない）。
+   古い画面から呼ばれても何も足さず、案内だけ出す */
 function tryApply() {
-  const st = testState;
-  const p = st.results[st.idx].phrase;
-  if (!hasApply(p) || p.isApply) return;
-  const used = st.queue.filter(q => q.isApply && q.id === p.id).map(q => q.applyIdx);
-  if (used.length >= p.apply.length) { showToast('この表現の応用はすべて出しました'); return; }
-  st.queue.splice(st.idx + 1, 0, applyQuestion(p, pickApplyIdx(p, used)));
-  nextQuestion();
+  showToast('応用は別の日に「④ 練習内容：応用」から出せます（同じ日に基本と応用は両方出しません）');
+  return;
 }
 
 /* ==========================================================
    テスト設定画面
    ========================================================== */
-let testMode = 'type';
+/* 答え方は前回の選択を覚える（端末ごと）。はじめて開いたときは「言う」 */
+const TEST_MODE_KEY = 'phraseNote_testMode';
+let testMode = (() => { try { return localStorage.getItem(TEST_MODE_KEY) === 'type' ? 'type' : 'oral'; } catch (e) { return 'oral'; } })();
 let testScope = 'all';
+let testKind = 'base';   // 練習内容：'base' 基本 ／ 'apply' 応用
+function setTestMode(m) {
+  testMode = m === 'type' ? 'type' : 'oral';
+  try { localStorage.setItem(TEST_MODE_KEY, testMode); } catch (e) {}
+  syncModeSegs();
+  renderSpeakStart();
+  updateSetupInfo();
+}
+function syncModeSegs() {
+  document.querySelectorAll('#testModeSeg .seg-btn').forEach(x => x.classList.toggle('active', x.dataset.mode === testMode));
+}
+
+/* ==========================================================
+   🗣 今日の発話練習（2026-10-26）
+   ---------------------------------------------------------
+   テストタブの一番上の入口。今日の復習（期限が来た表現）から5問ずつ。
+   ・数は rv.js の今日の枠（1日30問・時間の上限の小さいほう）をそのまま使う＝入口を変えても増えない
+   ・期限が来た表現が少ない日は、そのぶんだけ。30問を埋めるための出題はしない
+   ・5問ごとに区切り、残り枠と期限の来た表現があるときだけ「次の5問」を出す
+   ========================================================== */
+const CHUNK_N = 5;
+function speakQueue() { return dueQueue().slice(0, CHUNK_N); }
+function renderSpeakStart() {
+  const el = document.getElementById('speakStart');
+  if (!el) return;
+  const done = rvDone(), lim = rvLimit(), left = rvLeft(), g = testGenreOn();
+  const due = dueQueue().length, n = Math.min(CHUNK_N, due);
+  const hold = rvHold();
+  const fresh = left > 0 && !due ? poolFor('__all__', 'new', g).length : 0;
+  const pct = Math.min(100, Math.round(done / Math.max(1, lim) * 100));
+  const modeName = testMode === 'oral' ? '🗣 言う' : '⌨️ 書く';
+  el.innerHTML = `
+    <div class="ss-title">🗣 今日の発話練習</div>
+    <div class="ss-count">今日 <b>${done}</b>／${lim}問${due ? `　・　次の${n}問を用意しています` : ''}${g !== 'all' ? `<br>出典：${genreLabel(g)} だけ（変えるときは下の詳細設定）` : ''}</div>
+    <div class="ss-meter"><i style="width:${pct}%"></i></div>
+    <button class="ss-go" id="speakGoBtn" onclick="startSpeak()" ${n ? '' : 'disabled'}>${
+      n ? `▶ 次の${n}問をはじめる（${modeName}）`
+      : left <= 0 ? '今日はここまで。おつかれさまでした' : '✓ 今日の復習は完了'}</button>
+    ${hold ? `<button class="ss-sub-btn" onclick="resumeHold()">↩️ 途中でやめた回の続き（${hold.ids.length}問）</button>` : ''}
+    ${!n && fresh ? `<button class="ss-sub-btn" onclick="startFreshChunk()">🆕 まだ解いていない表現を${Math.min(CHUNK_N, fresh, left)}問（任意）</button>` : ''}
+    <div class="ss-mode">
+      <button class="${testMode === 'oral' ? 'on' : ''}" onclick="setTestMode('oral')">🗣 言う</button>
+      <button class="${testMode === 'type' ? 'on' : ''}" onclick="setTestMode('type')">⌨️ 書く</button>
+    </div>
+    <div class="ss-note">${n
+      ? '日本語を見て、英文を見ずに声に出す → 答えを見る → 自分で採点。5問ごとに区切るので、そこでやめても大丈夫です。'
+      : left <= 0 ? '一覧・解説・音声・週まとめの通し再生はこのまま使えます。'
+      : '期限が来ている表現がない日は、無理に増やさなくて大丈夫です。'}</div>`;
+}
+function startSpeak() {
+  const q = speakQueue();
+  if (!q.length) { renderSpeakStart(); showToast(rvLeft() <= 0 ? 'このアプリの今日の復習はここまでです' : '今日ぶんの復習は終わりました 🎉'); return; }
+  startTest(q, { weekKey: '__due__', chunk: true });
+}
+/* 期限が来た表現がない日だけ出す任意の入口。新しく覚える表現も同じ1日30問に数える */
+function startFreshChunk() {
+  const q = poolFor('__all__', 'new', testGenreOn()).slice(0, Math.min(CHUNK_N, rvLeft()));
+  if (!q.length) { showToast('いまは出せる表現がありません'); return; }
+  startTest(q, { weekKey: '__all__', chunk: true, fresh: true });
+}
+
+/* ---- 詳細設定：組み合わせられないものは理由つきで押せなくする ---- */
+function scopeBlockReason(scope, key, kind) {
+  if (key === '__due__' && (scope === 'new' || scope === 'few' || scope === 'weak'))
+    return '「今日の復習」は、期限が来た表現を自動で選ぶので、選び方は「すべて」「ランダム10問」だけです';
+  if (kind === 'apply' && (scope === 'new' || scope === 'few' || scope === 'weak'))
+    return '応用は、基本に一度正解した表現だけが対象なので、選び方は「すべて」「ランダム10問」だけです';
+  return '';
+}
+function effScope() {
+  if (testKind === 'apply') return 'apply';
+  return testScope === 'apply' ? 'apply' : testScope;
+}
+/* 詳細設定のいまの組み合わせで出す問題（応用＋ランダム10問は応用から10問） */
+function setupPool(key) {
+  let pool = poolFor(key, effScope());
+  if (testKind === 'apply' && testScope === 'r10') pool = pool.slice(0, 10);
+  return pool;
+}
+function syncSetupControls() {
+  const key = document.getElementById('testWeekSel').value;
+  if (testScope === 'apply') { testScope = 'all'; testKind = 'apply'; }   // 旧「🚀 応用」ボタンの名残り
+  let why = scopeBlockReason(testScope, key, testKind);
+  if (why) testScope = 'all';
+  document.querySelectorAll('#testScopeSeg .seg-btn').forEach(x => {
+    x.classList.toggle('active', x.dataset.scope === testScope);
+    x.disabled = !!scopeBlockReason(x.dataset.scope, key, testKind);
+  });
+  document.querySelectorAll('#testKindSeg .seg-btn').forEach(x => x.classList.toggle('active', x.dataset.kind === testKind));
+  syncModeSegs();
+  const anyBlocked = ['new', 'few', 'weak'].map(s => scopeBlockReason(s, key, testKind)).find(Boolean);
+  const c = document.getElementById('testConflict');
+  if (c) { c.hidden = !anyBlocked; c.textContent = anyBlocked ? '※ ' + anyBlocked : ''; }
+  return why;
+}
 
 function renderTestSetup() {
   document.getElementById('testSetup').hidden = false;
@@ -25086,6 +25461,7 @@ function renderTestSetup() {
   renderDueBox();
   updateDueBadge();
   updateSetupInfo();
+  renderSpeakStart();
   renderTestHistory();
 }
 
@@ -25132,7 +25508,8 @@ function poolFor(weekKey, scope, genre) {
   }
   if (scope === 'apply') {
     const s = getStats();
-    pool = pool.filter(p => applyReady(p, s)).map(p => applyQuestion(p, pickApplyIdx(p)));
+    /* 今日もう基本（または応用）に答えた表現は、応用でも出さない（同じ日に基本と応用を両方出さない） */
+    pool = pool.filter(p => applyReady(p, s) && !rvAnsweredToday(p.id)).map(p => applyQuestion(p, pickApplyIdx(p)));
   }
   pool = pool.slice().sort(() => Math.random() - 0.5);
   if (scope === 'r10') pool = pool.slice(0, 10);
@@ -25152,26 +25529,39 @@ function renderNewCount() {
   document.querySelectorAll('#newCountSeg .seg-btn').forEach(b => b.classList.toggle('active', b.dataset.n === n));
 }
 
+/* 開始前に「何から何問出るか」を1行で見せる。出せる数は今日の枠（30問）と休止・今日答えたものを差し引いた見込み */
+function setupSummaryHtml(key, pool) {
+  const raw = pool.length;
+  const gate = rvGate(pool.filter(p => !p.isApply && !rvAnsweredToday(p.id)).map(p => p.id));
+  let room = rvLeft() - gate.ids.filter(id => rvEnrolled(id) || rvCfg().capAll).length;
+  const apN = pool.filter(p => p.isApply && pnServeOk(p) && room-- > 0).length;
+  const n = gate.ids.length + apN;
+  const scopeName = { all: 'すべて', r10: 'ランダム10問', new: '🆕 未解答だけ（' + newCountLabel() + '）', few: '🔢 回数が少ない順（' + newCountLabel() + '）', weak: '苦手だけ' }[testScope] || 'すべて';
+  const g = testGenreOn();
+  return `<b>${testTargetLabel(key)}</b>${g !== 'all' ? '・' + genreLabel(g) : ''} から、${scopeName}・${testKind === 'apply' ? '🚀 応用' : '基本'}・${testMode === 'oral' ? '🗣 言う' : '⌨️ 書く'}で <b>${n}問</b>`
+    + (n < raw ? `<br><small>（範囲内は${raw}問。今日の枠のあと${rvLeft()}問・今日もう答えた表現・休止中を除いた数です）</small>` : '');
+}
 function updateSetupInfo() {
   const key = document.getElementById('testWeekSel').value;
-  const n = poolFor(key, testScope).length;
+  syncSetupControls();
+  const pool = setupPool(key);
+  const sumEl = document.getElementById('testSummary');
+  if (sumEl) sumEl.innerHTML = setupSummaryHtml(key, pool);
   const modeText = testMode === 'type'
     ? '日本語を見て英語を入力 → 模範解答・言い換えと一致すれば①、一致しなければ差分を見て自分で①②③'
-    : '日本語を見て口に出して言う → 答えを見て ①思い出せた／②惜しい／③思い出せなかった で自己採点';
-  const scopeText = testScope === 'apply'
+    : '日本語を見て英文を見ずに声に出す → 答えを見る → ①自力で言えた／②助けがあれば言えた／③まだ言えなかった を自分で付ける（自己申告）';
+  const scopeText = testKind === 'apply' || testScope === 'apply'
     ? '<br>🚀 <b>応用</b>：覚えた表現を、別の場面の日本語で英訳します（本体に一度正解したフレーズだけ出ます）'
     : testScope === 'weak' ? '<br>直近で間違えた・まだ解いていないフレーズだけを出します'
     : testScope === 'new' ? '<br>🆕 <b>未解答だけ</b>：この範囲で、まだ一度も答え合わせをしていないフレーズから' + newCountLabel() + '（ランダム）'
     : testScope === 'few' ? '<br>🔢 <b>回数が少ない順</b>：この範囲で、解いた回数が少ないものから' + newCountLabel() + '（未解答があれば先に出ます）'
     : key === '__due__' ? '<br>📅 直近でまちがえた・弱い表現20＋長く待っている表現10の割合で、今日の残り枠（あと '
         + rvLeft() + ' 問）まで出します。1日' + rvCfg().cap + '問と「今日つかう時間」（' + reviewMinutes() + '分）の小さいほうが上限です。'
-        + '<br>どの範囲から解いても、復習対象の表現は同じ1日' + rvCfg().cap + '問に数えます（今日もう答えた表現は出しません）。'
+        + '<br>どの範囲から解いても、このアプリで答えるのは同じ1日' + rvCfg().cap + '問に数えます（新しく覚える表現・応用も含む。今日もう答えた表現は出しません）。'
         + '<br>途中でやめても、答え合わせが済んだ問はそこまで記録されます。'
         + '結果は週の成績には記録されません'
     : '';
-  const g = testGenreOn();
-  document.getElementById('testSetupInfo').innerHTML =
-    `出題数: <b>${n}</b> 問${g !== 'all' ? `（ジャンル: ${genreLabel(g)}）` : ''}<br>${modeText}${scopeText}`;
+  document.getElementById('testSetupInfo').innerHTML = modeText + scopeText;
   /* この範囲で何回解いたかの内訳 */
   const bk = solvedBreakdown(poolFor(key, 'all'));
   document.getElementById('testSolvedBreak').innerHTML = `<span>この範囲：</span>`
@@ -25208,16 +25598,25 @@ function startTestForWeek(weekKey) {
    ========================================================== */
 let testState = null;
 
-function startTest(customQueue) {
-  const weekKey = document.getElementById('testWeekSel').value;
-  const raw = customQueue || poolFor(weekKey, testScope);
-  /* どの入口でも、復習対象の表現は「休止中でない・今日まだ答えていない・今日の残り枠のぶんまで」（rv.js）。
-     未登録の表現（新しく覚える表現）はそのまま出す */
-  const gate = rvGate(raw.filter(p => !p.isApply).map(p => p.id)), keep = new Set(gate.ids);
-  /* 応用は同じ表現の別の形式＝補助の練習。今日もう本体に答えていても出せるが、30問の枠には数える
-     （箱が動くのは1日1回なので、応用で二重に進むことはない） */
-  let room = rvLeft() - gate.ids.filter(id => rvEnrolled(id)).length;
-  const queue = raw.filter(p => p.isApply ? (!rvPaused(p.id) && (!rvEnrolled(p.id) || room-- > 0)) : keep.has(String(p.id)));
+function startTest(customQueue, opts) {
+  opts = opts || {};
+  const weekKey = opts.weekKey || document.getElementById('testWeekSel').value;
+  const raw = customQueue || setupPool(weekKey);
+  /* どの入口でも「休止中でない・今日まだ答えていない・今日の残り枠のぶんまで」（rv.js＋pnServeOk）。
+     表現メモでは新しく覚える表現も同じ1日30問に数える（RV_DEFAULTS.capAll）。
+     応用も1問として数え、同じ表現の基本と応用は同じ日・同じ回に両方は出さない */
+  const capAll = rvCfg().capAll;
+  const gate = rvGate(raw.filter(p => !p.isApply && !p.again && !rvAnsweredToday(p.id)).map(p => p.id)), keep = new Set(gate.ids);
+  let room = rvLeft() - gate.ids.filter(id => rvEnrolled(id) || capAll).length;
+  const seen = new Set();
+  const queue = raw.filter(p => {
+    if (p.again) return rvCanRetry(p.id);
+    const id = String(p.id);
+    if (seen.has(id)) return false;
+    const ok = p.isApply ? (pnServeOk(p) && (!(rvEnrolled(p.id) || capAll) || room-- > 0)) : keep.has(id);
+    if (ok) seen.add(id);
+    return ok;
+  });
   if (raw.length && !queue.length) {
     showToast(rvLeft() <= 0 ? 'このアプリの今日の復習はここまでです（新しい表現は「🆕 未解答だけ」から）'
       : 'この範囲は今日すでに答えた表現・休止中の表現だけです');
@@ -25245,7 +25644,7 @@ function startTest(customQueue) {
   const inRun = new Set(queue.map(q => String(q.id)));
   const holdPrev = customQueue && customQueue._hold ? [] : (((rvHold() || {}).items) || []).filter(x => !inRun.has(String(x.id)));
   testState = { weekKey, genre: testGenreOn(), mode: testMode, queue, idx: 0, revealed: false, results: [],
-    startedAt: Date.now(), lastAt: 0, sealed: false, holdPrev, cut: 0 };
+    startedAt: Date.now(), lastAt: 0, sealed: false, holdPrev, cut: 0, chunk: !!opts.chunk, fresh: !!opts.fresh };
   skipUnservable();
   if (testState.idx >= queue.length) { testState = null; showToast('このアプリの今日の復習はここまでです'); return; }
   saveHold();
@@ -25278,7 +25677,7 @@ function quitTest() {
 /* 出す直前に確かめる（別の入口・別の端末で今日の枠を使い切った／今日もう答えた表現は飛ばす） */
 function skipUnservable() {
   const st = testState;
-  const okNow = q => q.isApply ? (!rvPaused(q.id) && (!rvEnrolled(q.id) || rvLeft() > 0)) : rvServeOk(q.id, q.again);
+  const okNow = q => pnServeOk(q);
   while (st.idx < st.queue.length && !st.results[st.idx] && !okNow(st.queue[st.idx])) {
     st.queue.splice(st.idx, 1); st.cut++;
   }
@@ -25301,7 +25700,7 @@ function resumeHold() {
   rvHoldClear();
   if (!q.length) { renderTestSetup(); return; }
   q._hold = true;
-  startTest(q);
+  startTest(q, { weekKey: h.weekKey });
 }
 function renderQuestion() {
   const st = testState;
@@ -25323,24 +25722,34 @@ function renderQuestion() {
         autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="test-btn-row">
         <button class="btn-primary" onclick="submitAnswer()">✓ 答え合わせ</button>
-        <button class="btn-outline" onclick="showHint()">💡 ヒント</button>
+        <button class="btn-outline" onclick="openHintMenu()">💡 ヒント</button>
       </div>
       <div id="hintBox"></div>`;
   } else {
+    const oral = st.mode === 'oral';
+    /* 答えを見たあと：模範例・音声・確認するポイント →（任意）英文を隠してもう一度言う → 自己採点。
+       言い直しは記録・XP・箱に入れない（採点は最初の自力の答えで付ける） */
     area = st.revealed ? `
-      <div class="ans-block">
-        <div class="ans-label">正解</div>
-        <div class="ans-en">${escapeHtml(p.en)}</div>
-        <div class="mini-foot"><button class="icon-btn small" id="ansPlayBtn" onclick="playAudio(this, '${audioSrc(p)}')">🔊</button></div>
+      <div class="ans-wrap" id="ansWrap">
+        <div class="ans-block">
+          <div class="ans-label">${oral ? '模範例（言い方の一例。同じでなくてOK）' : '正解'}</div>
+          <div class="ans-hide"><div class="ans-en">${escapeHtml(p.en)}</div></div>
+          <div class="ans-hide-note">🙈 英文を隠しています。もう一度、声に出して言ってみましょう（記録には入りません）</div>
+          <div class="mini-foot"><button class="icon-btn small" id="ansPlayBtn" onclick="playAudio(this, '${audioSrc(p)}')">🔊</button></div>
+        </div>
+        <div class="ans-hide">
+          ${checkPtsHtml(p)}
+          ${baseNoteHtml(p)}
+          ${p.explanation ? `<div class="mini-exp">💡 ${escapeHtml(p.explanation)}</div>` : ''}
+          ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${relHtml(p.related)}</div>` : ''}
+        </div>
+        ${oral ? `<button class="resay-btn" id="resayBtn" onclick="toggleResay()">🙈 英文を隠してもう一度言う（任意）</button>` : ''}
       </div>
-      ${baseNoteHtml(p)}
-      ${p.explanation ? `<div class="mini-exp">💡 ${escapeHtml(p.explanation)}</div>` : ''}
-      ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
-      ${rvGradeHtml('selfGradePct', { hint: !!st.hinted, q: st.mode === 'type' ? '答えを見る前に、自分で英語を思い出せていましたか？' : '答えを見る前に、声に出して言えましたか？' })}` : `
-      <div class="hint-line">${p.isApply ? '覚えた表現を<b>この場面に合わせて</b>使い、声に出して言ってみましょう。' : '日本語を見て、英語で声に出して言ってみましょう。'}</div>
+      ${pnGradeHtml('selfGradePct', { hint: !!st.hinted, fluency: oral, q: oral ? '最初に、答えを見る前に言えたのは？' : '答えを見る前に、自分で英語を思い出せていましたか？' })}` : `
+      <div class="hint-line">${p.isApply ? '覚えた表現を<b>この場面に合わせて</b>使い、英文を見ずに声に出してみましょう。' : '英文は隠れています。まず<b>声に出して</b>言ってみましょう（知っている表現で意味が伝わればOK）。'}</div>
       <div class="test-btn-row">
         <button class="btn-primary" onclick="revealOral()">👁 答えを見る</button>
-        <button class="btn-outline" onclick="showHint()">💡 ヒント</button>
+        <button class="btn-outline" onclick="openHintMenu()">💡 ヒント</button>
       </div>
       <div id="hintBox"></div>`;
   }
@@ -25361,9 +25770,11 @@ function renderQuestion() {
         ${favBtnHtml(p.id)}
       </div>
       <div class="test-ja">${escapeHtml(p.ja)}</div>
+      ${(p.isApply ? '' : p.scene) ? `<div class="test-scene">🎬 場面：${escapeHtml(p.scene)}</div>` : ''}
       ${area}
     </div>
     ${prevFixHtml()}`;
+  if (!answered && !st.pending && !st.revealed && st.hintMenu) renderHintBox();
 
   const input = document.getElementById('testInput');
   if (input) {
@@ -25374,12 +25785,82 @@ function renderQuestion() {
   }
 }
 
-function showHint() {
-  const p = testState.queue[testState.idx];
-  testState.hinted = true;   // ヒントを見たら①にはしない（②まで）
+/* ---- 段階式ヒント（2026-10-26）----
+   「💡 ヒント」はメニューを開くだけ（まだ採点に影響しない）。
+   意味／構文／語数・頭文字のどれか1つでも開いたら、採点は②まで（従来どおり）。
+   showHint() を引数なしで呼ぶと従来の語数・頭文字ヒント */
+function openHintMenu() { testState.hintMenu = true; renderHintBox(); }
+function showHint(kind) {
+  const st = testState;
+  st.hinted = true;   // ヒントを見たら①にはしない（②まで）
+  st.hintMenu = true;
+  st.hints = st.hints || {};
+  st.hints[kind || 'letters'] = 1;
+  renderHintBox();
+}
+function renderHintBox() {
   const box = document.getElementById('hintBox');
-  if (box) box.innerHTML = `<div class="hint-text">${escapeHtml(hintOf(p.en))}</div>
-    <div class="diff-legend">語数と頭文字だけのヒントです（ヒントを見たら、採点は②惜しい までになります）</div>`;
+  const st = testState;
+  if (!box || !st) return;
+  const p = st.queue[st.idx], h = st.hints || {};
+  const mh = meaningHintOf(p), ch = coreHintOf(p);
+  const btn = (k, lab, ok) => ok ? `<button type="button" class="${h[k] ? 'used' : ''}" onclick="showHint('${k}')">${lab}</button>` : '';
+  box.innerHTML = `<div class="hint-menu">${btn('meaning', '① 意味のヒント', !!mh)}${btn('core', '② 構文のヒント', !!ch)}${btn('letters', '③ 語数・頭文字', true)}</div>`
+    + (h.meaning && mh ? `<div class="hint-item"><b>意味のヒント</b>「${escapeHtml(mh)}」を表す言い方を使う</div>` : '')
+    + (h.core && ch ? `<div class="hint-item"><b>構文のヒント${p.isApply ? '（元のフレーズの形）' : ''}</b>${escapeHtml(ch)}</div>` : '')
+    + (h.letters ? `<div class="hint-item"><b>語数・頭文字</b><div class="hint-text">${escapeHtml(hintOf(p.en))}</div></div>` : '')
+    + `<div class="diff-legend">必要なものだけ開いてください。ヒントを1つでも開くと、採点は②までになります。</div>`;
+}
+
+/* 答えを見たあとに確かめること（清書で付けた core / caution があればそれ、無ければ自動で拾った構文） */
+function checkPtsHtml(p) {
+  const b = p.isApply && p.base ? p.base : p;
+  const core = coreHintOf(p), pts = [];
+  if (core) pts.push(`中心の表現 <b>${escapeHtml(core)}</b>${b.coreJa ? `（${escapeHtml(b.coreJa)}）` : ''} を使えたか`);
+  if (b.caution) pts.push('注意：' + escapeHtml(b.caution));
+  pts.push('伝えたい意味が伝わる英語だったか（模範例と同じ言い方でなくてよい）');
+  return `<div class="check-pts"><b>確認するポイント</b><br>・${pts.join('<br>・')}</div>`;
+}
+/* 言い直し：英文を隠して、もう一度声に出す（任意・記録しない） */
+function toggleResay() {
+  const w = document.getElementById('ansWrap'), b = document.getElementById('resayBtn');
+  if (!w) return;
+  const on = !w.classList.contains('resay');
+  w.classList.toggle('resay', on);
+  if (on && testState) testState.resaid = true;
+  if (b) b.textContent = on ? '👁 英文をもう一度見る' : '🙈 英文を隠してもう一度言う（任意）';
+}
+
+/* 3段階の自己採点ボタン（表現メモ用の言葉）。点は rv.js と同じ 100/60/0、色や形も rv.js の部品を使う。
+   opt.fluency＝言うモードの最初の採点。①を「すぐ／考えてから」に分けて押せる（どちらも①＝100）。
+   速さは記録だけ（phraseNote_modeRec）で、箱の進み方は変えない */
+function pnGradeLabel(g, mode) {
+  const oral = (mode || (testState && testState.mode)) !== 'type';
+  return g === 1 ? '① 自力で' + (oral ? '言えた' : '書けた') : g === 2 ? '② 助けがあれば' + (oral ? '言えた' : '書けた') : '③ まだ' + (oral ? '言えなかった' : '書けなかった');
+}
+function pnGradeHtml(fn, opt) {
+  opt = opt || {};
+  const mode = opt.mode || (testState && testState.mode) || 'oral', oral = mode !== 'type';
+  const sel = opt.sel == null ? null : rvGradeOf(opt.sel);
+  const b = (g, cls, ttl, sub, arg) => {
+    const dis = g === 1 && opt.hint;
+    return `<button type="button" class="rv-g ${cls}${sel === g ? ' rv-on' : ''}"${dis ? ' disabled' : ''} onclick="${fn}(${RV_PCT[g]}${arg ? `,'${arg}'` : ''})"><b>${ttl}</b><small>${sub}</small></button>`;
+  };
+  const g1sub = '答え・ヒントを見る前に、伝えたい意味をおおむね適切な英語で' + (oral ? '言えた' : '書けた') + '（模範例と同じ言い方でなくてよい）';
+  const g1 = opt.fluency && oral && !opt.hint
+    ? `<div class="pn-g1row">${b(1, 'rv-g1', '① 自力で言えた・すぐ', 'すぐ口から出た', 'q')}${b(1, 'rv-g1', '① 自力で言えた・考えてから', '時間はかかったが自力で言えた', 's')}</div>`
+      + `<div class="self-note">${g1sub}。考えた時間が長かっただけなら②にしなくて大丈夫です（速さは①の中で分けて記録します）。</div>`
+    : b(1, 'rv-g1', pnGradeLabel(1, mode), g1sub);
+  return `<div class="rv-grade">`
+    + `<div class="rv-grade-q">${escapeHtml(opt.q || '答えやヒントを見る前に、自分で思い出せましたか？')}</div>`
+    + (opt.ref ? `<div class="rv-grade-ref">${opt.ref}</div>` : '')
+    + g1
+    + b(2, 'rv-g2', pnGradeLabel(2, mode), '一部は出たが文として完成しなかった／重要な語や文法で迷った／ヒントを使った')
+    + b(3, 'rv-g3', pnGradeLabel(3, mode), 'ほとんど出なかった／意味が大きく変わった／答えを見て初めてわかった')
+    + (opt.hint ? '<div class="rv-grade-ref">ヒントを見たので、②までで付けます。</div>' : '')
+    + (opt.fix ? '<div class="rv-grade-ref">付け直しても回数は増えません（回答前の状態から計算し直します）。</div>' : '')
+    + (oral && !opt.fix ? '<div class="self-note">🗣 言うモードの採点は自己申告です。最初に自力で言えたかで付けてください（言い直せたかどうかは採点に入れません）。</div>' : '')
+    + `</div>`;
 }
 
 function revealOral() { testState.revealed = true; renderQuestion(); autoPlayAnswer(); }
@@ -25400,14 +25881,16 @@ function commitAnswer(p, pct, extra) {
   const rec = recordStat(p.id, level === 'correct', pct, { fmt: p.isApply ? 'apply' : 'main', retry: !!p.again });
   if (!p.again) mvGain(level === 'correct' ? true : (level === 'close' ? 'half' : false));   // やる気の記録（連続日数・XP・バッジ）
   if (!p.again) hsAdd({ q: p.ja, a: p.en, p: pct, k: histKind(p, extra.kind) });   // 学習の履歴
-  st.results[st.idx] = Object.assign({ phrase: p, level, pct, before: rec.before, eid: rec.eid, rv: rec.rv }, extra);
+  /* 言う／書く・基本／応用ごとの直近の記録（解き直しは入れない） */
+  const mk = p.again ? null : recordMode(p, st.mode, pct, { hint: !!st.hinted, fl: pct >= 80 ? extra.fl : null });
+  st.results[st.idx] = Object.assign({ phrase: p, level, pct, before: rec.before, eid: rec.eid, rv: rec.rv, mk, rs: st.resaid ? 1 : 0 }, extra);
   /* 途中でやめても消えないように、1問ごとに「今日の問数」と「この回の控え」を残す */
   if (!p.again) { bumpDayLog(st.weekKey === '__due__'); saveRun(); }
   st.pending = null;
   saveHold();
 }
-function selfGradePct(v) { selfGrade(v / 100); }
-function selfGrade(score) {
+function selfGradePct(v, fl) { selfGrade(v / 100, fl); }
+function selfGrade(score, fl) {
   if (score === true) score = 1; else if (score === false) score = 0;   // 旧 ⭕❌ の呼び方も受ける
   score = Math.max(0, Math.min(1, Number(score) || 0));
   const st = testState, p = st.queue[st.idx];
@@ -25415,8 +25898,8 @@ function selfGrade(score) {
   if (st.hinted && pct >= 80) pct = 60;   // ヒントを見たら②まで
   const pend = st.pending;
   commitAnswer(p, pct, pend ? { user: pend.val, judge: pend.j, selfGraded: true, self: pct / 100, kind: '書く（自己採点）' }
-    : { user: '', selfGraded: true, self: pct / 100, kind: st.mode === 'type' ? '書く（自己採点）' : '言う（自己採点）' });
-  st.revealed = false; st.hinted = false;
+    : { user: '', selfGraded: true, self: pct / 100, kind: st.mode === 'type' ? '書く（自己採点）' : '言う（自己採点）', fl: fl === 'q' || fl === 's' ? fl : null });
+  st.revealed = false; st.hinted = false; st.hints = null; st.hintMenu = false; st.resaid = false;
   if (pend) { renderQuestion(); return; }   // 差分を見て付けたときは答えの画面にとどまる（付け直しもできる）
   nextQuestion();                           // 言う・空欄は押したら次へ（押し間違いは次の問題の「直前の採点を直す」で）
 }
@@ -25428,15 +25911,16 @@ function fixPrevPct(v) {
   r.level = levelOfPct(v); r.pct = v; r.self = v / 100; r.overridden = true;
   r.rv = rvRegrade(r.eid, v) || r.rv;
   if (!r.phrase.again) statFix(r.phrase.id, prevOk, r.level === 'correct');
+  fixMode(r.phrase.id, r.mk, v);
   saveRun();
   renderQuestion();
-  showToast('直前の採点を「' + rvGradeLabel(rvGradeOf(v)) + '」に直しました');
+  showToast('直前の採点を「' + pnGradeLabel(rvGradeOf(v)) + '」に直しました');
 }
 function prevFixHtml() {
   const st = testState, r = st && st.results[st.idx - 1];
   if (!r || !r.eid || !r.selfGraded || st.results[st.idx]) return '';
-  return `<details class="rv-panel"><summary>直前の採点を直す（いま: ${rvGradeLabel(rvGradeOf(r.pct))}）</summary>
-    ${rvGradeHtml('fixPrevPct', { sel: r.pct, fix: true, q: '「' + escapeHtml(r.phrase.ja) + '」の採点' })}</details>`;
+  return `<details class="rv-panel"><summary>直前の採点を直す（いま: ${pnGradeLabel(rvGradeOf(r.pct))}）</summary>
+    ${pnGradeHtml('fixPrevPct', { sel: r.pct, fix: true, q: '「' + r.phrase.ja + '」の採点' })}</details>`;
 }
 
 function submitAnswer() {
@@ -25474,14 +25958,14 @@ function renderPending(pd) {
         : o.t === 'miss' ? `<span class="d-del">${escapeHtml(o.w)}</span>`
         : `<span class="d-ins">${escapeHtml(o.w)}</span>`).join(' ')}</div>
     </div>
-    ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
-    ${rvGradeHtml('selfGradePct', { hint: !!testState.hinted, q: '模範解答と一致しませんでした。自分の英語は？',
-      ref: '参考：語の一致率 ' + Math.round(j.sim * 100) + '%。意味と文法が合っている言い換えなら①、主要部分は合っていて一部ちがうなら②にできます。' })}`;
+    ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${relHtml(p.related)}</div>` : ''}
+    ${pnGradeHtml('selfGradePct', { hint: !!testState.hinted, mode: 'type', q: '模範解答と一致しませんでした。自分の英語は？',
+      ref: '参考：語の一致率 ' + Math.round(j.sim * 100) + '%（参考の数字です。低くても、意味が伝わる正しい英語なら①にできます。主要部分は合っていて一部ちがうなら②）' })}`;
 }
 
 function renderFeedback(r) {
   const p = r.phrase;
-  const label = { correct: '① 思い出せた', close: '② 惜しい', wrong: '③ 思い出せなかった' }[r.level] + (p.again ? '（解き直し）' : '');
+  const label = pnGradeLabel({ correct: 1, close: 2, wrong: 3 }[r.level]) + (p.again ? '（解き直し）' : '');
   const cls = { correct: 'v-correct', close: 'v-close', wrong: 'v-wrong' }[r.level];
   const j = r.judge;
 
@@ -25513,17 +25997,16 @@ function renderFeedback(r) {
     ${diffHtml}
     ${baseNoteHtml(p)}
     ${p.explanation ? `<div class="mini-exp">💡 ${escapeHtml(p.explanation)}</div>` : ''}
-    ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${p.related.map(escapeHtml).join(' / ')}</div>` : ''}
+    ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${relHtml(p.related)}</div>` : ''}
     <div class="test-btn-row">
       <button class="btn-primary" onclick="nextQuestion()">${testState.idx + 1 < testState.queue.length ? '次へ →' : '結果を見る →'}</button>
     </div>
     ${rvNoteHtml(r.rv)}
     <details class="rv-panel"><summary>採点を直す（押し間違い・正しい言い換えだったとき）</summary>
-      ${rvGradeHtml('fixGradePct', { sel: r.pct != null ? r.pct : LEVEL_PCT[r.level], fix: true })}
+      ${pnGradeHtml('fixGradePct', { sel: r.pct != null ? r.pct : LEVEL_PCT[r.level], fix: true })}
     </details>
     ${!p.isApply && hasApply(p) && r.level !== 'wrong'
-      ? `<div class="test-btn-row"><button class="btn-outline" style="flex:1" onclick="tryApply()">🚀 この表現の応用に挑戦する</button></div>
-         <div class="diff-legend">同じ表現を、別の場面の日本語で使ってみます</div>`
+      ? `<div class="diff-legend">🚀 この表現の応用（別の場面で使う問題）は、別の日に「⚙️ 範囲を選んで練習する → ④ 練習内容：応用」から出せます（同じ日に基本と応用は両方出しません）</div>`
       : ''}`;
 }
 
@@ -25535,6 +26018,7 @@ function fixGradePct(v) {
   r.level = levelOfPct(v); r.pct = v; r.overridden = true;
   if (r.eid) r.rv = rvRegrade(r.eid, v) || r.rv;
   if (!r.phrase.again) statFix(r.phrase.id, prevOk, r.level === 'correct');
+  fixMode(r.phrase.id, r.mk, v);
   saveRun();   // 付け替えた判定を控えにも反映（数え直しはしない）
   renderQuestion();
 }
@@ -25563,6 +26047,7 @@ function nextQuestion() {
   queueAgain();
   testState.idx++;
   testState.revealed = false; testState.hinted = false; testState.pending = null;
+  testState.hints = null; testState.hintMenu = false; testState.resaid = false;
   skipUnservable();
   if (testState.idx < testState.queue.length) {
     saveHold();
@@ -25606,6 +26091,11 @@ function finishTest(partial) {
   const comment = pct === 100 ? '完璧です！🎉' : pct >= 80 ? 'いい調子です。落とした表現だけ復習しましょう。'
     : pct >= 50 ? 'あと一息。間違えたものをもう一度回しましょう。' : 'まずは間違えた表現を音声付きで読み直しましょう。';
 
+  /* 今日の発話練習（5問ずつ）の区切り。続けるのは、残り枠と期限の来た表現があるときだけ */
+  const chunkNext = st.chunk && rvLeft() > 0
+    ? Math.min(CHUNK_N, rvLeft(), st.fresh ? poolFor('__all__', 'new', st.genre).length : dueQueue().length) : 0;
+  const chunkHtml = st.chunk ? `<div class="hint-line">今日 <b>${rvDone()}</b>／${rvLimit()}問。${
+    chunkNext ? 'まだ続けられます（ここでやめても大丈夫です）。' : rvLeft() <= 0 ? '今日はここまでです。' : '今日の復習は完了です。'}</div>` : '';
   document.getElementById('testRun').hidden = true;
   const el = document.getElementById('testResult');
   el.hidden = false;
@@ -25614,9 +26104,9 @@ function finishTest(partial) {
       <div class="score-big">${pct}%</div>
       <div class="score-sub">${testTargetLabel(st.weekKey)}／${st.mode === 'type' ? '書くモード' : '言うモード'}${partial ? `／途中まで（${total}/${qN}問）` : ''}</div>
       <div class="score-row">
-        <div class="score-cell"><b class="v-correct">${correct}</b><span>正解</span></div>
-        <div class="score-cell"><b class="v-close">${close}</b><span>惜しい</span></div>
-        <div class="score-cell"><b class="v-wrong">${wrong}</b><span>不正解</span></div>
+        <div class="score-cell"><b class="v-correct">${correct}</b><span>①自力で</span></div>
+        <div class="score-cell"><b class="v-close">${close}</b><span>②助けがあれば</span></div>
+        <div class="score-cell"><b class="v-wrong">${wrong}</b><span>③まだ</span></div>
       </div>
       ${selfAvg !== null ? `<div class="hint-line">自己採点の平均 <b>${Math.round(selfAvg * 100)}%</b>（${selfRows.length}問）</div>` : ''}
       <div class="hint-line">${comment}${applyCount ? `<br>🚀 応用 ${applyCount} 問を含みます（週の成績には本体のみ記録）。` : ''}</div>
@@ -25625,10 +26115,12 @@ function finishTest(partial) {
       ${rvLeft() <= 0 ? `<div class="hint-line"><b>このアプリの今日の復習はここまでです。</b>一覧・解説・履歴はこのまま見られます。</div>` : ''}
       ${st.cut ? `<div class="hint-line">今日の枠を使い切った・今日もう答えた表現 ${st.cut} 問は出しませんでした。</div>` : ''}
       <div class="hint-line">まちがえた表現は<b>明日</b>の復習に出ます（当日中にはくり返し出しません）。</div>
+      ${chunkHtml}
       <div class="test-btn-row">
+        ${chunkNext && !restList.length ? `<button class="btn-primary" onclick="${st.fresh ? 'startFreshChunk()' : 'startSpeak()'}">▶ 次の${chunkNext}問</button>` : ''}
         ${restList.length ? `<button class="btn-primary" onclick="resumeRest()">▶ 残り${restList.length}問を続ける</button>` : ''}
         ${missed.length && rvCfg().retry ? `<button class="${restList.length ? 'btn-outline' : 'btn-primary'}" onclick="retryMissed()">🔁 間違えた表現を解き直す（今日あと${Math.max(0, rvCfg().retryMax - rvRetryDone())}問まで）</button>` : ''}
-        <button class="btn-outline" onclick="renderTestSetup()">設定に戻る</button>
+        <button class="btn-outline" onclick="renderTestSetup()">${st.chunk ? 'ここで終わる' : '設定に戻る'}</button>
       </div>
     </div>
     ${missed.length ? `
@@ -25659,7 +26151,7 @@ function retryMissed() {
 function resumeRest() {
   const rest = (testState && testState.rest) || [];
   if (!rest.length) return;
-  startTest(rest.slice());
+  startTest(rest.slice(), { weekKey: testState.weekKey, chunk: testState.chunk, fresh: testState.fresh });
 }
 
 /* ---- テスト画面のイベント配線 ---- */
@@ -25667,16 +26159,19 @@ document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () =>
 document.getElementById('testWeekSel').addEventListener('change', updateSetupInfo);
 document.getElementById('testModeSeg').addEventListener('click', e => {
   const b = e.target.closest('.seg-btn'); if (!b) return;
-  testMode = b.dataset.mode;
-  document.querySelectorAll('#testModeSeg .seg-btn').forEach(x => x.classList.toggle('active', x === b));
-  updateSetupInfo();
+  setTestMode(b.dataset.mode);
 });
 document.getElementById('testScopeSeg').addEventListener('click', e => {
-  const b = e.target.closest('.seg-btn'); if (!b) return;
+  const b = e.target.closest('.seg-btn'); if (!b || b.disabled) return;
   testScope = b.dataset.scope;
-  document.querySelectorAll('#testScopeSeg .seg-btn').forEach(x => x.classList.toggle('active', x === b));
   updateSetupInfo();
 });
+document.getElementById('testKindSeg').addEventListener('click', e => {
+  const b = e.target.closest('.seg-btn'); if (!b) return;
+  testKind = b.dataset.kind === 'apply' ? 'apply' : 'base';
+  updateSetupInfo();
+});
+document.getElementById('hideRoughBtn').addEventListener('click', toggleHideRough);
 document.getElementById('newCountSeg').addEventListener('click', e => {
   const b = e.target.closest('.seg-btn'); if (!b) return;
   setNewCount(Number(b.dataset.n));
@@ -25766,6 +26261,8 @@ document.getElementById('plShowEn').addEventListener('change', e => {
 loadSeqPrefs();
 syncPlayerControls();
 updateHideModeBtn();
+updateHideRoughBtn();
+syncModeSegs();
 applyCaptureMode();
 document.querySelectorAll('#polishedViewSeg .seg-btn').forEach(b => {
   b.classList.toggle('active', b.dataset.pview === polishedView);
@@ -25774,6 +26271,7 @@ render();
 /* 前回、答え合わせまで進んだのに締めずに閉じた回を、開いたときに確定させる */
 rvInit();   // 復習のきまり：移行（初回だけ）→ 取り込み → 合言葉で合流（終わったら onChange で描き直す）
 recoverRun();
+pushFixNotes();   // 修正メモ：清書で対応ずみのものを片付け、残りを受け箱へ（合言葉が無ければ何もしない）
 
 /* INBOX:JS:BEGIN */
 /* 未清書メモの受け箱（表現メモ・英単語ノート共通）。正本は .claude/skills_assets/auto-polish/inbox.js → inject.py で配る。
