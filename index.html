@@ -27165,16 +27165,24 @@ function renderNewCount() {
 }
 
 /* 開始前に「何から何問出るか」を1行で見せる。出せる数は今日の枠（30問）と休止・今日答えたものを差し引いた見込み */
+/* 範囲を選んで始めるときに、ノルマ達成ずみなら自由復習へ切り替えるか（今日の復習・再挑戦などの入口は対象外） */
+function rangeWillFree(key, customQueue) {
+  return !customQueue && key !== '__due__' && !rvFree() && rvQuotaLeft() <= 0;
+}
 function setupSummaryHtml(key, pool) {
   const raw = pool.length;
+  const willFree = rangeWillFree(key);
   const gate = rvGate(pool.filter(p => !p.isApply && !rvAnsweredToday(p.id)).map(p => p.id));
   let room = rvLeft() - gate.ids.filter(id => rvEnrolled(id) || rvCfg().capAll).length;
-  const apN = pool.filter(p => p.isApply && pnServeOk(p) && room-- > 0).length;
-  const n = gate.ids.length + apN;
+  const apN = willFree
+    ? pool.filter(p => p.isApply && !rvPaused(p.id) && !rvAnsweredToday(p.id)).length
+    : pool.filter(p => p.isApply && pnServeOk(p) && room-- > 0).length;
+  const n = gate.ids.length + (willFree ? gate.cutCap : 0) + apN;
   const scopeName = { all: 'すべて', r10: 'ランダム10問', new: '🆕 未解答だけ（' + newCountLabel() + '）', few: '🔢 回数が少ない順（' + newCountLabel() + '）', weak: '苦手だけ' }[testScope] || 'すべて';
   const g = testGenreOn();
   return `<b>${testTargetLabel(key)}</b>${g !== 'all' ? '・' + genreLabel(g) : ''} から、${scopeName}・${testKind === 'apply' ? '🚀 応用' : '基本'}・${testMode === 'oral' ? '🗣 言う' : '⌨️ 書く'}で <b>${n}問</b>`
-    + (n < raw ? `<br><small>（範囲内は${raw}問。${rvFree() ? '自由復習中' : `今日の枠のあと${rvLeft()}問`}・今日もう答えた表現・休止中を除いた数です）</small>` : '');
+    + (n < raw ? `<br><small>（範囲内は${raw}問。${rvFree() || willFree ? '自由練習' : `今日の枠のあと${rvLeft()}問`}・今日もう答えた表現・休止中を除いた数です）</small>` : '')
+    + (willFree ? `<br><small>今日のノルマ（${rvLimit()}問）は達成ずみ。ここからは自由練習として出します（答えはふだんどおり記録）</small>` : '');
 }
 function updateSetupInfo() {
   const key = document.getElementById('testWeekSel').value;
@@ -27237,6 +27245,12 @@ function startTest(customQueue, opts) {
   opts = opts || {};
   const weekKey = opts.weekKey || document.getElementById('testWeekSel').value;
   const raw = customQueue || setupPool(weekKey);
+  /* 2026-10-30 今日の30問を使い切ったあとでも「範囲を選んで練習する」は止めない。
+     自由復習（rvFree）に切り替えて出す（ノルマは30問のまま・答えはふだんどおり記録） */
+  if (rangeWillFree(weekKey, customQueue) && raw.length) {
+    rvSetFree(true);
+    showToast('今日のノルマ（' + rvLimit() + '問）は達成ずみ。ここからは自由練習として出します');
+  }
   /* どの入口でも「休止中でない・今日まだ答えていない・今日の残り枠のぶんまで」（rv.js＋pnServeOk）。
      表現メモでは新しく覚える表現も同じ1日30問に数える（RV_DEFAULTS.capAll）。
      応用も1問として数え、同じ表現の基本と応用は同じ日・同じ回に両方は出さない */
