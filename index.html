@@ -24122,23 +24122,50 @@ var AudioWarm = (function (G) {
 })(typeof window !== 'undefined' ? window : null);
 /* AW:JS:END */
 function resetPlayBtn(btn) { btn.textContent = '🔊'; btn.classList.remove('playing'); }
+/* 1件再生の <audio> は1つだけ作って使い回す（2026-10-31）。
+   iPhoneは毎回 new Audio() すると、答えを見る→自動読み上げのような「押したボタンとは別の再生」を止めることがある
+   （手で🔊を押すと鳴るのに自動では鳴らなかった）。1度タップの中で play() した <audio> はその後も鳴らせるので、
+   最初のタップで src なしの play() を呼んで許可を取っておく（音は出ない）。通し再生の seqAudio と同じ考え方 */
+let singleAudio = null;
+function singleEl() {
+  if (!singleAudio) { singleAudio = new Audio(); singleAudio.preload = 'auto'; }
+  return singleAudio;
+}
+function unlockSingle() {
+  document.removeEventListener('touchend', unlockSingle, true);
+  document.removeEventListener('click', unlockSingle, true);
+  const a = singleEl();
+  if (a.getAttribute('src')) return;
+  const pr = a.play();
+  if (pr && pr.catch) pr.catch(() => {});
+}
+document.addEventListener('touchend', unlockSingle, true);
+document.addEventListener('click', unlockSingle, true);
+/* 止めるときは src も外す（読み込み中に止めたとき、AudioWarm の鳴らし直しで前の音声が後から鳴らないように） */
+function haltSingle() {
+  if (!currentAudio) return;
+  currentAudio.pause();
+  currentAudio.removeAttribute('src');
+  try { currentAudio.load(); } catch (e) {}
+  currentAudio = null;
+}
 function stopSinglePlay() {
-  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; currentAudio = null; }
+  haltSingle();
   if (currentBtn) { resetPlayBtn(currentBtn); currentBtn = null; }
 }
 function playAudio(btn, src) {
   pauseSeqIfPlaying();   // 通し再生中なら止めてから1件再生する
   const isSameBtn = (currentBtn === btn);
-  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  if (currentAudio) currentAudio.pause();
   if (currentBtn) { resetPlayBtn(currentBtn); currentBtn = null; }
-  if (isSameBtn) { currentAudio = null; return; }
-  const audio = new Audio();
+  if (isSameBtn) { haltSingle(); return; }
+  const audio = singleEl();
   currentAudio = audio; currentBtn = btn;
   btn.textContent = '■'; btn.classList.add('playing');
   const done = () => { resetPlayBtn(btn); if (currentBtn === btn) { currentBtn = null; currentAudio = null; } };
   audio.onended = audio.onerror = done;
   const pr = AudioWarm.play(audio, src);
-  if (pr && pr.catch) pr.catch(() => { if (currentAudio === audio) done(); });
+  if (pr && pr.catch) pr.catch(() => { if (currentBtn === btn) done(); });
 }
 
 /* ---- 描画 ---- */
@@ -27693,8 +27720,7 @@ function queueAgain() {
 }
 function nextQuestion() {
   /* 自動で読んでいた答えの音声が次の問題に重ならないように止める */
-  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-  if (currentBtn) { resetPlayBtn(currentBtn); currentBtn = null; }
+  stopSinglePlay();
   queueAgain();
   testState.idx++;
   testState.revealed = false; testState.hinted = false; testState.pending = null;
