@@ -645,6 +645,8 @@
   }
   .test-input:focus { outline: 2px solid var(--blue); }
   .test-btn-row { display: flex; gap: 8px; margin-top: 10px; }
+  /* テストの答えの画面の「この表現を削除」（2026-11-08） */
+  .del-in-test { text-align: right; margin-top: 14px; }
   /* 言うモードの自己採点（100〜0%の6段階。狭い画面でも3×2で並ぶ） */
   .self-label { font-size: 0.78rem; color: var(--sub); font-weight: 700; margin-top: 12px; }
   .self-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
@@ -28145,7 +28147,8 @@ function renderQuestion() {
         </div>
         ${oral ? `<button class="resay-btn" id="resayBtn" onclick="toggleResay()">🙈 英文を隠してもう一度言う（任意）</button>` : ''}
       </div>
-      ${pnGradeHtml('selfGradePct', { hint: !!st.hinted, fluency: oral, q: oral ? '最初に、答えを見る前に言えたのは？' : '答えを見る前に、自分で英語を思い出せていましたか？' })}` : `
+      ${pnGradeHtml('selfGradePct', { hint: !!st.hinted, fluency: oral, q: oral ? '最初に、答えを見る前に言えたのは？' : '答えを見る前に、自分で英語を思い出せていましたか？' })}
+      ${delInTestHtml()}` : `
       <div class="hint-line">${p.isApply ? '覚えた表現を<b>この場面に合わせて</b>使い、英文を見ずに声に出してみましょう。' : '英文は隠れています。まず<b>声に出して</b>言ってみましょう（知っている表現で意味が伝わればOK）。'}</div>
       <div class="test-btn-row">
         <button class="btn-primary" onclick="revealOral()">👁 答えを見る</button>
@@ -28360,7 +28363,8 @@ function renderPending(pd) {
     </div>
     ${p.related && p.related.length ? `<div class="mini-exp"><b>言い換え:</b> ${relHtml(p.related)}</div>` : ''}
     ${pnGradeHtml('selfGradePct', { hint: !!testState.hinted, mode: 'type', q: '模範解答と一致しませんでした。自分の英語は？',
-      ref: '参考：語の一致率 ' + Math.round(j.sim * 100) + '%（参考の数字です。低くても、意味が伝わる正しい英語なら①にできます。主要部分は合っていて一部ちがうなら②）' })}`;
+      ref: '参考：語の一致率 ' + Math.round(j.sim * 100) + '%（参考の数字です。低くても、意味が伝わる正しい英語なら①にできます。主要部分は合っていて一部ちがうなら②）' })}
+    ${delInTestHtml()}`;
 }
 
 function renderFeedback(r) {
@@ -28407,7 +28411,48 @@ function renderFeedback(r) {
     </details>
     ${!p.isApply && hasApply(p) && r.level !== 'wrong'
       ? `<div class="diff-legend">🚀 この表現の応用（別の場面で使う問題）は、別の日に「⚙️ 範囲を選んで練習する → ④ 練習内容：応用」から出せます（同じ日に基本と応用は両方出しません）</div>`
-      : ''}`;
+      : ''}
+    ${delInTestHtml()}`;
+}
+
+/* ---- テストの答えの画面から、その表現を削除して次へ（2026-11-08） ----
+   答え合わせ前（自己採点を押す前）なら記録は付けずに外す。答え合わせ後なら記録は残したまま次へ。
+   削除のしくみはカードの🗑と同じ（phraseNote_deleted・一覧の下「🗑 削除したフレーズ」から戻せる）。
+   この回のあとに残っている同じ表現（解き直しなど）も外す */
+function delInTestHtml() {
+  return `<div class="del-in-test"><button class="btn-mini" onclick="deleteInTest()">🗑 この表現を削除（今後は出さない）</button></div>`;
+}
+function deleteInTest() {
+  const st = testState;
+  const p = st && st.queue[st.idx];
+  if (!p) return;
+  const answered = !!st.results[st.idx];
+  if (!confirm('「' + p.ja + '」を削除して次へ進みますか？\n（一覧・復習・テストに出なくなります。'
+    + (answered ? 'この問題の答え合わせの記録は残ります。' : 'この問題は答え合わせをしないので、記録は付きません。')
+    + '一覧のいちばん下の「🗑 削除したフレーズ」から元に戻せます）')) return;
+  const d = getDels();
+  d[String(p.id)] = { t: Date.now(), on: true };
+  setDels(d);
+  applyDels();
+  for (let i = st.queue.length - 1; i > st.idx; i--) {
+    if (!st.results[i] && String(st.queue[i].id) === String(p.id)) st.queue.splice(i, 1);
+  }
+  refreshAfterDel();
+  showToast('🗑 削除しました');
+  if (answered) { nextQuestion(); return; }
+  stopSinglePlay();
+  st.queue.splice(st.idx, 1);
+  st.revealed = false; st.hinted = false; st.pending = null;
+  st.hints = null; st.hintMenu = false; st.resaid = false;
+  skipUnservable();
+  if (st.idx < st.queue.length) { saveHold(); renderQuestion(); window.scrollTo(0, 0); return; }
+  if (st.results.some(Boolean)) { st.idx = st.queue.length - 1; finishTest(); return; }
+  /* 1問も答え合わせしないまま最後の問題を削除した → 何も記録せずに設定画面へ */
+  saveHold();
+  testState = null;
+  clearRun();
+  renderTestSetup();
+  window.scrollTo(0, 0);
 }
 
 /* 採点の押し間違いの訂正。同じ回答の修正なので回数は増やさず、回答前の状態から箱と期限を計算し直す */
@@ -28434,7 +28479,7 @@ function overrideGrade(ok) { fixGradePct(ok ? 100 : 0); }
 function queueAgain() {
   const st = testState;
   const r = st.results[st.idx];
-  if (!r || r.level === 'correct' || r.phrase.again || r.phrase.isApply) return;
+  if (!r || r.level === 'correct' || r.phrase.again || r.phrase.isApply || isDel(r.phrase.id)) return;
   if (st.queue.some(q => q.again && q.id === r.phrase.id)) return;
   const queued = st.queue.filter((q, i) => q.again && !st.results[i]).length;
   if (!rvCanRetry(r.phrase.id) || rvRetryDone() + queued >= rvCfg().retryMax) return;
