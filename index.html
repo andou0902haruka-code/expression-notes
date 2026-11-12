@@ -33,6 +33,10 @@
     --photo-bg: #fce7f3;
     --biz: #1e5a8a;
     --biz-bg: #e3effa;
+    --santa: #b91c1c;
+    --santa-bg: #fde8e8;
+    --sundai: #4338ca;
+    --sundai-bg: #e8eafc;
   }
   * { box-sizing: border-box; }
   body {
@@ -238,6 +242,10 @@
   .badge-photo { background: var(--photo-bg); color: var(--photo); }
   .badge-biz { background: var(--biz-bg); color: var(--biz); }
   .card .src-line.biz { color: var(--biz); }
+  .badge-santa { background: var(--santa-bg); color: var(--santa); }
+  .card .src-line.santa { color: var(--santa); }
+  .badge-sundai { background: var(--sundai-bg); color: var(--sundai); }
+  .card .src-line.sundai { color: var(--sundai); }
   .card .src-line { font-size: 0.72rem; color: var(--note); margin-top: 4px; }
   .card .src-line.web { color: var(--web); }
   .card .src-line.web a { color: inherit; text-decoration: underline; }
@@ -246,6 +254,8 @@
   .mini-web { font-size: 0.72rem; margin-left: 5px; color: var(--web); font-weight: 600; white-space: nowrap; }
   .mini-photo { font-size: 0.72rem; margin-left: 5px; color: var(--photo); font-weight: 600; white-space: nowrap; }
   .mini-biz { font-size: 0.72rem; margin-left: 5px; color: var(--biz); font-weight: 600; white-space: nowrap; }
+  .mini-santa { font-size: 0.72rem; margin-left: 5px; color: var(--santa); font-weight: 600; white-space: nowrap; }
+  .mini-sundai { font-size: 0.72rem; margin-left: 5px; color: var(--sundai); font-weight: 600; white-space: nowrap; }
   /* ジャンル（💼 Bizmate／🌐 ネット／📱 Speak／💡 ひらめき）の切り替え */
   .genre-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 10px; }
   .genre-row .btn-mini { flex: 0 0 auto; }
@@ -1055,7 +1065,7 @@
       <li>未清書メモは合言葉を入れた端末から受け箱へ自動で送られる。月曜などに Claude Code で「清書して」と頼むと、自然な英訳＋解説＋音声付きの「保存済みフレーズ」になる（「📋 コピー」でJSONを貼ってもよい）</li>
       <li>サイトが更新されたら、清書済みと同じ内容の未清書メモは自動で一覧から消える</li>
       <li>すでに追加した表現をもう一度保存しようとすると、<b>「この表現はすでにメモに追加されています（追加日）」</b>と表示される（前の英訳もその場で確認できる。あえて重複させたいときは「＋ それでも保存する」）</li>
-      <li><b>📚 保存済みフレーズ</b>は<b>週ごとのトグル</b>でまとまる（初期表示は今週だけ開く）。<b>🕘 新しい順</b>にも切り替えられる。上のボタンで<b>💼 Bizmate／🌐 ネット／📱 Speak／💡 ひらめき</b>の出典ごとに絞り込める</li>
+      <li><b>📚 保存済みフレーズ</b>は<b>週ごとのトグル</b>でまとまる（初期表示は今週だけ開く）。<b>🕘 新しい順</b>にも切り替えられる。上のボタンで<b>💼 Bizmate／🌐 ネット／📱 Speak／🎅 Santa／📘 駿台単語／💡 ひらめき</b>の出典ごとに絞り込める</li>
       <li>カードの「くわしく」を開くと、言い換え・場面・注意点・応用例・<b>🗣 言う／⌨️ 書く の記録</b>が見られる。内容を直してほしいときは <b>✏️ 修正メモ</b> を残すと、次の清書で確認される（この端末に残り、更新で消えない）</li>
       <li>フレーズの <b>☆</b> をタップすると<b>⭐ お気に入り</b>タブに集まる（この端末のみ保存）。お気に入りに入れただけでは復習の対象は増えない</li>
       <li><b>📅 週まとめ</b>タブ … 週ごとの表現を日付順に。<b>🎧 通し再生</b>で「日本語 →（考える間）→ 英語」の順に自動再生できる。考える間は最大15秒、英訳は英語の音声まで隠しておける</li>
@@ -24902,6 +24912,649 @@ const PHRASES = [
     src: "note",
     srcRef: "Bizmate予習/1-D-19 テーマの表現",
     savedAt: "2026-11-11T13:22:10.104Z"
+  },
+  {
+    id: 1794447262460,
+    ja: "学生は大学のあらゆる資料を自由に使える。",
+    en: "Students have all the university's resources at their disposal.",
+    noteEn: ["have A at one's disposal"],
+    explanation: "<b>have A at one's disposal</b> は「Aを自分の思うように使える状態にある」。disposal は「（自由に）配置できること」で、dispose（配置する）から来ている。",
+    related: ["All the university's resources are available to students."],
+    apply: [
+      { ja: "新しい職場では最新の機材を自由に使える。", en: "At my new job, I have the latest equipment at my disposal." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0184.HEIC",
+    savedAt: "2026-11-12T01:34:22.460Z"
+  },
+  {
+    id: 1794447262461,
+    ja: "そんな小さなことで騒ぎ立てないで。",
+    en: "Don't make a fuss about such a small thing.",
+    noteEn: ["make a fuss"],
+    explanation: "<b>make a fuss (about A)</b> は「（Aのことで）大騒ぎする・文句を言う」。小さなことを必要以上に騒ぐニュアンス。",
+    related: ["Don't make a big deal about such a small thing."],
+    apply: [
+      { ja: "彼は料理が冷めていると店で騒ぎ立てた。", en: "He made a fuss at the restaurant because his food was cold." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0184.HEIC",
+    savedAt: "2026-11-12T01:34:22.461Z"
+  },
+  {
+    id: 1794447262462,
+    ja: "博物館の入場券は大人1枚15ドルです。",
+    en: "An admission ticket to the museum costs fifteen dollars for adults.",
+    noteEn: ["admission ticket"],
+    explanation: "<b>admission ticket</b> は「入場券」。admission は admit（入ることを許す）の名詞で、mit は「送る」＝中へ送り入れる。",
+    related: ["Entry to the museum costs fifteen dollars for adults."],
+    apply: [
+      { ja: "コンサートの入場券をネットで2枚買った。", en: "I bought two admission tickets for the concert online." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0185.HEIC",
+    savedAt: "2026-11-12T01:34:22.462Z"
+  },
+  {
+    id: 1794447262463,
+    ja: "彼女は生涯を子どもの教育に捧げた。",
+    en: "She committed herself to educating children throughout her life.",
+    noteEn: ["commit oneself to A"],
+    explanation: "<b>commit oneself to A</b> は「Aに身を捧げる・専念する」。to の後ろは名詞か動名詞（to educate ではなく <b>to educating</b>）。",
+    related: ["She devoted herself to educating children throughout her life."],
+    apply: [
+      { ja: "彼は環境を守る活動に専念すると決めた。", en: "He decided to commit himself to protecting the environment." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0185.HEIC",
+    savedAt: "2026-11-12T01:34:22.463Z"
+  },
+  {
+    id: 1794447262464,
+    ja: "その男は金のために罪を犯した。",
+    en: "The man committed a crime for money.",
+    noteEn: ["commit a crime"],
+    explanation: "<b>commit a crime</b> は「罪を犯す」。commit はもともと「（任せて）送る」で、悪い行為を「行う」にも使う（commit suicide, commit an error）。",
+    related: ["The man broke the law for money."],
+    apply: [
+      { ja: "貧困が人を犯罪に走らせることもある。", en: "Poverty can sometimes lead people to commit crimes." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0185.HEIC",
+    savedAt: "2026-11-12T01:34:22.464Z"
+  },
+  {
+    id: 1794447262465,
+    ja: "医師たちは彼の回復を新しい治療法のおかげだと考えた。",
+    en: "The doctors ascribed his recovery to the new treatment.",
+    noteEn: ["ascribe A to B"],
+    explanation: "<b>ascribe A to B</b> は「AをBのせいにする・Aの原因をBと考える」。語順に注意：結果が A、原因が B。≒ attribute A to B。",
+    related: ["The doctors attributed his recovery to the new treatment."],
+    apply: [
+      { ja: "多くの人は彼女の成功を才能ではなく努力のおかげだと考えている。", en: "Many people ascribe her success to hard work rather than talent." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0185.HEIC",
+    savedAt: "2026-11-12T01:34:22.465Z"
+  },
+  {
+    id: 1794447262466,
+    ja: "学生は無料の個別指導サービスを利用すべきだ。",
+    en: "Students should avail themselves of the free tutoring service.",
+    noteEn: ["avail oneself of ..."],
+    explanation: "<b>avail oneself of A</b> は「Aを利用する」の硬い言い方。avail は「役に立つ」で、val（価値）と同じ仲間。",
+    related: ["Students should take advantage of the free tutoring service."],
+    apply: [
+      { ja: "ホテルの宿泊客はプールとジムを利用できます。", en: "Hotel guests may avail themselves of the pool and gym." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0185.HEIC",
+    savedAt: "2026-11-12T01:34:22.466Z"
+  },
+  {
+    id: 1794447262467,
+    ja: "応募用紙を切り離して受付に提出してください。",
+    en: "Please detach the application form from the booklet and hand it in at the desk.",
+    noteEn: ["detach A from B"],
+    explanation: "<b>detach A from B</b> は「AをBから引き離す・取り外す」。de-（離れる）＋tach（くっつける）で、attach の反対。",
+    related: ["Please remove the application form from the booklet."],
+    apply: [
+      { ja: "彼は現実から離れて山で1週間過ごした。", en: "He detached himself from everyday life and spent a week in the mountains." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0186.HEIC",
+    savedAt: "2026-11-12T01:34:22.467Z"
+  },
+  {
+    id: 1794447262468,
+    ja: "メールに履歴書を添付してください。",
+    en: "Please attach your résumé to the email.",
+    noteEn: ["attach A to B"],
+    explanation: "<b>attach A to B</b> は「AをBにくっつける・添付する」。メールの添付ファイルは attachment。",
+    related: ["Please include your résumé with the email."],
+    apply: [
+      { ja: "彼女はかばんに名札をつけた。", en: "She attached a name tag to her bag." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0186.HEIC",
+    savedAt: "2026-11-12T01:34:22.468Z"
+  },
+  {
+    id: 1794447262469,
+    ja: "彼は日本グランプリで初優勝した。",
+    en: "He won his first victory at the Japanese Grand Prix.",
+    noteEn: ["Grand Prix"],
+    explanation: "<b>Grand Prix</b> はフランス語で「大賞」。prix は prize（賞）と同じで、ノートでは「つかむ（pris）」と関連づけて覚えている。最後の x は発音しない（/ˌɡrɑːn ˈpriː/）。",
+    related: ["He won his first race at the Japanese Grand Prix."],
+    apply: [
+      { ja: "その映画は国際映画祭でグランプリを受賞した。", en: "The film won the Grand Prix at an international film festival." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0186.HEIC",
+    savedAt: "2026-11-12T01:34:22.469Z"
+  },
+  {
+    id: 1794447262470,
+    ja: "彼女は生まれつき美しい声に恵まれている。",
+    en: "She is endowed with a beautiful voice.",
+    noteEn: ["be endowed"],
+    explanation: "<b>be endowed with A</b> は「Aに恵まれている」。en-（中に）＋dow（与える）＝才能などを授けられている。",
+    related: ["She was born with a beautiful voice."],
+    apply: [
+      { ja: "その国は豊かな天然資源に恵まれている。", en: "The country is endowed with rich natural resources." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0186.HEIC",
+    savedAt: "2026-11-12T01:34:22.470Z"
+  },
+  {
+    id: 1794447262471,
+    ja: "質問があれば遠慮なく聞いてください。",
+    en: "Don't hesitate to ask if you have any questions.",
+    noteEn: ["hesitate to do"],
+    explanation: "<b>hesitate to do</b> は「〜するのをためらう」。Don't hesitate to do で「遠慮なく〜してください」の決まり文句になる。",
+    related: ["Feel free to ask if you have any questions."],
+    apply: [
+      { ja: "彼は自分の間違いを認めることをためらった。", en: "He hesitated to admit his mistake." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0188.HEIC",
+    savedAt: "2026-11-12T01:34:22.471Z"
+  },
+  {
+    id: 1794447262472,
+    ja: "すべての参加者は安全規則を守らなければならない。",
+    en: "All participants must adhere to the safety rules.",
+    noteEn: ["adhere to ..."],
+    explanation: "<b>adhere to A</b> は「A（規則・信念）を固く守る」。ad-（〜に）＋here（くっつく）＝ぴったりくっついて離れない。",
+    related: ["All participants must follow the safety rules."],
+    apply: [
+      { ja: "彼は今も子どものころの信仰を守り続けている。", en: "He still adheres to the beliefs he grew up with." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0188.HEIC",
+    savedAt: "2026-11-12T01:34:22.472Z"
+  },
+  {
+    id: 1794447262473,
+    ja: "堅苦しいあいさつは抜きにして始めましょう。",
+    en: "Let's dispense with the formalities and get started.",
+    noteEn: ["dispense with ..."],
+    explanation: "<b>dispense with A</b> は「Aなしで済ます・Aを省く」。ノートのとおり dispense だけだと「分配する・施行する」。",
+    related: ["Let's skip the formalities and get started."],
+    apply: [
+      { ja: "新しいシステムで紙の書類はなしで済ませられるようになった。", en: "The new system allows us to dispense with paper forms." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0191.HEIC",
+    savedAt: "2026-11-12T01:34:22.473Z"
+  },
+  {
+    id: 1794447262474,
+    ja: "会社は会議の時間を1時間から30分に減らした。",
+    en: "The company reduced meetings to thirty minutes.",
+    noteEn: ["reduce A to B"],
+    explanation: "<b>reduce A to B</b> は「AをBにまで減らす」。to の後ろは減らした後の量・状態。reduce A to tears（Aを泣かせる）のように「〜の状態にしてしまう」にも使う。",
+    related: ["The company cut meetings down to thirty minutes."],
+    apply: [
+      { ja: "火事でその家はがれきと化した。", en: "The fire reduced the house to rubble." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0192.HEIC",
+    savedAt: "2026-11-12T01:34:22.474Z"
+  },
+  {
+    id: 1794447262475,
+    ja: "面接では礼儀正しくふるまいなさい。",
+    en: "Conduct yourself politely during the interview.",
+    noteEn: ["conduct oneself"],
+    explanation: "<b>conduct oneself</b> は「ふるまう」の硬い言い方。conduct（導く）＋自分＝自分の行動を導く。≒ behave。",
+    related: ["Behave politely during the interview."],
+    apply: [
+      { ja: "彼はプレッシャーの中でも落ち着いてふるまった。", en: "He conducted himself calmly even under pressure." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0192.HEIC",
+    savedAt: "2026-11-12T01:34:22.475Z"
+  },
+  {
+    id: 1794447262476,
+    ja: "彼女は収入の一部を地元の慈善団体に寄付している。",
+    en: "She contributes part of her income to a local charity.",
+    noteEn: ["contribute A to B"],
+    explanation: "<b>contribute A to B</b> は「AをBに与える・寄付する」。目的語なしの contribute to B は「Bに貢献する・Bの一因となる」。",
+    related: ["She donates part of her income to a local charity."],
+    apply: [
+      { ja: "喫煙は多くの健康問題の一因となる。", en: "Smoking contributes to many health problems." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0192.HEIC",
+    savedAt: "2026-11-12T01:34:22.476Z"
+  },
+  {
+    id: 1794447262477,
+    ja: "科学者たちは気温上昇を温室効果ガスのせいだと考えている。",
+    en: "Scientists attribute rising temperatures to greenhouse gases.",
+    noteEn: ["attribute A to B"],
+    explanation: "<b>attribute A to B</b> は「AをBのせいだと考える・Aの原因をBに帰する」。結果が A、原因が B。≒ ascribe A to B。",
+    related: ["Scientists say rising temperatures are caused by greenhouse gases."],
+    apply: [
+      { ja: "彼は自分の成功を両親の支えのおかげだと思っている。", en: "He attributes his success to his parents' support." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0192.HEIC",
+    savedAt: "2026-11-12T01:34:22.477Z"
+  },
+  {
+    id: 1794447262478,
+    ja: "総額から割引分を引いてください。",
+    en: "Please subtract the discount from the total.",
+    noteEn: ["subtract A from B"],
+    explanation: "<b>subtract A from B</b> は「BからAを引く」。sub-（下に）＋tract（引く）。語順は「引くもの from 元の数」。",
+    related: ["Please take the discount off the total."],
+    apply: [
+      { ja: "10から3を引くと7になる。", en: "If you subtract three from ten, you get seven." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0193.HEIC",
+    savedAt: "2026-11-12T01:34:22.478Z"
+  },
+  {
+    id: 1794447262479,
+    ja: "その広告は若い消費者の心に訴えかける。",
+    en: "The advertisement appeals to young consumers.",
+    noteEn: ["appeal to ..."],
+    explanation: "<b>appeal to A</b> は「Aの心に訴える・Aにとって魅力がある」。ap-（〜に）＋pel（押す）＝相手の心に押しかける。「Aに懇願する」の意味もある。",
+    related: ["The advertisement attracts young consumers."],
+    apply: [
+      { ja: "市長は住民に水を節約するよう呼びかけた。", en: "The mayor appealed to residents to save water." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0194.HEIC",
+    savedAt: "2026-11-12T01:34:22.479Z"
+  },
+  {
+    id: 1794447262480,
+    ja: "その書店は売上不振で倒産した。",
+    en: "The bookstore went bankrupt because of poor sales.",
+    noteEn: ["go bankrupt"],
+    explanation: "<b>go bankrupt</b> は「破産する・倒産する」。bank（銀行・両替台）＋rupt（壊す）＝両替商の台を壊したことから。",
+    related: ["The bookstore went out of business because of poor sales."],
+    apply: [
+      { ja: "パンデミックの間に多くの小さな会社が倒産した。", en: "Many small companies went bankrupt during the pandemic." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0194.HEIC",
+    savedAt: "2026-11-12T01:34:22.480Z"
+  },
+  {
+    id: 1794447262481,
+    ja: "費用の点では、電車の方がタクシーよりずっと安い。",
+    en: "In terms of cost, the train is much cheaper than a taxi.",
+    noteEn: ["in terms of A"],
+    explanation: "<b>in terms of A</b> は「Aの観点から・Aの点では」。term は「枠」で、Aという枠組みの中で比べると、という意味。ライティングで比較の軸を示すのに便利。",
+    related: ["When it comes to cost, the train is much cheaper than a taxi."],
+    apply: [
+      { ja: "使いやすさの点では、このアプリが一番だ。", en: "In terms of ease of use, this app is the best." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0194.HEIC",
+    savedAt: "2026-11-12T01:34:22.481Z"
+  },
+  {
+    id: 1794447262482,
+    ja: "彼は父の死を受け入れるのに何年もかかった。",
+    en: "It took him years to come to terms with his father's death.",
+    noteEn: ["come to terms with A"],
+    explanation: "<b>come to terms with A</b> は「A（つらい現実など）を受け入れる」。terms（条件）で折り合いがつく、から。≒ accept A。",
+    related: ["It took him years to accept his father's death."],
+    apply: [
+      { ja: "彼女はついに自分の病気を受け入れた。", en: "She finally came to terms with her illness." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0194.HEIC",
+    savedAt: "2026-11-12T01:34:22.482Z"
+  },
+  {
+    id: 1794447262483,
+    ja: "患者は手術を受けることに同意した。",
+    en: "The patient consented to the surgery.",
+    noteEn: ["consent to ..."],
+    explanation: "<b>consent to A</b> は「Aに同意する・承諾する」。con-（共に）＋sent（感じる）。正式な許可のニュアンスで、名詞（informed consent など）でも使う。",
+    related: ["The patient agreed to have the surgery."],
+    apply: [
+      { ja: "両親は彼女が留学することを承諾した。", en: "Her parents consented to her studying abroad." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0195.HEIC",
+    savedAt: "2026-11-12T01:34:22.483Z"
+  },
+  {
+    id: 1794447262484,
+    ja: "委員会はその計画に賛成した。",
+    en: "The committee assented to the plan.",
+    noteEn: ["assent to ..."],
+    explanation: "<b>assent to A</b> は「Aに賛成する」の硬い言い方。as-（〜に）＋sent（感じる）＝相手の考えに気持ちを寄せる。",
+    related: ["The committee agreed to the plan."],
+    apply: [
+      { ja: "議長はうなずいてその提案に賛成した。", en: "The chairperson assented to the proposal with a nod." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0195.HEIC",
+    savedAt: "2026-11-12T01:34:22.484Z"
+  },
+  {
+    id: 1794447262485,
+    ja: "祖父は今でも万年筆で手紙を書いている。",
+    en: "My grandfather still writes letters with a fountain pen.",
+    noteEn: ["a fountain pen"],
+    explanation: "<b>fountain pen</b> は「万年筆」。fountain（泉）のようにインクが湧き出るペン、というノートの覚え方どおり。",
+    related: ["My grandfather still writes letters with an ink pen."],
+    apply: [
+      { ja: "卒業祝いに万年筆をもらった。", en: "I received a fountain pen as a graduation gift." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0195.HEIC",
+    savedAt: "2026-11-12T01:34:22.485Z"
+  },
+  {
+    id: 1794447262486,
+    ja: "一度計画を決めたら、それを守り通しなさい。",
+    en: "Once you make a plan, stick to it.",
+    noteEn: ["stick to ..."],
+    explanation: "<b>stick to A</b> は「A（計画・約束・話題）にこだわる・守り通す」。stick（くっつく）から、離れずに続けること。",
+    related: ["Once you make a plan, follow it through."],
+    apply: [
+      { ja: "ダイエット中は健康的な食事を続けるのが難しい。", en: "It is hard to stick to a healthy diet." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0196.HEIC",
+    savedAt: "2026-11-12T01:34:22.486Z"
+  },
+  {
+    id: 1794447262487,
+    ja: "その授業は学生たちにもっと学びたいと思わせた。",
+    en: "The class stimulated the students to learn more.",
+    noteEn: ["stimulate A to B"],
+    explanation: "<b>stimulate A to do</b> は「Aを刺激して〜させる」。stimulate は「刺激する・活発にする」で、stimulate the economy（景気を刺激する）もよく使う。",
+    related: ["The class encouraged the students to learn more."],
+    apply: [
+      { ja: "減税は経済を活性化させることを目的としている。", en: "The tax cuts are meant to stimulate the economy." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0196.HEIC",
+    savedAt: "2026-11-12T01:34:22.487Z"
+  },
+  {
+    id: 1794447262488,
+    ja: "子どもは現実と空想を区別できないことがある。",
+    en: "Young children sometimes cannot distinguish between reality and fantasy.",
+    noteEn: ["distinguish between A and B"],
+    explanation: "<b>distinguish between A and B</b> は「AとBを区別する」。<b>distinguish A from B</b> とも言える。",
+    related: ["Young children sometimes cannot tell reality from fantasy."],
+    apply: [
+      { ja: "その鳥は2種類の鳴き声を聞き分けることができる。", en: "The bird can distinguish between two different calls." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0196.HEIC",
+    savedAt: "2026-11-12T01:34:22.488Z"
+  },
+  {
+    id: 1794447262489,
+    ja: "台所には消火器を置いておくべきだ。",
+    en: "You should keep a fire extinguisher in the kitchen.",
+    noteEn: ["a fire extinguisher"],
+    explanation: "<b>fire extinguisher</b> は「消火器」。extinguish（火を消す）＋-er（道具）。extinct（絶滅した）と同じ仲間。",
+    related: ["You should keep fire safety equipment in the kitchen."],
+    apply: [
+      { ja: "彼は消火器を使って小さな火を消した。", en: "He put out the small fire with a fire extinguisher." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0196.HEIC",
+    savedAt: "2026-11-12T01:34:22.489Z"
+  },
+  {
+    id: 1794447262490,
+    ja: "英単語の多くはラテン語に由来する。",
+    en: "Many English words derive from Latin.",
+    noteEn: ["derive from ..."],
+    explanation: "<b>derive from A</b> は「Aに由来する」。<b>be derived from A</b> の形もよく使う。他動詞で derive A from B は「BからAを得る」。",
+    related: ["Many English words come from Latin."],
+    apply: [
+      { ja: "彼女は庭仕事から大きな喜びを得ている。", en: "She derives great pleasure from gardening." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0196.HEIC",
+    savedAt: "2026-11-12T01:34:22.490Z"
+  },
+  {
+    id: 1794447262491,
+    ja: "多くの住民が新しい空港の建設に反対している。",
+    en: "Many residents object to the construction of the new airport.",
+    noteEn: ["object to ..."],
+    explanation: "<b>object to A</b> は「Aに反対する」。to は前置詞なので、後ろは名詞か動名詞（object to doing）。名詞の object（物体・目的）は前にアクセント。",
+    related: ["Many residents are against the construction of the new airport."],
+    apply: [
+      { ja: "彼は週末に働くことに反対した。", en: "He objected to working on weekends." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0199.HEIC",
+    savedAt: "2026-11-12T01:34:22.491Z"
+  },
+  {
+    id: 1794447262492,
+    ja: "すべての工場は新しい環境規制に従わなければならない。",
+    en: "All factories must comply with the new environmental regulations.",
+    noteEn: ["comply with ..."],
+    explanation: "<b>comply with A</b> は「A（規則・要求）に従う・応じる」。名詞は compliance（遵守）。",
+    related: ["All factories must follow the new environmental regulations."],
+    apply: [
+      { ja: "その会社は顧客の要望に応じることができなかった。", en: "The company was unable to comply with the customer's request." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0199.HEIC",
+    savedAt: "2026-11-12T01:34:22.492Z"
+  },
+  {
+    id: 1794447262493,
+    ja: "チームは彼を最終メンバーから外した。",
+    en: "The team excluded him from the final roster.",
+    noteEn: ["exclude A from B"],
+    explanation: "<b>exclude A from B</b> は「AをBから除外する」。ex-（外に）＋clude（閉じる）＝閉め出す。反対は include。",
+    related: ["The team left him out of the final roster."],
+    apply: [
+      { ja: "料金には税金は含まれていません。", en: "The price excludes tax." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0200.HEIC",
+    savedAt: "2026-11-12T01:34:22.493Z"
+  },
+  {
+    id: 1794447262494,
+    ja: "彼は勘定を払うと言い張った。",
+    en: "He insisted on paying the bill.",
+    noteEn: ["insist on ..."],
+    explanation: "<b>insist on A / doing</b> は「Aを（すると）言い張る・強く要求する」。insist that SV の形もある。",
+    related: ["He was determined to pay the bill."],
+    apply: [
+      { ja: "彼女は自分で引っ越しの手配をすると言い張った。", en: "She insisted on arranging the move herself." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0200.HEIC",
+    savedAt: "2026-11-12T01:34:22.494Z"
+  },
+  {
+    id: 1794447262495,
+    ja: "そのチームは5人の研究者で構成されている。",
+    en: "The team consists of five researchers.",
+    noteEn: ["consist of ..."],
+    explanation: "<b>consist of A</b> は「Aから成る」。進行形にしない。ノートの <b>consist in A</b> は「（本質が）Aにある」。",
+    related: ["The team is made up of five researchers."],
+    apply: [
+      { ja: "この食事は主に野菜と米でできている。", en: "This meal consists mainly of vegetables and rice." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0200.HEIC",
+    savedAt: "2026-11-12T01:34:22.495Z"
+  },
+  {
+    id: 1794447262496,
+    ja: "その結果は以前の研究と一致している。",
+    en: "The results are consistent with previous studies.",
+    noteEn: ["consistent with ..."],
+    explanation: "<b>be consistent with A</b> は「Aと一致する・矛盾しない」。consistent だけなら「一貫した」。反対は inconsistent with A。",
+    related: ["The results agree with previous studies."],
+    apply: [
+      { ja: "彼の話は目撃者の証言と一致しなかった。", en: "His story was not consistent with the witness's account." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0200.HEIC",
+    savedAt: "2026-11-12T01:34:22.496Z"
+  },
+  {
+    id: 1794447262497,
+    ja: "私は夏より冬の方が好きだ。",
+    en: "I prefer winter to summer.",
+    noteEn: ["prefer A to B"],
+    explanation: "<b>prefer A to B</b> は「BよりもAを好む」。than ではなく <b>to</b> を使うのがポイント。",
+    related: ["I like winter better than summer."],
+    apply: [
+      { ja: "多くの学生は紙の本よりも電子書籍を好む。", en: "Many students prefer e-books to paper books." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0200.HEIC",
+    savedAt: "2026-11-12T01:34:22.497Z"
+  },
+  {
+    id: 1794447262498,
+    ja: "銀行は私の普通預金から当座預金にお金を移した。",
+    en: "The bank transferred the money from my savings account to my checking account.",
+    noteEn: ["transfer A from B to C"],
+    explanation: "<b>transfer A from B to C</b> は「AをBからCへ移す」。trans-（向こうへ）＋fer（運ぶ）。電車の「乗り換え」や「転校・転勤」にも使う。",
+    related: ["The bank moved the money from my savings account to my checking account."],
+    apply: [
+      { ja: "彼は来年東京から大阪の支社に転勤する。", en: "He will transfer from the Tokyo office to the Osaka branch next year." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0200.HEIC",
+    savedAt: "2026-11-12T01:34:22.498Z"
+  },
+  {
+    id: 1794447262499,
+    ja: "教授は講義の中で何度もその研究に言及した。",
+    en: "The professor referred to the study several times in her lecture.",
+    noteEn: ["refer to A"],
+    explanation: "<b>refer to A</b> は「Aに言及する・Aを参照する」。モノが主語だと「Aを指す」（This term refers to ...）。",
+    related: ["The professor mentioned the study several times in her lecture."],
+    apply: [
+      { ja: "「ジェネレーションZ」は1990年代後半以降に生まれた人々を指す。", en: "\"Generation Z\" refers to people born after the late 1990s." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0200.HEIC",
+    savedAt: "2026-11-12T01:34:22.499Z"
+  },
+  {
+    id: 1794447262500,
+    ja: "私は新しい隣人とまだ知り合いではない。",
+    en: "I am not yet acquainted with my new neighbors.",
+    noteEn: ["acquainted with ..."],
+    explanation: "<b>be acquainted with A</b> は「A（人）と知り合いである」「A（物事）に精通している」。get acquainted with A で「Aと知り合いになる」。",
+    related: ["I haven't met my new neighbors yet."],
+    apply: [
+      { ja: "新入社員は会社の規則をよく知っておく必要がある。", en: "New employees need to be acquainted with the company's rules." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0201.HEIC",
+    savedAt: "2026-11-12T01:34:22.500Z"
+  },
+  {
+    id: 1794447262501,
+    ja: "首相は記者会見で新しい政策を発表した。",
+    en: "The prime minister announced a new policy at a press conference.",
+    noteEn: ["the prime minister"],
+    explanation: "<b>prime minister</b> は「首相・総理大臣」。prime は「第一の」（primary・prince と同じ prim）で、「第一の大臣」。",
+    related: ["The head of the government announced a new policy at a press conference."],
+    apply: [
+      { ja: "その国の首相は来月日本を訪問する予定だ。", en: "The country's prime minister will visit Japan next month." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0201.HEIC",
+    savedAt: "2026-11-12T01:34:22.501Z"
+  },
+  {
+    id: 1794447262502,
+    ja: "弟は近所の小学校に通っている。",
+    en: "My younger brother goes to a primary school in our neighborhood.",
+    noteEn: ["primary school"],
+    explanation: "<b>primary school</b> は「小学校」（主にイギリス英語。アメリカでは elementary school）。primary は「最初の」。",
+    related: ["My younger brother goes to an elementary school in our neighborhood."],
+    apply: [
+      { ja: "彼女は小学校の先生として20年働いた。", en: "She worked as a primary school teacher for twenty years." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0201.HEIC",
+    savedAt: "2026-11-12T01:34:22.502Z"
+  },
+  {
+    id: 1794447262503,
+    ja: "会議の前に資料に目を通しておいてください。",
+    en: "Please read the materials prior to the meeting.",
+    noteEn: ["prior to ..."],
+    explanation: "<b>prior to A</b> は「Aより前に」の硬い言い方。≒ before A。prior は「前の」（priority と同じ）。",
+    related: ["Please read the materials before the meeting."],
+    apply: [
+      { ja: "出発の24時間前までにチェックインしてください。", en: "Please check in at least 24 hours prior to departure." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0201.HEIC",
+    savedAt: "2026-11-12T01:34:22.503Z"
+  },
+  {
+    id: 1794447262504,
+    ja: "陣痛が始まった",
+    en: "My wife is having contractions.",
+    explanation: "contraction は「収縮」で、複数形の <b>contractions</b> が「陣痛」。病院に電話するときの決まった言い方。She has gone into labor.（陣痛が始まった）も同じ場面で使う。",
+    related: ["My wife has gone into labor."],
+    apply: [
+      { ja: "妹が陣痛が始まったので、急いで病院に向かった。", en: "My sister started having contractions, so we rushed to the hospital." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0202.HEIC",
+    savedAt: "2026-11-12T01:34:22.504Z"
+  },
+  {
+    id: 1794447262505,
+    ja: "海外旅行の前に旅行保険に入るべきだ。",
+    en: "You should buy travel insurance before going abroad.",
+    noteEn: ["buy insurance"],
+    explanation: "英語では保険は「買う」と言う（<b>buy insurance</b>／get insurance）。insurance は in-（〜にする）＋sure（安全な）＝安全にするもの。",
+    related: ["You should get travel insurance before going abroad."],
+    apply: [
+      { ja: "彼は新しい車を買ったときに自動車保険に入った。", en: "He bought car insurance when he got his new car." }
+    ],
+    src: "note",
+    srcRef: "駿台単語/IMG_0202.HEIC",
+    savedAt: "2026-11-12T01:34:22.505Z"
   }
 ];
 
@@ -25560,10 +26213,13 @@ function polishedBase() {
 function noteSrcLabel(p) { return String(p.srcRef || '').split('/').filter(Boolean).join(' ・ '); }
 function noteBadgeHtml(p) {
   if (!isNotePhrase(p)) return '';
-  return isBizmate(p) ? `<span class="badge badge-biz">💼 Bizmateから</span>` : `<span class="badge badge-note">📓 ノートから</span>`;
+  if (isBizmate(p)) return `<span class="badge badge-biz">💼 Bizmateから</span>`;
+  if (isSantaNote(p)) return `<span class="badge badge-santa">🎅 santaから</span>`;
+  if (isSundaiNote(p)) return `<span class="badge badge-sundai">📘 駿台単語から</span>`;
+  return `<span class="badge badge-note">📓 ノートから</span>`;
 }
 function noteSrcHtml(p) {
-  return isNotePhrase(p) && p.srcRef ? `<div class="src-line${isBizmate(p) ? ' biz' : ''}">出典: ${escapeHtml(noteSrcLabel(p))}</div>` : '';
+  return isNotePhrase(p) && p.srcRef ? `<div class="src-line${isBizmate(p) ? ' biz' : isSantaNote(p) ? ' santa' : isSundaiNote(p) ? ' sundai' : ''}">出典: ${escapeHtml(noteSrcLabel(p))}</div>` : '';
 }
 
 /* ==========================================================
@@ -25620,6 +26276,8 @@ function srcLineHtml(p) { return noteSrcHtml(p) + webSrcHtml(p) + photoSrcHtml(p
      biz   💼 Bizmate   … src:"note" で srcRef が「Bizmate 表現まとめ/…」
      web   🌐 ネット     … src:"web"（/phrase-research で調べたもの）
      speak 📱 Speak      … src:"photo" で出典がアプリspeak
+     santa 🎅 Santa      … src:"note" で srcRef が「Santa/…」（Santa のノート写真から・2026-11-12）
+     sundai 📘 駿台単語  … src:"note" で srcRef が「駿台単語/…」（駿台単語のノート写真から・2026-11-12）
      idea  💡 ひらめき   … src なし（📝メモタブで自分で日本語を書いて清書したもの）
    どれにも入らないもの（Bizmate 以外のノート・Speak 以外の写真）は「すべて」でだけ出る。
    ========================================================== */
@@ -25628,15 +26286,21 @@ const GENRES = [
   { k: 'biz',   nm: '💼 Bizmate' },
   { k: 'web',   nm: '🌐 ネット' },
   { k: 'speak', nm: '📱 Speak' },
+  { k: 'santa', nm: '🎅 Santa' },
+  { k: 'sundai', nm: '📘 駿台単語' },
   { k: 'idea',  nm: '💡 ひらめき' }
 ];
 const LIST_GENRE_KEY = 'phraseNote_listGenre';
 const TEST_GENRE_KEY = 'phraseNote_testGenre';
 function isBizmate(p) { return !!(p && p.src === 'note' && /^bizmate/i.test(String(p.srcRef || '').trim())); }
+function isSantaNote(p) { return !!(p && p.src === 'note' && /^santa\//i.test(String(p.srcRef || '').trim())); }
+function isSundaiNote(p) { return !!(p && p.src === 'note' && /^駿台単語\//.test(String(p.srcRef || '').trim())); }
 function genreOf(p) {
   if (!p) return null;
   if (!p.src) return 'idea';
   if (isBizmate(p)) return 'biz';
+  if (isSantaNote(p)) return 'santa';
+  if (isSundaiNote(p)) return 'sundai';
   if (p.src === 'web') return 'web';
   if (p.src === 'photo' && /speak/i.test(String(p.srcFrom || '') + ' ' + String(p.srcRef || ''))) return 'speak';
   return null;
@@ -26021,7 +26685,7 @@ function renderWeeks() {
           const open = weekRevealSet.has(p.id);
           return `<div class="mini-row">
             <div class="mini-head">
-              <div class="mini-ja">${escapeHtml(p.ja)}${isNotePhrase(p) ? (isBizmate(p) ? `<span class="mini-biz" title="Bizmateから">💼 Bizmate</span>` : `<span class="mini-note" title="ノートから">📓 ノート</span>`) : ''}${isWebPhrase(p) ? `<span class="mini-web" title="調べて">🌐 調べて</span>` : ''}${isPhotoPhrase(p) ? `<span class="mini-photo" title="写真から">${isAppPhoto(p) ? '📱 ' + escapeHtml(p.srcFrom) : '📷 写真'}</span>` : ''}</div>
+              <div class="mini-ja">${escapeHtml(p.ja)}${isNotePhrase(p) ? (isBizmate(p) ? `<span class="mini-biz" title="Bizmateから">💼 Bizmate</span>` : isSantaNote(p) ? `<span class="mini-santa" title="santaから">🎅 santa</span>` : isSundaiNote(p) ? `<span class="mini-sundai" title="駿台単語から">📘 駿台単語</span>` : `<span class="mini-note" title="ノートから">📓 ノート</span>`) : ''}${isWebPhrase(p) ? `<span class="mini-web" title="調べて">🌐 調べて</span>` : ''}${isPhotoPhrase(p) ? `<span class="mini-photo" title="写真から">${isAppPhoto(p) ? '📱 ' + escapeHtml(p.srcFrom) : '📷 写真'}</span>` : ''}</div>
               ${favBtnHtml(p.id, 'small')}
             </div>
             ${open ? `
