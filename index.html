@@ -1028,6 +1028,7 @@
   <nav class="tabs">
     <button class="tab active" data-view="notes">📝 メモ</button>
     <button class="tab" data-view="favs">⭐ お気に入り</button>
+    <button class="tab" data-view="mastered">🏆 定着</button>
     <button class="tab" data-view="weeks">📅 週まとめ</button>
     <button class="tab" data-view="test">✍️ テスト<span class="tab-badge" id="dueBadge" hidden>0</span></button>
     <button class="tab" data-view="motiv">🔥 記録</button>
@@ -1129,6 +1130,39 @@
     </div>
   </div>
   <div id="favList"></div>
+</section>
+
+<!-- 定着タブ（2026-11-24）次の復習が30日以上先の段まで上がった表現。テストは練習（記録しない） -->
+<section id="view-mastered" hidden>
+  <div class="capture-box">
+    <h2 class="panel-title">🏆 定着した表現</h2>
+    <div class="hint-line" id="msSummary"></div>
+    <label class="field-label">答え方</label>
+    <div class="seg" id="msModeSeg">
+      <button class="seg-btn" data-mode="oral">🗣 言う（自己採点）</button>
+      <button class="seg-btn" data-mode="type">⌨️ 書く（一致で自動①）</button>
+    </div>
+    <label class="field-label">問題数</label>
+    <div class="seg" id="msCountSeg">
+      <button class="seg-btn" data-n="10">10問</button>
+      <button class="seg-btn" data-n="20">20問</button>
+      <button class="seg-btn" data-n="0">ぜんぶ</button>
+    </div>
+    <div class="week-actions">
+      <button class="btn-primary" id="msTestBtn">✍️ 定着した表現だけでテスト（練習・記録しない）</button>
+    </div>
+  </div>
+  <input type="text" class="search-box" id="msSearch" placeholder="🔍 定着した表現を検索">
+  <div class="section-title">
+    <h2>🏆 定着（<span id="msCount">0</span>件）</h2>
+    <div class="section-actions">
+      <div class="seg fav-sort" id="msSortSeg">
+        <button class="seg-btn active" data-sort="due">次の復習が近い順</button>
+        <button class="seg-btn" data-sort="date">📅順</button>
+      </div>
+    </div>
+  </div>
+  <div id="msList"></div>
 </section>
 
 <section id="view-weeks" hidden>
@@ -32930,6 +32964,329 @@ const PHRASES = [
       { ja: "うまくできるかわからないけど、やってみます。", en: "I'm not sure if I can do it well, but I'll give it a try." }
     ],
     savedAt: "2026-11-21T13:40:31.610Z"
+  },
+  {
+    id: 1795500265157,
+    ja: "私はホラー映画があまり好きじゃありません。",
+    en: "I'm not much of a fan of horror movies.",
+    noteEn: ["I'm not much of a fan of A", "much of a fan of"],
+    explanation: "I'm not much of a fan of A は「Aはあまり好きじゃない」。I don't like A よりやわらかく、角を立てずに好みを言える。much of a は否定文で「大した〜ではない」。",
+    related: ["I'm not a big fan of horror movies."],
+    apply: [
+      { ja: "正直に言うと、私は朝早く起きるのがあまり好きじゃありません。", en: "To be honest, I'm not much of a fan of getting up early." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.157Z"
+  },
+  {
+    id: 1795500265158,
+    ja: "AIは良い側面もある",
+    en: "There are some upsides to advances in AI.",
+    explanation: "upside は「良い面・利点」（反対は downside）。There are some upsides to A で「Aには良い面もある」。advances in AI は「AIの進歩」。",
+    related: ["AI advances have some benefits."],
+    apply: [
+      { ja: "オンライン授業には良い面もあります。", en: "There are some upsides to online classes." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.158Z"
+  },
+  {
+    id: 1795500265159,
+    ja: "AIによる広告の作成やプログラミングはコストや時間の削減できる",
+    en: "Using AI to create ads or help with coding can save time and cut costs.",
+    explanation: "Using AI to do ~ が主語（動名詞のかたまり）。help with coding は「プログラミングを手伝う」。save time（時間を節約する）と cut costs（費用を削る）はセットでよく使う。",
+    related: ["AI can save time and cut costs when we create ads or write code."],
+    apply: [
+      { ja: "オンラインで会議をすれば、時間を節約して費用も削れます。", en: "Having meetings online can save time and cut costs." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.159Z"
+  },
+  {
+    id: 1795500265160,
+    ja: "でも、AIが私たちの働き方を変えていることは否めません。",
+    en: "But there is no denying that AI is changing the way we work.",
+    noteEn: ["there is no denying that ~", "But there is no denying that"],
+    explanation: "there is no denying that は「〜は否定できない・〜は否めない」。良い面を認めたあとに But を付けて、反対側の事実を出すときに便利。",
+    related: ["But we can't deny that AI is changing the way we work."],
+    apply: [
+      { ja: "スマートフォンが便利なことは否めません。", en: "There is no denying that smartphones are convenient." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.160Z"
+  },
+  {
+    id: 1795500265161,
+    ja: "それは仕事の減少や人間の意欲や熱意の減少にもつながる",
+    en: "It can lead to fewer job opportunities and make people less motivated and enthusiastic about their work.",
+    en_orig: "It can leads to fewer job opportunities and make peple less motivated and enthusiatic about their work.",
+    explanation: "直した点: can の後ろは原形なので leads → lead、綴り peple → people・enthusiatic → enthusiastic。lead to A は「Aにつながる」、make people less motivated は「人のやる気を下げる」。",
+    related: ["It may mean fewer jobs and less motivation for workers."],
+    apply: [
+      { ja: "睡眠不足は集中力の低下につながることがあります。", en: "A lack of sleep can lead to poor concentration." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.161Z"
+  },
+  {
+    id: 1795500265162,
+    ja: "大手企業で大規模なデータ漏えいがあったと読みました。",
+    en: "I read that a major company had a big data leak.",
+    noteEn: ["I read that ~"],
+    explanation: "I read that は「〜と（記事で）読みました」。ニュースを話し始めるときの型（SEE の Sharing news）。read は過去形で「レッド」と読む。",
+    related: ["I saw in the news that a major company had a big data leak."],
+    apply: [
+      { ja: "来年、新しい駅ができると読みました。", en: "I read that a new station will open next year." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.162Z"
+  },
+  {
+    id: 1795500265163,
+    ja: "その会社では、人々の個人情報が流出するデータ漏えいがありました。",
+    en: "The company had a data leak that exposed people's personal information.",
+    noteEn: ["had a data leak that exposed people's personal information"],
+    explanation: "had a data leak that exposed people's personal information は「個人情報が流出するデータ漏えいがあった」。expose は「さらす・明るみに出す」で、情報が外に出てしまうこと。",
+    related: ["People's personal information was leaked from the company."],
+    apply: [
+      { ja: "その病院でデータ漏えいがあり、患者の個人情報が流出しました。", en: "The hospital had a data leak that exposed patients' personal information." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.163Z"
+  },
+  {
+    id: 1795500265164,
+    ja: "記事には、データ漏えいが増えていると書いてありました。",
+    en: "It said that data leaks are increasing.",
+    noteEn: ["It said that ~"],
+    explanation: "It said that は「（記事には）〜と書いてありました」。it は記事・ニュースのこと。I read that のあとに詳しい中身を足す型（SEE の Giving details）。",
+    related: ["The article said that data leaks are increasing."],
+    apply: [
+      { ja: "天気予報では、明日は雪になると言っていました。", en: "The weather forecast said that it would snow tomorrow." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.164Z"
+  },
+  {
+    id: 1795500265165,
+    ja: "多くの顧客データが漏えいしました。",
+    en: "A lot of customer data got leaked.",
+    noteEn: ["get leaked", "got leaked"],
+    explanation: "get leaked は「（情報が）漏えいする」。主語は漏れた情報（data・information）にする。ノートの companies got leaked data は、Companies had their data leaked. か Data got leaked. の形が自然。",
+    related: ["A lot of customer data was leaked."],
+    apply: [
+      { ja: "新しいスマートフォンの写真が、発売前に流出しました。", en: "Photos of the new smartphone got leaked before the launch." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.165Z"
+  },
+  {
+    id: 1795500265166,
+    ja: "AIの開発が、この増加の理由の一つかもしれません。",
+    en: "Developing AI may be one reason for this increase.",
+    noteEn: ["may be one reason for this increase"],
+    explanation: "may be one reason for this increase は「この増加の理由の一つかもしれない」。may be で断定を避け、one reason で「唯一ではない」とやわらげる。",
+    related: ["AI development might be part of the reason for this increase."],
+    apply: [
+      { ja: "円安が、観光客が増えている理由の一つかもしれません。", en: "The weak yen may be one reason for the increase in tourists." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.166Z"
+  },
+  {
+    id: 1795500265167,
+    ja: "AIがこんなに速く進歩したことに驚きました。",
+    en: "I was surprised that AI had advanced so fast.",
+    noteEn: ["I was surprised that ~"],
+    explanation: "I was surprised that は「〜に驚きました」。ニュースへの感想を言う型（SEE の Commenting on the news）。that の後ろは文。",
+    related: ["It surprised me that AI had advanced so fast."],
+    apply: [
+      { ja: "彼女が試験に一回で合格したことに驚きました。", en: "I was surprised that she passed the exam on her first try." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.167Z"
+  },
+  {
+    id: 1795500265168,
+    ja: "それで、AIが私たちの生活をどれだけ変えるのか心配になりました。",
+    en: "It made me worry about how much AI would change our lives.",
+    noteEn: ["It made me worry about ~"],
+    explanation: "It made me worry about A は「それで（そのせいで）Aが心配になった」。make + 人 + 動詞の原形で「人に〜させる」。about の後ろは名詞か how ~ のかたまり。",
+    related: ["It got me worried about how much AI would change our lives."],
+    apply: [
+      { ja: "そのニュースを見て、将来の仕事が心配になりました。", en: "The news made me worry about my future job." }
+    ],
+    src: "note",
+    srcRef: "Bizmate資料/1-E-07_ノート_01.HEIC",
+    savedAt: "2026-11-24T06:04:25.168Z"
+  },
+  {
+    id: 1795500265169,
+    ja: "民主党が選挙に勝った",
+    en: "The Democrats won the U.S. election.",
+    explanation: "the Democrats は「民主党（の人たち）」で、党を指すときは the を付けて複数形。win an election で「選挙に勝つ」（won は過去形）。",
+    related: ["The Democratic Party won the U.S. election."],
+    apply: [
+      { ja: "共和党が前回の選挙に勝ちました。", en: "The Republicans won the last election." }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 覚えたい表現",
+    savedAt: "2026-11-24T06:04:25.169Z"
+  },
+  {
+    id: 1795500265170,
+    ja: "上院でも下院でも共和党よりより多くの議席を獲得した",
+    en: "They won more seats than the Republicans in both the Senate and the House of Representatives.",
+    explanation: "win seats は「議席を獲得する」。the Senate は上院、the House of Representatives は下院（短く the House とも言う）。both A and B で「AでもBでも」。",
+    related: ["They won more seats than the Republicans in both houses of Congress."],
+    apply: [
+      { ja: "その党は前回の選挙より多くの議席を獲得しました。", en: "The party won more seats than in the last election." }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 覚えたい表現",
+    savedAt: "2026-11-24T06:04:25.170Z"
+  },
+  {
+    id: 1795500265171,
+    ja: "Aiの進化による利益を全員に同様に行き渡るようにしなければならない。",
+    en: "As AI continues to advance, we need to make sure everyone can benefit from it equally.",
+    explanation: "as AI continues to advance は「AIが進歩し続けるにつれて」（as は「〜につれて」）。make sure everyone can benefit from it は「みんながそこから利益を得られるようにする」。equally は「平等に」。",
+    related: ["As AI keeps advancing, we have to make sure everyone benefits from it equally."],
+    apply: [
+      { ja: "町が大きくなるにつれて、みんなが公共交通機関を使えるようにする必要があります。", en: "As the city continues to grow, we need to make sure everyone can use public transportation." }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 覚えたい表現",
+    savedAt: "2026-11-24T06:04:25.171Z"
+  },
+  {
+    id: 1795500265172,
+    ja: "最近同じこと思ってた",
+    en: "I've been thinking the same thing lately.",
+    explanation: "have been thinking（現在完了進行形）で「ここしばらくずっと思っていた」。相手の意見に強く共感するときのひと言。lately は「最近」。",
+    related: ["I've been feeling the same way lately."],
+    apply: [
+      { ja: "最近、引っ越しをしようかとずっと考えていました。", en: "I've been thinking about moving lately." }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 覚えたい表現",
+    savedAt: "2026-11-24T06:04:25.172Z"
+  },
+  {
+    id: 1795500265173,
+    ja: "AIのせいで、仕事を失って損をしている人もいます。",
+    en: "Some people are losing out because of AI.",
+    noteEn: ["lose out"],
+    explanation: "lose out は「損をする・（機会や仕事を）取り逃がす」。職そのものを失うなら lose one's job だが、lose out はそれも含めて「割を食う」ニュアンス。lose out on A で「Aを逃す」。",
+    related: ["Some people are losing their jobs because of AI."],
+    apply: [
+      { ja: "英語が話せないと、良いチャンスを逃してしまうかもしれません。", en: "If you can't speak English, you might lose out on good opportunities." }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 覚えたい表現",
+    savedAt: "2026-11-24T06:04:25.173Z"
+  },
+  {
+    id: 1795500265174,
+    ja: "上位階級の人がAIによる利益を独占しているように感じられる。",
+    en: "It feels like the people at the top are keeping all the wealth generated by AI for themselves.",
+    explanation: "It feels like ~ は「〜のように感じる」。the people at the top は「上の立場の人たち」。keep A for oneself で「Aを独り占めする」。generated by AI は「AIが生み出した」で wealth を後ろから説明する。",
+    related: ["It seems like the people at the top are keeping all the AI wealth to themselves."],
+    apply: [
+      { ja: "上司が手柄を独り占めしているように感じます。", en: "It feels like my boss is keeping all the credit for himself." }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 覚えたい表現",
+    savedAt: "2026-11-24T06:04:25.174Z"
+  },
+  {
+    id: 1795500265175,
+    ja: "彼は本当にみんなのことを気にかけているんだと感じた",
+    en: "I got the sense that he really cares about everyone.",
+    explanation: "I got the sense that ~ は「〜だと感じた・〜という印象を受けた」。話を聞いて受けた印象を言うときに使う。care about A は「Aを大切に思う」。",
+    related: ["I felt that he really cares about everyone."],
+    apply: [
+      { ja: "話してみて、彼女はこの仕事が本当に好きなんだと感じました。", en: "After talking with her, I got the sense that she really loves this job." }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 覚えたい表現",
+    savedAt: "2026-11-24T06:04:25.175Z"
+  },
+  {
+    id: 1795500265176,
+    ja: "選挙のニュース、見た？",
+    en: "Did you see the news about the election?",
+    explanation: "Did you see the news about A? は「Aのニュース見た？」と雑談でニュースを切り出すひと言。news は数えられない名詞なので a を付けない。",
+    related: ["Have you heard the news about the election?"],
+    apply: [
+      { ja: "新しいiPhoneのニュース、見た？", en: "Did you see the news about the new iPhone?" }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 テーマの表現",
+    savedAt: "2026-11-24T06:04:25.176Z"
+  },
+  {
+    id: 1795500265177,
+    ja: "記事によると、データ漏えいが増えているそうです",
+    en: "According to the article, data leaks are becoming more common.",
+    explanation: "According to A は「Aによると」。It said that ~ の言い換えとして、情報の出どころを先に言える。become more common は「よくあることになる・増える」。",
+    related: ["The article said that data leaks are becoming more common."],
+    apply: [
+      { ja: "天気予報によると、今週末は晴れるそうです。", en: "According to the weather forecast, it will be sunny this weekend." }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 テーマの表現",
+    savedAt: "2026-11-24T06:04:25.177Z"
+  },
+  {
+    id: 1795500265178,
+    ja: "どのニュースもその話題で持ちきりでした",
+    en: "It was all over the news.",
+    explanation: "be all over the news は「ニュースのいたるところに出ている＝その話題で持ちきり」。大きなニュースだと伝えるくだけた言い方。",
+    related: ["Everyone was talking about it on the news."],
+    apply: [
+      { ja: "その選手の結婚はSNSで持ちきりでした。", en: "The player's wedding was all over social media." }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 テーマの表現",
+    savedAt: "2026-11-24T06:04:25.178Z"
+  },
+  {
+    id: 1795500265179,
+    ja: "今朝ニュースで見ました",
+    en: "I saw it on the news this morning.",
+    explanation: "on the news で「ニュースで」（テレビ・ネットのニュース番組）。記事で読んだなら I read it in the paper / online. と言う。",
+    related: ["I watched it on the news this morning."],
+    apply: [
+      { ja: "昨日の夜、その事故のことをニュースで見ました。", en: "I saw the accident on the news last night." }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 テーマの表現",
+    savedAt: "2026-11-24T06:04:25.179Z"
+  },
+  {
+    id: 1795500265180,
+    ja: "この先どうなるのか気になります",
+    en: "I'm curious to see what happens next.",
+    explanation: "I'm curious to see ~ は「〜を見るのが楽しみ・気になる」。ニュースの感想を前向きに締めるひと言。what happens next は「次に何が起こるか」。",
+    related: ["I wonder what will happen next."],
+    apply: [
+      { ja: "新しい監督がどんな映画を作るのか気になります。", en: "I'm curious to see what kind of movie the new director will make." }
+    ],
+    src: "note",
+    srcRef: "Bizmate予習/1-E-07 テーマの表現",
+    savedAt: "2026-11-24T06:04:25.180Z"
   }
 ];
 
@@ -33094,6 +33451,37 @@ function renderFavs() {
     : (items.length
         ? `<div class="empty">「${escapeHtml(query)}」に一致するお気に入りはありません</div>`
         : `<div class="empty">まだお気に入りはありません<br>フレーズの ☆ をタップして登録しましょう</div>`);
+}
+
+/* ---- 定着した表現（2026-11-24） ----
+   rv.js の rvMastered（いまの段の間隔が30日以上）で決める。
+   テストは「間違えた問題だけ再挑戦」と同じ練習（again+manual＝箱・回数・週の成績・履歴・今日の30問に入れない） */
+function masteredPhrases() { return PHRASES.filter(p => rvMastered(p.id)); }
+let msSort = 'due', msN = (() => { try { const v = localStorage.getItem('phraseNote_msN'); return v == null ? 10 : (Number(v) | 0); } catch (e) { return 10; } })();
+function renderMastered() {
+  const query = document.getElementById('msSearch').value.trim().toLowerCase();
+  let items = masteredPhrases();
+  const all = items.length;
+  if (msSort === 'date') items.sort((a, b) => new Date(b.savedAt || 0) - new Date(a.savedAt || 0));
+  else items.sort((a, b) => rvSt(a.id).due - rvSt(b.id).due);
+  const filtered = query ? items.filter(p => [p.ja, p.en, p.explanation].some(s => (s || '').toLowerCase().includes(query))) : items;
+  document.getElementById('msCount').textContent = filtered.length;
+  document.getElementById('msSummary').innerHTML = (all ? `🏆 ${all}件が定着しています。` : 'まだ定着した表現はありません。復習で①を付け続けると、ここに入ってきます。')
+    + '<br>' + rvMasterNote();
+  document.getElementById('msTestBtn').disabled = !all;
+  document.querySelectorAll('#msModeSeg .seg-btn').forEach(x => x.classList.toggle('active', x.dataset.mode === testMode));
+  document.querySelectorAll('#msCountSeg .seg-btn').forEach(x => x.classList.toggle('active', Number(x.dataset.n) === msN));
+  document.querySelectorAll('#msSortSeg .seg-btn').forEach(x => x.classList.toggle('active', x.dataset.sort === msSort));
+  document.getElementById('msList').innerHTML = filtered.length
+    ? filtered.map(p => phraseCardHtml(p, 'mastered')).join('')
+    : `<div class="empty">${query ? `「${escapeHtml(query)}」に一致する表現はありません` : '定着した表現がここに並びます'}</div>`;
+}
+function startMasteredTest() {
+  let list = masteredPhrases().sort(() => Math.random() - 0.5);
+  if (!list.length) { showToast('定着した表現はまだありません'); return; }
+  if (msN) list = list.slice(0, msN);
+  switchView('test');
+  startTest(list.map(p => Object.assign({}, p, { again: true, manual: true, mst: true })), { weekKey: '__mastered__', retryRun: true });
 }
 
 /* ---- 未清書メモ（localStorage） ---- */
@@ -33731,6 +34119,7 @@ function phraseCardHtml(p, context) {
     ? `<span class="badge badge-fav">⭐ お気に入り</span>`
     : `<span class="badge badge-done">📚 清書済み</span>`)
     + (p.mine ? `<span class="badge badge-mine">✍️ 自分の英語</span>` : '')
+    + rvMasterChip(p.id)
     + srcBadgeHtml(p);
   return `
     <div class="card">
@@ -34003,8 +34392,9 @@ function switchView(name) {
      （タブを戻すと設定画面に戻るので、締めないとその回だけ記録が宙に浮く） */
   sealIfRunning();
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.view === name));
-  ['notes', 'favs', 'weeks', 'test', 'motiv'].forEach(v => { document.getElementById('view-' + v).hidden = (v !== name); });
+  ['notes', 'favs', 'mastered', 'weeks', 'test', 'motiv'].forEach(v => { document.getElementById('view-' + v).hidden = (v !== name); });
   if (name === 'favs') renderFavs();
+  if (name === 'mastered') renderMastered();
   if (name === 'weeks') renderWeeks();
   if (name === 'test') renderTestSetup();
   if (name === 'motiv') { mvRender(); hsRender(); }
@@ -36587,6 +36977,7 @@ function testTargetLabel(key) {
   if (key === '__due__') return '📅 今日の復習';
   if (key === '__all__') return '全期間';
   if (key === '__fav__') return '⭐ お気に入り';
+  if (key === '__mastered__') return '🏆 定着テスト（練習）';
   if (key === '__note__') return '📓 ノートから';
   if (key === '__web__') return '🌐 調べて';
   if (key === '__photo__') return '📷 写真から';
@@ -36597,7 +36988,7 @@ function testTargetLabel(key) {
   return weekRangeLabel(key);
 }
 /* 週ごとのスコア記録の対象外（週に属さない出題範囲） */
-function isSpecialKey(key) { return key === '__all__' || key === '__fav__' || key === '__due__' || key === '__note__' || key === '__web__' || key === '__photo__'; }
+function isSpecialKey(key) { return key === '__all__' || key === '__fav__' || key === '__mastered__' || key === '__due__' || key === '__note__' || key === '__web__' || key === '__photo__'; }
 
 function poolFor(weekKey, scope, genre) {
   const g = genre || testGenreOn();
@@ -36891,7 +37282,7 @@ function renderQuestion() {
   document.getElementById('testRun').innerHTML = `
     <div class="test-topbar">
       <button class="btn-mini" onclick="quitTest()">✕ やめる</button>
-      <div class="test-progress">${p.manual ? `🔁 再挑戦 ${st.idx + 1} / ${st.queue.length}（記録には入れません）` : p.again ? '🔁 解き直し（箱は動かしません）'
+      <div class="test-progress">${p.mst ? `🏆 定着テスト ${st.idx + 1} / ${st.queue.length}（練習・記録には入れません）` : p.manual ? `🔁 再挑戦 ${st.idx + 1} / ${st.queue.length}（記録には入れません）` : p.again ? '🔁 解き直し（箱は動かしません）'
         : `${st.idx + 1} / ${qN}`}　${st.mode === 'type' ? '⌨️ 書く' : '🗣 言う'}${p.again ? '' : srsChip(p)}</div>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
@@ -37287,7 +37678,8 @@ function finishTest(partial) {
         + (restList.length ? `残り ${restList.length} 問は「途中でやめた回の続き」に残ります。` : '') + `</div>` : ''}
       ${rvDoneHtml('startSpeak()')}
       ${st.cut ? `<div class="hint-line">今日の枠を使い切った・今日もう答えた表現 ${st.cut} 問は出しませんでした。</div>` : ''}
-      <div class="hint-line">まちがえた表現は<b>明日</b>の復習に出ます（当日中にはくり返し出しません）。</div>
+      <div class="hint-line">${st.weekKey === '__mastered__' ? '🏆 定着テストは練習なので記録していません（箱・次の復習日・今日の30問はそのままです）。'
+        : 'まちがえた表現は<b>明日</b>の復習に出ます（当日中にはくり返し出しません）。'}</div>
       ${chunkHtml}
       <div class="test-btn-row">
         ${restList.length ? `<button class="btn-primary" onclick="resumeRest()">▶ 残り${restList.length}問を続ける</button>` : ''}
@@ -37319,7 +37711,7 @@ function retryMissed() {
   const missed = (testState && testState.missed) || [];
   if (!missed.length) return;
   startTest(missed.slice().sort(() => Math.random() - 0.5)
-    .map(p => Object.assign({}, p, { again: true, manual: true })), { weekKey: testState.weekKey, retryRun: true });
+    .map(p => Object.assign({}, p, { again: true, manual: true, mst: false })), { weekKey: testState.weekKey === '__mastered__' ? '__fav__' : testState.weekKey, retryRun: true });
 }
 
 /* 途中でやめた回の続き。答えた問はもう出さず、残りだけを出し直す */
@@ -37394,6 +37786,15 @@ document.getElementById('hideModeBtn').addEventListener('click', toggleHideMode)
 
 /* ---- お気に入りタブのイベント配線 ---- */
 document.getElementById('favSearch').addEventListener('input', renderFavs);
+document.getElementById('msSearch').addEventListener('input', renderMastered);
+document.getElementById('msTestBtn').addEventListener('click', startMasteredTest);
+document.getElementById('msModeSeg').addEventListener('click', e => { const b = e.target.closest('.seg-btn'); if (b) { setTestMode(b.dataset.mode); renderMastered(); } });
+document.getElementById('msCountSeg').addEventListener('click', e => {
+  const b = e.target.closest('.seg-btn'); if (!b) return;
+  msN = Number(b.dataset.n) | 0; try { localStorage.setItem('phraseNote_msN', String(msN)); } catch (e2) {}
+  renderMastered();
+});
+document.getElementById('msSortSeg').addEventListener('click', e => { const b = e.target.closest('.seg-btn'); if (b) { msSort = b.dataset.sort; renderMastered(); } });
 document.getElementById('favHideBtn').addEventListener('click', toggleHideMode);
 document.getElementById('favTestBtn').addEventListener('click', () => {
   if (!favPhrases().length) { showToast('お気に入りがまだありません（☆をタップして登録）'); return; }
