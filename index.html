@@ -1012,6 +1012,11 @@
 .rv-modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;}
 .rv-modal-in{background:var(--rv-card);color:var(--rv-ink);border-radius:14px;max-width:560px;width:100%;max-height:85vh;overflow:auto;padding:16px;}
 .rv-modal-b{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;}
+
+/* 定着した問題の目印（2026-11-24）。一覧の中に置くのでアプリの文字色に合わせる */
+.rv-master{display:inline-block;font-size:.72rem;font-weight:700;line-height:1.5;padding:1px 8px;margin:0 2px;border-radius:999px;
+  color:#8a5a00;background:#fff3d6;border:1px solid #f0d08a;white-space:nowrap;vertical-align:middle;}
+@media (prefers-color-scheme: dark){ .rv-master{color:#ffd27a;background:#3a2f14;border-color:#6b5520;} }
 /* RV:CSS:END */
 </style>
 </head>
@@ -1157,7 +1162,7 @@
     <h2>🏆 定着（<span id="msCount">0</span>件）</h2>
     <div class="section-actions">
       <div class="seg fav-sort" id="msSortSeg">
-        <button class="seg-btn active" data-sort="due">次の復習が近い順</button>
+        <button class="seg-btn active" data-sort="due">📅次の復習</button>
         <button class="seg-btn" data-sort="date">📅順</button>
       </div>
     </div>
@@ -36290,6 +36295,29 @@ function rvWaitIds() {
 /* 登録待ちを今日の登録の残り枠まで登録する。2026-11-20〜 空いている日に予約する（rvReserve と同じ） */
 function rvEnrollWaiting(n) { return rvReserve(n); }
 
+/* ---------------- 定着した問題（2026-11-24） ----------------
+   いまの段の間隔が RV_MASTER_DAYS（30日）以上＝次の復習が30日以上先になる段まで上がった問題。
+   英単語ノート・表現メモは30日の段、ほか（1/3/7/14/35/90日）は35日の段から。②③で段が下がれば外れる。
+   定着した問題だけのテストは練習（記録しない）で、各アプリが自分の出題画面で出す */
+var RV_MASTER_DAYS = 30;
+function rvMasterBox() {
+  var iv = rvIv();
+  for (var i = 0; i < iv.length; i++) if (iv[i] >= RV_MASTER_DAYS) return i;
+  return iv.length - 1;
+}
+function rvMastered(id) { var s = rvSt(id); return !!(s.en && (s.box | 0) >= rvMasterBox()); }
+function rvMasteredIds(ids) { return (ids || rvLiveIds()).map(String).filter(rvMastered); }
+/* 一覧に付ける目印「🏆 定着・次 12/30」。定着していなければ空 */
+function rvMasterChip(id) {
+  if (!rvMastered(id)) return '';
+  return '<span class="rv-master" title="次の復習まで30日以上の段まで上がった">🏆 定着・次 ' + rvMd(rvSt(id).due) + '</span>';
+}
+/* 定着した問題の一覧・テストの見出しに出す説明 */
+function rvMasterNote() {
+  return '次の復習が' + RV_MASTER_DAYS + '日以上先になる段（' + rvIv()[rvMasterBox()] + '日の段）まで上がった' + rvUnit() + 'です。'
+    + '復習で②③を付けて段が下がると、ここから外れます。定着テストは練習なので記録しません（箱・今日の' + rvCfg().cap + rvUnit() + '・成績は動きません）。';
+}
+
 /* ---------------- 途中でやめた回の保留（この端末だけ） ---------------- */
 function rvHoldKey() { return rvKey() + '_hold'; }
 function rvHoldSave(h) { try { if (h && h.ids && h.ids.length) localStorage.setItem(rvHoldKey(), JSON.stringify(h)); else localStorage.removeItem(rvHoldKey()); } catch (e) {} }
@@ -36517,6 +36545,7 @@ function rvPanelHtml(ids) {
     + '<div><b>' + viewed + '</b><span>閲覧のみ</span></div>'
     + '<div><b>' + paused.length + '</b><span>休止中</span></div>'
     + '<div><b>' + rel.length + '</b><span>学び直し候補</span></div>'
+    + '<div><b>' + all.filter(rvMastered).length + '</b><span>定着（' + RV_MASTER_DAYS + '日以上の段）</span></div>'
     + '</div>'
     + '<div class="rv-p">今日の登録（登録待ち→復習対象）：<b>' + rvEnrolledToday() + '</b>／' + el + '件</div>';
   if (wait.length || rsv.length) {
@@ -37711,7 +37740,7 @@ function retryMissed() {
   const missed = (testState && testState.missed) || [];
   if (!missed.length) return;
   startTest(missed.slice().sort(() => Math.random() - 0.5)
-    .map(p => Object.assign({}, p, { again: true, manual: true, mst: false })), { weekKey: testState.weekKey === '__mastered__' ? '__fav__' : testState.weekKey, retryRun: true });
+    .map(p => Object.assign({}, p, { again: true, manual: true, mst: false })), { weekKey: testState.weekKey, retryRun: true });
 }
 
 /* 途中でやめた回の続き。答えた問はもう出さず、残りだけを出し直す */
